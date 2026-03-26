@@ -6,6 +6,12 @@ using Dapper;
 public class AccountsAccess : DefaultAccess
 {
     protected override string Table { get; } = "Accounts";
+    protected override void CreateTable()
+    {
+        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
+            (id INTEGER AUTOINCREMENT, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, fullname TEXT NOT NULL)";
+        connection.Execute(sql);
+    }
 
     public void Write(AccountModel account)
     {
@@ -30,7 +36,4 @@ public class AccountsAccess : DefaultAccess
         string sql = $"DELETE FROM {Table} WHERE id = @Id";
         connection.Execute(sql, new { Id = account.Id });
     }
-
-
-
 }
