@@ -69,7 +69,7 @@ public static class UiLib
         return selected;
     }
 
-    public static string InputMenu(string prompt, string? header = null, int maxLength = 24)
+    public static string Input(string prompt, string? header = null, int maxLength = 24)
     {
         string name = "";
 
@@ -101,5 +101,12 @@ public static class UiLib
         }
 
         return name;
+    }
+    public static void HoldUser(
+        string message = "Press any key to continue..."
+    )
+    {
+        Console.WriteLine(message);
+        Console.ReadKey();
     }
 }
