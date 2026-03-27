@@ -9,5 +9,23 @@ static class Menu
     {
         List<string> menu = ["View Movies", "Login", "Register", "Exit"];
         int selected = UiLib.SelectionMenu(menu, header);
+
+        if (selected == menu.IndexOf("Login"))
+        {
+            UserLogin.Start();
+        }
+        // needs to be added in the future when we have the user registration page created
+        // else if (selected == menu.IndexOf("Register"))
+        // {
+        //     UserRegister.Start();
+        // }
+        // else if (selected == menu.IndexOf("View Movies"))
+        // {
+        //     MovieMenu.Start();
+        // }
+        else if (selected == menu.IndexOf("Exit"))
+        {
+            Console.WriteLine("Thank you for using Cinema Vier! Goodbye!");
+        }
     }
 }
