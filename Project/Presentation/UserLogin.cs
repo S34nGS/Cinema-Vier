@@ -5,12 +5,9 @@ static class UserLogin
 
     public static void Start()
     {
-        Console.WriteLine("Welcome to the login page");
-        Console.WriteLine("Please enter your email address");
-        string email = Console.ReadLine();
-        Console.WriteLine("Please enter your password");
-        string password = Console.ReadLine();
-        AccountModel acc = accountsLogic.CheckLogin(email, password);
+        List<string> fields = ["Email", "Password"];
+        Dictionary<string, string> inputs = UiLib.InputForm(fields, "Please enter your login information");
+        AccountModel acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         if (acc != null)
         {
             Console.WriteLine("Welcome back " + acc.FullName);
