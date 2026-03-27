@@ -110,7 +110,10 @@ public static class UiLib
 
     public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form", int maxLength = 32)
     {
-        int longest = Math.Max(GetLongestString(titles), maxLength);
+        int longest = Math.Max(
+            Math.Max(GetLongestString(titles), maxLength),
+            formTitle.Length
+        );
         int selected = 0;
 
         Dictionary<string, string> inputs = new();
