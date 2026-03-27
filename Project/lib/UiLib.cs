@@ -107,7 +107,21 @@ public static class UiLib
         Console.WriteLine(message);
         Console.ReadKey();
     }
-
+    public static string ShowInput(string input, string title)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "";
+        }
+        else if (title.ToLower().Contains("password"))
+        {
+            return new string('*', input.Length);
+        }
+        else
+        {
+            return input;
+        }
+    }
     public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form", int maxLength = 32)
     {
         int longest = Math.Max(
@@ -133,11 +147,11 @@ public static class UiLib
                 Console.WriteLine($"╠═ {title} {new string('═', longest - title.Length)}╣");
                 if (i == selected)
                 {
-                    Console.WriteLine($"║>{inputs[title]} {new string(' ', longest - inputs[title].Length)}<║");
+                    Console.WriteLine($"║>{ShowInput(inputs[title], title)} {new string(' ', longest - ShowInput(inputs[title], title).Length)}<║");
                 }
                 else
                 {
-                    Console.WriteLine($"║ {inputs[title]} {new string(' ', longest - inputs[title].Length)} ║");
+                    Console.WriteLine($"║ {ShowInput(inputs[title], title)} {new string(' ', longest - ShowInput(inputs[title], title).Length)} ║");
                 }
             }
             Console.WriteLine($"╚{new string('═', longest + 3)}╝");
