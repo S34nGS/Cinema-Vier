@@ -14,11 +14,10 @@ static class Menu
         {
             UserLogin.Start();
         }
-        // needs to be added in the future when we have the user registration page created
-        // else if (selected == menu.IndexOf("Register"))
-        // {
-        //     UserRegister.Start();
-        // }
+        else if (selected == menu.IndexOf("Register"))
+        {
+            UserRegistration.Start();
+        }
         // else if (selected == menu.IndexOf("View Movies"))
         // {
         //     MovieMenu.Start();
