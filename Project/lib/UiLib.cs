@@ -1,8 +1,5 @@
 public static class UiLib
 {
-    public static void Main()
-    { }
-
     public static int GetLongestString(List<string> strings)
     {
         int longest = 0;
