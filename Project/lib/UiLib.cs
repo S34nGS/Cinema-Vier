@@ -102,11 +102,69 @@ public static class UiLib
 
         return name;
     }
-    public static void HoldUser(
-        string message = "Press any key to continue..."
-    )
+    public static void HoldUser(string message = "Press any key to continue...")
     {
         Console.WriteLine(message);
         Console.ReadKey();
+    }
+
+    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form", int maxLength = 32)
+    {
+        int longest = Math.Max(GetLongestString(titles), maxLength);
+        int selected = 0;
+
+        Dictionary<string, string> inputs = new();
+
+        foreach (string title in titles)
+        {
+            inputs[title] = "";
+        }
+
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("╔═ " + formTitle + $" {new string('═', longest - formTitle.Length)}╗");
+            for (int i = 0; i < titles.Count; i++)
+            {
+                string title = titles[i];
+                Console.WriteLine($"╠═ {title} {new string('═', longest - title.Length)}╣");
+                if (i == selected)
+                {
+                    Console.WriteLine($"║>{inputs[title]} {new string(' ', longest - inputs[title].Length)}<║");
+                }
+                else
+                {
+                    Console.WriteLine($"║ {inputs[title]} {new string(' ', longest - inputs[title].Length)} ║");
+                }
+            }
+            Console.WriteLine($"╚{new string('═', longest + 3)}╝");
+            ConsoleKeyInfo key = Console.ReadKey();
+
+            if (key.Key == ConsoleKey.Enter)
+            {
+                break;
+            }
+            else if (key.Key == ConsoleKey.DownArrow && selected < titles.Count - 1)
+            {
+                selected++;
+            }
+            else if (key.Key == ConsoleKey.UpArrow && selected > 0)
+            {
+                selected--;
+            }
+            else if (key.Key == ConsoleKey.Backspace && inputs[titles[selected]].Length > 0)
+            {
+                inputs[titles[selected]] = inputs[titles[selected]][..^1];
+            }
+            else
+            {
+                char character = key.KeyChar;
+                if (!char.IsControl(character) && inputs[titles[selected]].Length < maxLength)
+                {
+                    inputs[titles[selected]] += character;
+                }
+            }
+        }
+        return inputs;
     }
 }
