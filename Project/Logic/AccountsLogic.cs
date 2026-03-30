@@ -7,11 +7,6 @@ public class AccountsLogic
     public static AccountModel? CurrentAccount { get; private set; }
     private AccountsAccess _access = new();
 
-    public AccountsLogic()
-    {
-
-    }
-
     public string HashPassword(string password)
     {
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
@@ -30,8 +25,6 @@ public class AccountsLogic
 
     public AccountModel? CheckLogin(string email, string password)
     {
-
-
         AccountModel acc = _access.GetByEmail(email);
         if (acc != null && acc.Password == HashPassword(password))
         {
