@@ -30,6 +30,7 @@ public class AccountsLogic
             account = _access.GetByEmail(email);
             return account;
         }
+        return null;
     }
 
 
