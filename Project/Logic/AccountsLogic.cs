@@ -1,6 +1,5 @@
+using System.Text.RegularExpressions;
 
-
-//This class is not static so later on we can use inheritance and interfaces
 public class AccountsLogic
 {
 
@@ -12,14 +11,25 @@ public class AccountsLogic
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
     }
 
-    public AccountModel CreateAccount(string email, string password, string fullName)
+    public bool IsValidEmail(string email)
     {
-        AccountModel account = new AccountModel(0, email, HashPassword(password), fullName);
 
-        _access.Write(account);
+        var match = Regex.Match(email, "([^ ])+@([A-Z])+.([A-Z])+", RegexOptions.IgnoreCase);
 
-        account = _access.GetByEmail(email);
-        return account;
+        return match.Success;
+    }
+
+    public AccountModel? CreateAccount(string email, string password, string fullName)
+    {
+        if (IsValidEmail(email))
+        {
+            AccountModel account = new AccountModel(0, email, HashPassword(password), fullName);
+
+            _access.Write(account);
+
+            account = _access.GetByEmail(email);
+            return account;
+        }
     }
 
 
