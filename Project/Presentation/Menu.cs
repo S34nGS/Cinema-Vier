@@ -4,25 +4,27 @@ static class Menu
     //This shows the menu. You can call back to this method to show the menu again
     //after another presentation method is completed.
     //You could edit this to show different menus depending on the user's role
+    static string header = "Welcome to Cinema Vier! Please select an option:";
     static public void Start()
     {
-        Console.WriteLine("Enter 1 to login");
-        Console.WriteLine("Enter 2 to do something else in the future");
+        List<string> menu = ["View Movies", "Login", "Register", "Exit"];
+        int selected = UiLib.SelectionMenu(menu, header);
 
-        string input = Console.ReadLine();
-        if (input == "1")
+        if (selected == menu.IndexOf("Login"))
         {
             UserLogin.Start();
         }
-        else if (input == "2")
+        else if (selected == menu.IndexOf("Register"))
         {
-            Console.WriteLine("This feature is not yet implemented");
+            UserRegistration.Start();
         }
-        else
+        // else if (selected == menu.IndexOf("View Movies"))
+        // {
+        //     MovieMenu.Start();
+        // }
+        else if (selected == menu.IndexOf("Exit"))
         {
-            Console.WriteLine("Invalid input");
-            Start();
+            Console.WriteLine("Thank you for using Cinema Vier! Goodbye!");
         }
-
     }
 }

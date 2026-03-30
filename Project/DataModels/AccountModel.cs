@@ -15,8 +15,6 @@
         Password = password;
         FullName = fullname;
     }
-
-
 }
 
 
