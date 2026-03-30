@@ -14,7 +14,7 @@ public class AccountsLogic
     public bool IsValidEmail(string email)
     {
 
-        var match = Regex.Match(email, "([^ ])+@([A-Z])+.([A-Z])+", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(email, "([^ ])+@([A-Z])+.([A-Z])+", RegexOptions.IgnoreCase);
 
         return match.Success;
     }
