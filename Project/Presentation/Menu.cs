@@ -18,10 +18,11 @@ static class Menu
         {
             UserRegistration.Start();
         }
-        // else if (selected == menu.IndexOf("View Movies"))
-        // {
-        //     MovieMenu.Start();
-        // }
+        else if (selected == menu.IndexOf("View Movies"))
+        {
+        //  MovieMenu.Start();
+            PurchaseModel purchaseTicket = PurchaseTicket.Start();
+        }
         else if (selected == menu.IndexOf("Exit"))
         {
             Console.WriteLine("Thank you for using Cinema Vier! Goodbye!");
