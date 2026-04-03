@@ -44,7 +44,7 @@ static class PurchaseTicket
             {
                 if(invalidInputs != "")
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}, please try again");
+                    var creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs} please try again");
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
                 }
                 else
@@ -60,7 +60,7 @@ static class PurchaseTicket
             {
                 if(invalidInputs != "")
                 {
-                    var iBANInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}, please try again");
+                    var iBANInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs} please try again");
                     invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
                 }
                 else
