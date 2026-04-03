@@ -34,7 +34,7 @@ static class PurchaseTicket
             selectedTime = TimeMenu[UiLib.SelectionMenu(TimeMenu, "Pick a time")];
         }
 
-        DateTime selectedDateTime = DateTime.ParseExact($"{selectedDate} {selectedTime}", "dd-MM-yyyy HH:mm", null);
+        DateTime selectedDateTime = DateTime.ParseExact($"{selectedDate} {selectedTime}", "dd-MM-yyyy H:mm", null);
         string selectedPaymentMethod = PaymentMethods[UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?")];
         string invalidInputs = "";
 
@@ -60,12 +60,12 @@ static class PurchaseTicket
             {
                 if(invalidInputs != "")
                 {
-                    var iBANInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}please try again");
+                    var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
                     invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
                 }
                 else
                 {
-                    var iBANInfo = UiLib.InputForm(CreditCardInput, "Please fill in the payment information");
+                    var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
                     invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
                 }
             } while(invalidInputs != "");
@@ -94,7 +94,7 @@ static class PurchaseTicket
             TimeSpan timeToCompare = TimeSpan.Parse(time);
             if(nowPlus20 <= timeToCompare)
             {
-                newTimeMenu.Add(timeToCompare.ToString(@"hh\:mm"));
+                newTimeMenu.Add(timeToCompare.ToString(@"h\:mm"));
             }
         }
         return newTimeMenu;
