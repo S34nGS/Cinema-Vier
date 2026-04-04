@@ -27,7 +27,9 @@ public class MoviesAccess : DefaultAccess
 
     public void Write(MovieModel movie)
     {
-        string sql = $"INSERT INTO {Table} (title, duration, summary, director, ageRating, genre, releaseDate) VALUES (@Title, @Duration, @Summary, @Director, @AgeRating, @Genre, @ReleaseDate)";
+        string sql = $@"INSERT INTO {Table} 
+            (title, duration, summary, director, ageRating, genre, releaseDate) 
+            VALUES (@Title, @Duration, @Summary, @Director, @AgeRating, @Genre, @ReleaseDate)";
         connection.Execute(sql, movie);
     }
 
