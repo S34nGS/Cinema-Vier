@@ -48,7 +48,9 @@ public class MoviesAccess : DefaultAccess
 
     public void Update(MovieModel movie)
     {
-        string sql = $"UPDATE {Table} SET title = @Title, duration = @Duration, summary = @Summary, director = @Director, ageRating = @AgeRating, genre = @Genre, releaseDate = @ReleaseDate";
+        string sql = $@"UPDATE {Table} 
+            SET title = @Title, duration = @Duration, summary = @Summary, director = @Director, ageRating = @AgeRating, genre = @Genre, releaseDate = @ReleaseDate
+            WHERE id = @Id";
         connection.Execute(sql, movie);
     }
 
