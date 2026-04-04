@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 public static class UiLib
 {
     public static int GetLongestString(List<string> strings)
@@ -180,5 +182,24 @@ public static class UiLib
             }
         }
         return inputs;
+    }
+    public static void ShowTable(Dictionary<string, string> table, string title)
+    {
+        int longestKey = GetLongestString(new List<string>(table.Keys));
+        int longestValue = GetLongestString(new List<string>(table.Values));
+        int innerWidth = longestKey + longestValue + 3;
+
+        Console.WriteLine($"╔═ {title} {new string('═', Math.Max(innerWidth - title.Length - 1, 0))}╗");
+        var entries = table.ToList();
+        for (int i = 0; i < entries.Count; i++)
+        {
+            string displayValue = ShowInput(entries[i].Value, entries[i].Key);
+            Console.WriteLine($"║ {entries[i].Key}{new string(' ', longestKey - entries[i].Key.Length)} ║ {displayValue}{new string(' ', longestValue - displayValue.Length)} ║");
+            if (i < entries.Count - 1)
+            {
+                Console.WriteLine($"╠{new string('═', longestKey + 2)}╩{new string('═', longestValue + 2)}╣");
+            }
+        }
+        Console.WriteLine($"╚{new string('═', longestKey + 2)}╩{new string('═', longestValue + 2)}╝");
     }
 }
