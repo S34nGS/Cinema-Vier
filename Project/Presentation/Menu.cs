@@ -20,7 +20,7 @@ static class Menu
         }
         else if (selected == menu.IndexOf("View Movies"))
         {
-        //  MovieMenu.Start();
+            MoviesMenu.Start();
             PurchaseModel purchaseTicket = PurchaseTicket.Start();
         }
         else if (selected == menu.IndexOf("Exit"))
