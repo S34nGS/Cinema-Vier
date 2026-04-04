@@ -1,7 +1,7 @@
 public static class MoviesLogic
 {
-    static private MoviesAccess _access = new();
-    static public List<string> GetMovieTitles(){
+    private static MoviesAccess _access = new();
+    public static List<string> GetMovieTitles(){
         List<string> Titles = [];
         foreach(MovieModel Movie in _access.GetAllMovies())
         {
