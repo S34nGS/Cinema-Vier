@@ -8,7 +8,7 @@ public class MoviesAccess : DefaultAccess
 
     public MoviesAccess()
     {
-        CreateTable();
+        // CreateTable();
     }
 
     protected override void CreateTable()
