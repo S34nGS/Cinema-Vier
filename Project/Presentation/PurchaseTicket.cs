@@ -2,20 +2,19 @@ static class PurchaseTicket
 {
     static List<string> TimeMenu { get; } = new() {"9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"};
     static List<string> DateMenu { get; } = [];
-    static List<string> PaymentMethods { get; } = new() {"Credit Card", "IBAN"};
+    static List<string> PaymentMethods { get; } = new() {"Credit Card"};
     static List<string> CreditCardInput = new()
     {
         "Cardholder name",
-        "Card number (13-19 digits)",
+        "Card number (13-19 digits, for example:4111 1111 1111 1111)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
     };
-    static List<string> IBANInput = new()
-    {
-        "Cardholder name",
-        "IBAN number (for example: NL12 ABNA 1234 5678 90)",
-    };
-    static PurchaseLogic PurchaseLogic { get; } = new();
+    // static List<string> IBANInput = new()
+    // {
+    //     "Cardholder name",
+    //     "IBAN number (for example: NL12 ABNA 1234 5678 90)",
+    // };
 
     public static PurchaseModel Start()
     {
@@ -54,22 +53,22 @@ static class PurchaseTicket
                 }
             } while(invalidInputs != "");
         }
-        else if(selectedPaymentMethod == "IBAN")
-        {
-            do
-            {
-                if(invalidInputs != "")
-                {
-                    var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-                }
-                else
-                {
-                    var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-                }
-            } while(invalidInputs != "");
-        }
+        // else if(selectedPaymentMethod == "IBAN")
+        // {
+        //     do
+        //     {
+        //         if(invalidInputs != "")
+        //         {
+        //             var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
+        //             invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+        //         }
+        //         else
+        //         {
+        //             var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
+        //             invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+        //         }
+        //     } while(invalidInputs != "");
+        // }
 
         UiLib.SelectionMenu(["Payment successful"], "");
         return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
