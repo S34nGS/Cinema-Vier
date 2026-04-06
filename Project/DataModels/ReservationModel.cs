@@ -12,12 +12,11 @@ public class ReservationModel
     [ForeignKey("TimeTable")]
     public Int64 TimeTableId {get; set;}
 
-    public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double TotalPrice, Int64 timeTableId)
+    public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, Int64 timeTableId)
     {
         Id = id;
         UserId = userId;
         ReservationDate = reservationDate;
-        TotalPrice = totalPrice;
         TimeTableId = timeTableId;
     }
 }
