@@ -1,6 +1,9 @@
+using System.Security.Cryptography;
+
 public class PurchaseLogic  
 {
     public static PurchaseModel? CurrentPayment { get; private set; }
+    public static Random rng = new();
 
     public static string CreditCardCheck(Dictionary<string, string> creditCardInfo)
     {
@@ -249,4 +252,9 @@ public class PurchaseLogic
 
     //     return remainder == 1;
     // }
+
+    public static int GenerateReservationNumber()
+    {
+        return rng.Next();
+    }
 }
