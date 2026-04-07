@@ -1,30 +1,30 @@
-using Microsoft.Data.Sqlite;
-
 using Dapper;
 
-
-public class AccountsAccess : DefaultAccess
+public class ReservationsAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Reservations";
+    protected override string Table { get; } = "Reservation";
+
     protected override void CreateTable()
     {
-        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
+        string sql = $@"
+            CREATE TABLE IF NOT EXISTS {Table} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 userId INTEGER NOT NULL,
-                reservationDate INTEGER NOT NULL,
+                reservationDate TEXT NOT NULL,
                 totalPrice REAL NOT NULL,
-                timeTableId INTEGER NOT NULL,
-
-                FOREIGN KEY (userId) REFERENCE Accounts(id) ON DELETE CASCADE,
-                FOREIGN KEY (timeTableId) REFERENCES TimeTables(id) ON DELETE RESTRICT
+                timeTableId INTEGER NOT NULL
             )";
+
         connection.Execute(sql);
     }
 
     public void Write(ReservationModel reservation)
     {
-        string sql = $"INSERT INTO {Table} (userId, reservationDate, timeTableId) VALUES (@UserId, @ReservationDate, @TimeTableId)";
-        connection.Execute(sql, account);
+        string sql = $@"
+            INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId)
+            VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId)";
+
+        connection.Execute(sql, reservation);
     }
 
     public List<ReservationModel> GetReservationsByUserId(int userId)
@@ -35,7 +35,14 @@ public class AccountsAccess : DefaultAccess
 
     public void Update(ReservationModel reservation)
     {
-        string sql = $"UPDATE {Table} SET userId = @UserId, reservationDate = @ReservationDate, timeTableId = @TimeTableId WHERE id = @Id";
+        string sql = $@"
+            UPDATE {Table}
+            SET userId = @UserId,
+                reservationDate = @ReservationDate,
+                totalPrice = @TotalPrice,
+                timeTableId = @TimeTableId
+            WHERE id = @Id";
+
         connection.Execute(sql, reservation);
     }
 
