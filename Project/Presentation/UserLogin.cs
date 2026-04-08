@@ -10,13 +10,9 @@ static class UserLogin
         AccountModel? acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         string? errorMessage = null;
 
-        if (acc == null)
-        {
-            errorMessage = "No account found with that email and password";
-        }
-
         while(acc == null)
         {
+            errorMessage = "No account found with that email and password";
             inputs = UiLib.InputForm(inputs, "Please enter your login information", header: errorMessage);
             acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
 
