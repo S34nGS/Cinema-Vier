@@ -16,7 +16,7 @@ static class UserLogin
             inputs = UiLib.InputForm(inputs, "Please enter your login information", header: errorMessage);
             acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
 
-             if (acc == null)
+            if (acc == null)
             {
                 errorMessage = "No account found with that email and password";
             }
