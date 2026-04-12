@@ -12,6 +12,8 @@ static class UserLogin
 
         while(acc == null)
         {
+            // reset password field so it doesn't show the previous input
+            inputs["Password"] = "";
             errorMessage = "No account found with that email and password";
             inputs = UiLib.InputForm(inputs, "Please enter your login information", header: errorMessage);
             acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
