@@ -1,13 +1,13 @@
 static class UserLogin
 {
-    static private AccountsLogic accountsLogic = new AccountsLogic();
+    private static AccountsLogic _accountsLogic = new AccountsLogic();
 
 
     public static void Start()
     {
         List<string> fields = ["Email", "Password"];
         Dictionary<string, string> inputs = UiLib.InputForm(fields, "Please enter your login information");
-        AccountModel? acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
+        AccountModel? acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         string? errorMessage;
 
         while(acc == null)
@@ -16,7 +16,7 @@ static class UserLogin
             inputs["Password"] = "";
             errorMessage = "No account found with that email and password";
             inputs = UiLib.InputForm(inputs, "Please enter your login information", header: errorMessage);
-            acc = accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
+            acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         }
 
 
