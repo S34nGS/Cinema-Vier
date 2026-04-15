@@ -10,11 +10,11 @@ static class PurchaseTicket
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
     };
-    // static List<string> IBANInput = new()
-    // {
-    //     "Cardholder name",
-    //     "IBAN number (for example: NL12 ABNA 1234 5678 90)",
-    // };
+    static List<string> IBANInput = new()
+    {
+        "Cardholder name",
+        "IBAN number (for example: NL12 ABNA 1234 5678 90)",
+    };
 
     public static PurchaseModel Start()
     {
@@ -53,22 +53,22 @@ static class PurchaseTicket
                 }
             } while(invalidInputs != "");
         }
-        // else if(selectedPaymentMethod == "IBAN")
-        // {
-        //     do
-        //     {
-        //         if(invalidInputs != "")
-        //         {
-        //             var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
-        //             invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-        //         }
-        //         else
-        //         {
-        //             var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
-        //             invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-        //         }
-        //     } while(invalidInputs != "");
-        // }
+        else if(selectedPaymentMethod == "IBAN")
+        {
+            do
+            {
+                if(invalidInputs != "")
+                {
+                    var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
+                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                }
+                else
+                {
+                    var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
+                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                }
+            } while(invalidInputs != "");
+        }
 
         UiLib.SelectionMenu(["Payment successful"], "");
         return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
