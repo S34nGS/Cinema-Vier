@@ -70,7 +70,7 @@ static class PurchaseTicket
             } while(invalidInputs != "");
         }
 
-        UiLib.SelectionMenu(["Payment successful"], "");
+        UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
         return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
     }
 
