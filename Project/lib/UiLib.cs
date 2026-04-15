@@ -158,8 +158,8 @@ public static class UiLib
             Console.Clear();
             WriteHeader(header);
             Console.WriteLine("╔═ " + formTitle + $" {new string('═', longest - formTitle.Length)}╗");
-            var currentField = fields.Keys.ToList()[selected];
-            foreach (var title in fields)
+            string currentField = fields.Keys.ToList()[selected];
+            foreach (KeyValuePair<string, string> title in fields)
             {
                 Console.WriteLine($"╠═ {title.Key} {new string('═', longest - title.Key.Length)}╣");
                 if (title.Key == currentField)
