@@ -5,7 +5,7 @@ public class PurchaseLogic
     public static string CreditCardCheck(Dictionary<string, string> creditCardInfo)
     {
         string invalidMessages = "";
-        foreach(var info in creditCardInfo)
+        foreach(KeyValuePair<string, string> info in creditCardInfo)
         {
             if(info.Key == "Cardholder name")
             {
@@ -30,7 +30,7 @@ public class PurchaseLogic
     public static string IBANCheck(Dictionary<string, string> iBANInfo)
     {
         string invalidMessages = "";
-        foreach(var info in iBANInfo)
+        foreach(KeyValuePair<string, string> info in iBANInfo)
         {
             if(info.Key == "Cardholder name")
             {

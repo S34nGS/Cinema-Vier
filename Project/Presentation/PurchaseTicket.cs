@@ -43,12 +43,12 @@ static class PurchaseTicket
             {
                 if(invalidInputs != "")
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}please try again");
+                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}please try again");
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
                 }
                 else
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, "Please fill in the payment information");
+                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(CreditCardInput, "Please fill in the payment information");
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
                 }
             } while(invalidInputs != "");
@@ -59,12 +59,12 @@ static class PurchaseTicket
             {
                 if(invalidInputs != "")
                 {
-                    var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
+                    Dictionary<string, string> iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
                     invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
                 }
                 else
                 {
-                    var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
+                    Dictionary<string, string> iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
                     invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
                 }
             } while(invalidInputs != "");
