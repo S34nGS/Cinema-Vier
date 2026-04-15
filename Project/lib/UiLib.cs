@@ -44,6 +44,7 @@ public static class UiLib
                     Console.WriteLine($"║   {menu[index]} {new string(' ', longest - menu[index].Length)}  ║");
                 }
             }
+
             Console.WriteLine($"╚{new string('═', longest + 6)}╝");
 
             ConsoleKey key = Console.ReadKey().Key;
@@ -99,11 +100,13 @@ public static class UiLib
 
         return name;
     }
+
     public static void HoldUser(string message = "Press any key to continue...")
     {
         Console.WriteLine(message);
         Console.ReadKey();
     }
+
     public static string ShowInput(string input, string title)
     {
         if (string.IsNullOrEmpty(input))
@@ -120,7 +123,8 @@ public static class UiLib
         }
     }
 
-    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form", int maxLength = 32)
+    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form",
+        int maxLength = 32)
     {
         int longest = Math.Max(
             Math.Max(GetLongestString(titles), maxLength),
@@ -138,7 +142,8 @@ public static class UiLib
         return InputForm(inputs, formTitle, maxLength);
     }
 
-    public static Dictionary<string, string> InputForm(Dictionary<string, string> fields, string formTitle = "Input Form", int maxLength = 32, string? header = null)
+    public static Dictionary<string, string> InputForm(Dictionary<string, string> fields,
+        string formTitle = "Input Form", int maxLength = 32, string? header = null)
     {
         int longest = Math.Max(
             Math.Max(GetLongestString(fields.Keys.ToList()), maxLength),
@@ -154,31 +159,21 @@ public static class UiLib
             WriteHeader(header);
             Console.WriteLine("╔═ " + formTitle + $" {new string('═', longest - formTitle.Length)}╗");
             var currentField = fields.Keys.ToList()[selected];
-            foreach(var title in fields)
+            foreach (var title in fields)
             {
                 Console.WriteLine($"╠═ {title.Key} {new string('═', longest - title.Key.Length)}╣");
-                if(title.Key == currentField)
+                if (title.Key == currentField)
                 {
-                    Console.WriteLine($"║>{ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)}<║");
+                    Console.WriteLine(
+                        $"║>{ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)}<║");
                 }
                 else
                 {
-                    Console.WriteLine($"║ {ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)} ║");
+                    Console.WriteLine(
+                        $"║ {ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)} ║");
                 }
             }
-            // for (int i = 0; i < titles.Count; i++)
-            // {
-            //     string title = titles[i];
-            //     Console.WriteLine($"╠═ {title} {new string('═', longest - title.Length)}╣");
-            //     if (i == selected)
-            //     {
-            //         Console.WriteLine($"║>{ShowInput(inputs[title], title)} {new string(' ', longest - ShowInput(inputs[title], title).Length)}<║");
-            //     }
-            //     else
-            //     {
-            //         Console.WriteLine($"║ {ShowInput(inputs[title], title)} {new string(' ', longest - ShowInput(inputs[title], title).Length)} ║");
-            //     }
-            // }
+
             Console.WriteLine($"╚{new string('═', longest + 3)}╝");
             ConsoleKeyInfo key = Console.ReadKey();
 
@@ -207,6 +202,7 @@ public static class UiLib
                 }
             }
         }
+
         return inputs;
     }
 }
