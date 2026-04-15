@@ -2,7 +2,7 @@ static class PurchaseTicket
 {
     static List<string> TimeMenu { get; } = new() {"9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"};
     static List<string> DateMenu { get; } = [];
-    static List<string> PaymentMethods { get; } = new() {"Credit Card"};
+    static List<string> PaymentMethods { get; } = new() {"Credit Card", "IBAN"};
     static List<string> CreditCardInput = new()
     {
         "Cardholder name",
