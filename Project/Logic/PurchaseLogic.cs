@@ -27,22 +27,22 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
-    // public static string IBANCheck(Dictionary<string, string> iBANInfo)
-    // {
-    //     string invalidMessages = "";
-    //     foreach(var info in iBANInfo)
-    //     {
-    //         if(info.Key == "Cardholder name")
-    //         {
-    //             invalidMessages += CardHolderNameCheck(info.Value);
-    //         }
-    //         else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
-    //         {
-    //             invalidMessages += IBANNumberCheck(info.Value);
-    //         }
-    //     }
-    //     return invalidMessages;
-    // }
+    public static string IBANCheck(Dictionary<string, string> iBANInfo)
+    {
+        string invalidMessages = "";
+        foreach(var info in iBANInfo)
+        {
+            if(info.Key == "Cardholder name")
+            {
+                invalidMessages += CardHolderNameCheck(info.Value);
+            }
+            else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+            {
+                invalidMessages += IBANNumberCheck(info.Value);
+            }
+        }
+        return invalidMessages;
+    }
 
     static string CardHolderNameCheck(string fullname)
     {
@@ -204,49 +204,49 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
-    // static string IBANNumberCheck(string iban)
-    // {
-    //     string invalidMessages = "";
-    //     iban = iban.Replace(" ", "").ToUpper();
+    static string IBANNumberCheck(string iban)
+    {
+        string invalidMessages = "";
+        iban = iban.Replace(" ", "").ToUpper();
 
-    //     if (iban.Length < 4 || !char.IsLetter(iban[0]) || !char.IsLetter(iban[1]) || !char.IsDigit(iban[2]) || !char.IsDigit(iban[3]))
-    //     {
-    //         invalidMessages += "IBAN must start with a country code like NL, DE, BE, ";
-    //         return invalidMessages;
-    //     }
+        if (iban.Length < 4 || !char.IsLetter(iban[0]) || !char.IsLetter(iban[1]) || !char.IsDigit(iban[2]) || !char.IsDigit(iban[3]))
+        {
+            invalidMessages += "IBAN must start with a country code like NL, DE, BE, ";
+            return invalidMessages;
+        }
 
-    //     if (iban.Length < 15 || iban.Length > 34)
-    //     {
-    //         invalidMessages += "Invalid IBAN length, ";
-    //         return invalidMessages;
-    //     }
+        if (iban.Length < 15 || iban.Length > 34)
+        {
+            invalidMessages += "Invalid IBAN length, ";
+            return invalidMessages;
+        }
 
-    //     if (!Mod97Check(iban))
-    //     {
-    //         invalidMessages += "IBAN is invalid, ";
-    //         return invalidMessages;
-    //     }
+        if (!Mod97Check(iban))
+        {
+            invalidMessages += "IBAN is invalid, ";
+            return invalidMessages;
+        }
 
-    //     return invalidMessages;
-    // }
+        return invalidMessages;
+    }
 
-    // static bool Mod97Check(string iban)
-    // {
-    //     // Move the first 4 characters to the end
-    //     string rearranged = iban[4..] + iban[..4];
+    static bool Mod97Check(string iban)
+    {
+        // Move the first 4 characters to the end
+        string rearranged = iban[4..] + iban[..4];
 
-    //     // Replace letters with numbers: A=10, B=11 ... Z=35
-    //     string numericIban = string.Concat(
-    //         rearranged.Select(c => char.IsLetter(c) ? (c - 'A' + 10).ToString() : c.ToString())
-    //     );
+        // Replace letters with numbers: A=10, B=11 ... Z=35
+        string numericIban = string.Concat(
+            rearranged.Select(c => char.IsLetter(c) ? (c - 'A' + 10).ToString() : c.ToString())
+        );
 
-    //     // Calculate remainder — a valid IBAN always gives 1
-    //     int remainder = 0;
-    //     foreach (char c in numericIban)
-    //     {
-    //         remainder = (remainder * 10 + (c - '0')) % 97;
-    //     }
+        // Calculate remainder — a valid IBAN always gives 1
+        int remainder = 0;
+        foreach (char c in numericIban)
+        {
+            remainder = (remainder * 10 + (c - '0')) % 97;
+        }
 
-    //     return remainder == 1;
-    // }
+        return remainder == 1;
+    }
 }
