@@ -44,6 +44,7 @@ public static class UiLib
                     Console.WriteLine($"║   {menu[index]} {new string(' ', longest - menu[index].Length)}  ║");
                 }
             }
+
             Console.WriteLine($"╚{new string('═', longest + 6)}╝");
 
             ConsoleKey key = Console.ReadKey().Key;
@@ -99,11 +100,13 @@ public static class UiLib
 
         return name;
     }
+
     public static void HoldUser(string message = "Press any key to continue...")
     {
         Console.WriteLine(message);
         Console.ReadKey();
     }
+
     public static string ShowInput(string input, string title)
     {
         if (string.IsNullOrEmpty(input))
@@ -119,7 +122,9 @@ public static class UiLib
             return input;
         }
     }
-    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form", int maxLength = 32)
+
+    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form",
+        int maxLength = 32)
     {
         int longest = Math.Max(
             Math.Max(GetLongestString(titles), maxLength),
@@ -134,23 +139,41 @@ public static class UiLib
             inputs[title] = "";
         }
 
+        return InputForm(inputs, formTitle, maxLength);
+    }
+
+    public static Dictionary<string, string> InputForm(Dictionary<string, string> fields,
+        string formTitle = "Input Form", int maxLength = 32, string? header = null)
+    {
+        int longest = Math.Max(
+            Math.Max(GetLongestString(fields.Keys.ToList()), maxLength),
+            formTitle.Length
+        );
+        int selected = 0;
+
+        Dictionary<string, string> inputs = fields;
+
         while (true)
         {
             Console.Clear();
+            WriteHeader(header);
             Console.WriteLine("╔═ " + formTitle + $" {new string('═', longest - formTitle.Length)}╗");
-            for (int i = 0; i < titles.Count; i++)
+            string currentField = fields.Keys.ToList()[selected];
+            foreach (KeyValuePair<string, string> title in fields)
             {
-                string title = titles[i];
-                Console.WriteLine($"╠═ {title} {new string('═', longest - title.Length)}╣");
-                if (i == selected)
+                Console.WriteLine($"╠═ {title.Key} {new string('═', longest - title.Key.Length)}╣");
+                if (title.Key == currentField)
                 {
-                    Console.WriteLine($"║>{ShowInput(inputs[title], title)} {new string(' ', longest - ShowInput(inputs[title], title).Length)}<║");
+                    Console.WriteLine(
+                        $"║>{ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)}<║");
                 }
                 else
                 {
-                    Console.WriteLine($"║ {ShowInput(inputs[title], title)} {new string(' ', longest - ShowInput(inputs[title], title).Length)} ║");
+                    Console.WriteLine(
+                        $"║ {ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)} ║");
                 }
             }
+
             Console.WriteLine($"╚{new string('═', longest + 3)}╝");
             ConsoleKeyInfo key = Console.ReadKey();
 
@@ -158,7 +181,7 @@ public static class UiLib
             {
                 break;
             }
-            else if (key.Key == ConsoleKey.DownArrow && selected < titles.Count - 1)
+            else if (key.Key == ConsoleKey.DownArrow && selected < fields.Count - 1)
             {
                 selected++;
             }
@@ -166,19 +189,20 @@ public static class UiLib
             {
                 selected--;
             }
-            else if (key.Key == ConsoleKey.Backspace && inputs[titles[selected]].Length > 0)
+            else if (key.Key == ConsoleKey.Backspace && inputs[currentField].Length > 0)
             {
-                inputs[titles[selected]] = inputs[titles[selected]][..^1];
+                inputs[currentField] = inputs[currentField][..^1];
             }
             else
             {
                 char character = key.KeyChar;
-                if (!char.IsControl(character) && inputs[titles[selected]].Length < maxLength)
+                if (!char.IsControl(character) && inputs[currentField].Length < maxLength)
                 {
-                    inputs[titles[selected]] += character;
+                    inputs[currentField] += character;
                 }
             }
         }
+
         return inputs;
     }
 }
