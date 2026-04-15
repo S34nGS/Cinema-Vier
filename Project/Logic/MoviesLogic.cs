@@ -14,4 +14,14 @@ public static class MoviesLogic
     {
         return _access.GetByTitle(GetMovieTitles()[MovieIndex]);
     }
+
+    static public List<string> GetByPartOfTitle(string pattern)
+    {
+        List<string> Titles = [];
+        foreach(MovieModel Movie in _access.GetByPartOfTitle(pattern))
+        {
+            Titles.Add(Movie.Title);
+        }
+        return Titles;
+    }
 }
