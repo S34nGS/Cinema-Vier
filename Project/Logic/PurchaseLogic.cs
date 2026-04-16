@@ -29,7 +29,7 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
-    static string CardHolderNameCheck(string fullname)
+    private static string CardHolderNameCheck(string fullname)
     {
         string invalidMessages = "";
         string spacesRemovedFromInput = fullname.Replace(" ", "");
@@ -44,7 +44,7 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
-    static string CreditCardNumberCheck(string cardNumber)
+    private static string CreditCardNumberCheck(string cardNumber)
     {
         string invalidMessages = "";
         cardNumber = cardNumber.Replace(" ", "");
@@ -57,7 +57,7 @@ public class PurchaseLogic
 
         return invalidMessages;
     }
-    static bool HasValidPrefix(string cardNumber)
+    private static bool HasValidPrefix(string cardNumber)
     {
         // Visa
         if (cardNumber.StartsWith("4")) return true;
@@ -75,7 +75,7 @@ public class PurchaseLogic
         return false;
     }
 
-    static bool LuhnCheck(string cardNumber)
+    private static bool LuhnCheck(string cardNumber)
     {
         int sum = 0;
         bool alternate = false;
@@ -96,7 +96,7 @@ public class PurchaseLogic
         return sum % 10 == 0;
     }
 
-    static string CreditCardExpirationDateCheck(string expirationDate)
+    private static string CreditCardExpirationDateCheck(string expirationDate)
     {
         string invalidMessages = "";
         int month = Convert.ToInt32(expirationDate.Split("/")[0]);
@@ -113,7 +113,7 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
-    static string CreditCardCVCCVVCheck(string number)
+    private static string CreditCardCVCCVVCheck(string number)
     {
         string invalidMessages = "";
 
@@ -124,7 +124,7 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
-    static string IBANNumberCheck(string iban)
+    private static string IBANNumberCheck(string iban)
     {
         string invalidMessages = "";
         iban = iban.Replace(" ", "").ToUpper();
@@ -142,7 +142,7 @@ public class PurchaseLogic
     // Validates an IBAN using the Mod-97 checksum algorithm.
     // Mod-97 check is a rule that every valid IBAN must follow.
     // Ensures the IBAN is correctly formatted
-    static bool Mod97Check(string iban)
+    private static bool Mod97Check(string iban)
     {
         // Move the first 4 characters to the end
         string rearranged = iban[4..] + iban[..4];

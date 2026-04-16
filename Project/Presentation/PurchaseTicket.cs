@@ -1,20 +1,20 @@
 static class PurchaseTicket
 {
-    static List<string> TimeMenu { get; } = new() {"9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"};
-    static List<string> DateMenu { get; } = [];
-    static List<string> PaymentMethods { get; } = new() {"Credit Card", "IBAN"};
-    static List<string> CreditCardInput = new()
-    {
+    public static List<string> TimeMenu { get; } = ["9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"];
+    public static List<string> DateMenu { get; } = [];
+    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    public static List<string> CreditCardInput =
+    [
         "Cardholder name",
         "Card number (13-19 digits, for example:4111 1111 1111 1111)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
-    };
-    static List<string> IBANInput = new()
-    {
+    ];
+    public static List<string> IBANInput =
+    [
         "Cardholder name",
         "IBAN number (for example: NL12 ABNA 1234 5678 90)",
-    };
+    ];
 
     public static PurchaseModel Start()
     {
@@ -74,7 +74,7 @@ static class PurchaseTicket
         return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
     }
 
-    static void SetUp_dateMenu()
+    private static void SetUp_dateMenu()
     {
         for (int i = 0; i < 14; i ++)
         {
@@ -82,7 +82,7 @@ static class PurchaseTicket
         }
     }
 
-    static List<string> CustomizeTimeMenu()
+    private static List<string> CustomizeTimeMenu()
     {
         List<string> newTimeMenu = [];
         TimeSpan now = DateTime.Now.TimeOfDay;
