@@ -35,11 +35,26 @@ public class PurchaseLogic
         string spacesRemovedFromInput = fullname.Replace(" ", "");
         string[] splitName = fullname.Split(' ');
 
-        if (!spacesRemovedFromInput.All(char.IsLetter)) invalidMessages += "Special characters are not allowed, ";
-        else if (!fullname.Contains(' '))invalidMessages += "Enter your full name, ";
-        else if (splitName[0].Length < 2 || splitName[splitName.Length - 1].Length < 2) invalidMessages += "First and last name must be at least 2 letters, ";
-        else if (splitName[0].Length > 30 || splitName[splitName.Length - 1].Length > 30)invalidMessages += "First and last name cannot exceed 30 letters, ";
-        else if (!char.IsUpper(splitName[0][0]) || !char.IsUpper(splitName[splitName.Length - 1][0])) invalidMessages += "Name must start with a capital letter, ";
+        if (!spacesRemovedFromInput.All(char.IsLetter))
+        {
+            invalidMessages += "Special characters are not allowed, ";
+        }
+        else if (!fullname.Contains(' '))
+        {
+            invalidMessages += "Enter your full name, ";
+        }
+        else if (splitName[0].Length < 2 || splitName[splitName.Length - 1].Length < 2)
+        {
+            invalidMessages += "First and last name must be at least 2 letters, ";
+        }
+        else if (splitName[0].Length > 30 || splitName[splitName.Length - 1].Length > 30)
+        {
+            invalidMessages += "First and last name cannot exceed 30 letters, ";
+        }
+        else if (!char.IsUpper(splitName[0][0]) || !char.IsUpper(splitName[splitName.Length - 1][0]))
+        {
+            invalidMessages += "Name must start with a capital letter, ";
+        }
 
         return invalidMessages;
     }
@@ -49,11 +64,23 @@ public class PurchaseLogic
         string invalidMessages = "";
         cardNumber = cardNumber.Replace(" ", "");
 
-        if (!cardNumber.All(char.IsDigit)) invalidMessages += "Card number must contain only digits, ";
-        else if (cardNumber.Length < 13 || cardNumber.Length > 19) invalidMessages += "Card number must be 13-19 digits, ";
-        else if (!HasValidPrefix(cardNumber)) invalidMessages += "Card number is not from a known provider, ";
+        if (!cardNumber.All(char.IsDigit))
+        {
+            invalidMessages += "Card number must contain only digits, ";
+        }
+        else if (cardNumber.Length < 13 || cardNumber.Length > 19)
+        {
+            invalidMessages += "Card number must be 13-19 digits, ";
+        }
+        else if (!HasValidPrefix(cardNumber))
+        {
+            invalidMessages += "Card number is not from a known provider, ";
+        }
         // Check if card number is mathematically valid: catch mistyped numbers and random fake numbers
-        else if (!LuhnCheck(cardNumber)) invalidMessages += "Card number is invalid, ";
+        else if (!LuhnCheck(cardNumber))
+        {
+            invalidMessages += "Card number is invalid, ";
+        }
 
         return invalidMessages;
     }
@@ -117,9 +144,18 @@ public class PurchaseLogic
     {
         string invalidMessages = "";
 
-        if (!number.All(char.IsDigit)) invalidMessages += "CVC/CVV must contain only digits, ";
-        else if (number.Length < 3 || number.Length > 4) invalidMessages += "CVC/CVV must be 3-4 digits, ";
-        else if (number.Distinct().Count() == 1) invalidMessages += "CVC/CVV is invalid, ";
+        if (!number.All(char.IsDigit))
+        {
+            invalidMessages += "CVC/CVV must contain only digits, ";
+        }
+        else if (number.Length < 3 || number.Length > 4)
+        {
+            invalidMessages += "CVC/CVV must be 3-4 digits, ";
+        }
+        else if (number.Distinct().Count() == 1)
+        {
+            invalidMessages += "CVC/CVV is invalid, ";
+        }
 
         return invalidMessages;
     }
@@ -133,8 +169,14 @@ public class PurchaseLogic
         {
             invalidMessages += "IBAN must start with a country code like NL, DE, BE, ";
         }
-        else if (iban.Length < 15 || iban.Length > 34) invalidMessages += "Invalid IBAN length, ";
-        else if (!Mod97Check(iban))invalidMessages += "IBAN is invalid, ";
+        else if (iban.Length < 15 || iban.Length > 34)
+        {
+            invalidMessages += "Invalid IBAN length, ";
+        }
+        else if (!Mod97Check(iban))
+        {
+            invalidMessages += "IBAN is invalid, ";
+        }
 
         return invalidMessages;
     }
