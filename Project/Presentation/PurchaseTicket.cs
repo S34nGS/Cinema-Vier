@@ -1,20 +1,20 @@
 static class PurchaseTicket
 {
-    static List<string> TimeMenu { get; } = new() {"9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"};
-    static List<string> DateMenu { get; } = [];
-    static List<string> PaymentMethods { get; } = new() {"Credit Card"};
-    static List<string> CreditCardInput = new()
-    {
+    public static List<string> TimeMenu { get; } = ["9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"];
+    public static List<string> DateMenu { get; } = [];
+    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    public static List<string> CreditCardInput =
+    [
         "Cardholder name",
         "Card number (13-19 digits, for example:4111 1111 1111 1111)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
-    };
-    // static List<string> IBANInput = new()
-    // {
-    //     "Cardholder name",
-    //     "IBAN number (for example: NL12 ABNA 1234 5678 90)",
-    // };
+    ];
+    public static List<string> IBANInput =
+    [
+        "Cardholder name",
+        "IBAN number (for example: NL12 ABNA 1234 5678 90)",
+    ];
 
     public static PurchaseModel Start()
     {
@@ -43,38 +43,38 @@ static class PurchaseTicket
             {
                 if(invalidInputs != "")
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}please try again");
+                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input:{invalidInputs}please try again");
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
                 }
                 else
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, "Please fill in the payment information");
+                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(CreditCardInput, "Please fill in the payment information");
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
                 }
             } while(invalidInputs != "");
         }
-        // else if(selectedPaymentMethod == "IBAN")
-        // {
-        //     do
-        //     {
-        //         if(invalidInputs != "")
-        //         {
-        //             var iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
-        //             invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-        //         }
-        //         else
-        //         {
-        //             var iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
-        //             invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-        //         }
-        //     } while(invalidInputs != "");
-        // }
+        else if(selectedPaymentMethod == "IBAN")
+        {
+            do
+            {
+                if(invalidInputs != "")
+                {
+                    Dictionary<string, string> iBANInfo = UiLib.InputForm(IBANInput, $"Invalid input:{invalidInputs}please try again");
+                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                }
+                else
+                {
+                    Dictionary<string, string> iBANInfo = UiLib.InputForm(IBANInput, "Please fill in the payment information");
+                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                }
+            } while(invalidInputs != "");
+        }
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
         return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
     }
 
-    static void SetUp_dateMenu()
+    private static void SetUp_dateMenu()
     {
         for (int i = 0; i < 14; i ++)
         {
@@ -82,7 +82,7 @@ static class PurchaseTicket
         }
     }
 
-    static List<string> CustomizeTimeMenu()
+    private static List<string> CustomizeTimeMenu()
     {
         List<string> newTimeMenu = [];
         TimeSpan now = DateTime.Now.TimeOfDay;
