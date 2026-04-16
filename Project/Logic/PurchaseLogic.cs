@@ -97,9 +97,7 @@ public class PurchaseLogic
         }
 
         // Amex
-        if (cardNumber.StartsWith("34") || cardNumber.StartsWith("37")) return true;
-
-        return false;
+        return (cardNumber.StartsWith("34") || cardNumber.StartsWith("37"));
     }
 
     private static bool LuhnCheck(string cardNumber)
