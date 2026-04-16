@@ -139,6 +139,9 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
+    // Validates an IBAN using the Mod-97 checksum algorithm.
+    // Mod-97 check is a rule that every valid IBAN must follow.
+    // Ensures the IBAN is correctly formatted
     static bool Mod97Check(string iban)
     {
         // Move the first 4 characters to the end
