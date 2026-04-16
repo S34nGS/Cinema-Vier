@@ -22,10 +22,30 @@ public static class UiLib
         }
     }
 
-    public static int SelectionMenu(List<string> menu, string? header = null)
+    public static void ContinueOrBackMenu(int continueOrBack)
+    {
+        Console.WriteLine($"╔{new string('═', 22)}╗");
+
+        for (int index = 0; index < 1; index++)
+        {
+            if (index == continueOrBack)
+            {
+                Console.WriteLine($"║ > Back <  Continue   ║");
+            }
+            else
+            {
+                Console.WriteLine($"║   Back  > Continue < ║");
+            }
+        }
+
+        Console.WriteLine($"╚{new string('═', 22)}╝");
+    }
+
+    public static int SelectionMenu(List<string> menu, string? header = null, bool mainMenu = false)
     {
         int longest = GetLongestString(menu);
         int selected = 0;
+        int continueOrBack = 1;
 
         while (true)
         {
@@ -47,11 +67,32 @@ public static class UiLib
 
             Console.WriteLine($"╚{new string('═', longest + 6)}╝");
 
+            if (!mainMenu)
+            {
+                ContinueOrBackMenu(continueOrBack);
+            }
+
             ConsoleKey key = Console.ReadKey().Key;
+
+            if (!mainMenu)
+            {
+                if (key == ConsoleKey.LeftArrow && continueOrBack > 0)
+                {
+                    continueOrBack--;
+                }
+                else if (key == ConsoleKey.RightArrow && continueOrBack < 1)
+                {
+                    continueOrBack++;
+                } 
+            }
 
             if (key == ConsoleKey.Enter)
             {
-                break;
+                if (continueOrBack == 1)
+                {
+                    break;
+                }
+                return -1;
             }
 
             if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < menu.Count - 1)
