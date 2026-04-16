@@ -41,7 +41,7 @@ public static class UiLib
         Console.WriteLine($"╚{new string('═', 22)}╝");
     }
 
-    public static int SelectionMenu(List<string> menu, string? header = null, bool mainMenu = false)
+    public static int SelectionMenu(List<string> menu, string? header = null, bool hasButtons = false)
     {
         int longest = GetLongestString(menu);
         int selected = 0;
@@ -67,14 +67,14 @@ public static class UiLib
 
             Console.WriteLine($"╚{new string('═', longest + 6)}╝");
 
-            if (!mainMenu)
+            if (!hasButtons)
             {
                 ContinueOrBackMenu(continueOrBack);
             }
 
             ConsoleKey key = Console.ReadKey().Key;
 
-            if (!mainMenu)
+            if (!hasButtons)
             {
                 if (key == ConsoleKey.LeftArrow && continueOrBack > 0)
                 {
@@ -108,23 +108,40 @@ public static class UiLib
         return selected;
     }
 
-    public static string Input(string prompt, string? header = null, int maxLength = 24)
+    public static string Input(string? header = null, int maxLength = 24)
     {
         string name = "";
+        int continueOrBack = 1;
 
         while (true)
         {
             Console.Clear();
             WriteHeader(header);
 
-            Console.WriteLine(prompt + name);
-            Console.WriteLine($"{Environment.NewLine}Enter = confirm, Backspace = delete");
+            int fieldWidth = 20;
+            string shown = name.Length > fieldWidth ? name[..fieldWidth] : name;
+
+            Console.WriteLine($"╔{new string('═', 22)}╗");
+            Console.WriteLine($"║ {shown.PadRight(fieldWidth)} ║");
+            Console.WriteLine($"╚{new string('═', 22)}╝");
+
+            ContinueOrBackMenu(continueOrBack);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-            if (keyInfo.Key == ConsoleKey.Enter && name.Length > 0)
+            if (keyInfo.Key == ConsoleKey.LeftArrow && continueOrBack > 0)
             {
-                break;
+                continueOrBack--;
+            }
+            else if (keyInfo.Key == ConsoleKey.RightArrow && continueOrBack < 1)
+            {
+                continueOrBack++;
+            } 
+
+            if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                if (continueOrBack == 0) return "-1";
+                if (name.Length > 0) return name;
             }
 
             if (keyInfo.Key == ConsoleKey.Backspace && name.Length > 0)
@@ -138,8 +155,6 @@ public static class UiLib
                 name += character;
             }
         }
-
-        return name;
     }
 
     public static void HoldUser(string message = "Press any key to continue...")
