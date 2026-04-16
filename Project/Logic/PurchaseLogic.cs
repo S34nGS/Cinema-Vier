@@ -10,22 +10,10 @@ public class PurchaseLogic
         string invalidMessages = "";
         foreach(KeyValuePair<string, string> info in creditCardInfo)
         {
-            if(info.Key == "Cardholder name")
-            {
-                invalidMessages += CardHolderNameCheck(info.Value);
-            }
-            else if(info.Key == "Card number (13-19 digits)")
-            {
-                invalidMessages += CreditCardNumberCheck(info.Value);
-            }
-            else if(info.Key == "Expiration date (MM/YY)")
-            {
-                invalidMessages += CreditCardExpirationDateCheck(info.Value);
-            }
-            else if(info.Key == "CVC/CVV code (3-4 digits)")
-            {
-                invalidMessages += CreditCardCVCCVVCheck(info.Value);
-            }
+            if(info.Key == "Cardholder name") invalidMessages += CardHolderNameCheck(info.Value);
+            else if(info.Key == "Card number (13-19 digits)") invalidMessages += CreditCardNumberCheck(info.Value);
+            else if(info.Key == "Expiration date (MM/YY)") invalidMessages += CreditCardExpirationDateCheck(info.Value);
+            else if(info.Key == "CVC/CVV code (3-4 digits)") invalidMessages += CreditCardCVCCVVCheck(info.Value);
         }
         return invalidMessages;
     }
@@ -35,14 +23,8 @@ public class PurchaseLogic
         string invalidMessages = "";
         foreach(KeyValuePair<string, string> info in iBANInfo)
         {
-            if(info.Key == "Cardholder name")
-            {
-                invalidMessages += CardHolderNameCheck(info.Value);
-            }
-            else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
-            {
-                invalidMessages += IBANNumberCheck(info.Value);
-            }
+            if(info.Key == "Cardholder name") invalidMessages += CardHolderNameCheck(info.Value);
+            else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)") invalidMessages += IBANNumberCheck(info.Value);
         }
         return invalidMessages;
     }
@@ -51,37 +33,14 @@ public class PurchaseLogic
     {
         string invalidMessages = "";
         string spacesRemovedFromInput = fullname.Replace(" ", "");
-
-        if (!spacesRemovedFromInput.All(char.IsLetter))
-        {
-            invalidMessages += "Special characters are not allowed, ";
-            return invalidMessages;
-        }
-
-        if (!fullname.Contains(' '))
-        {
-            invalidMessages += "Enter your full name, ";
-            return invalidMessages;
-        }
-
         string[] splitName = fullname.Split(' ');
-        if (splitName[0].Length < 2 || splitName[splitName.Length - 1].Length < 2)
-        {
-            invalidMessages += "First and last name must be at least 2 letters, ";
-            return invalidMessages;
-        }
 
-        if (splitName[0].Length > 30 || splitName[splitName.Length - 1].Length > 30)
-        {
-            invalidMessages += "First and last name cannot exceed 30 letters, ";
-            return invalidMessages;
-        }
+        if (!spacesRemovedFromInput.All(char.IsLetter)) invalidMessages += "Special characters are not allowed, ";
+        else if (!fullname.Contains(' '))invalidMessages += "Enter your full name, ";
+        else if (splitName[0].Length < 2 || splitName[splitName.Length - 1].Length < 2) invalidMessages += "First and last name must be at least 2 letters, ";
+        else if (splitName[0].Length > 30 || splitName[splitName.Length - 1].Length > 30)invalidMessages += "First and last name cannot exceed 30 letters, ";
+        else if (!char.IsUpper(splitName[0][0]) || !char.IsUpper(splitName[splitName.Length - 1][0])) invalidMessages += "Name must start with a capital letter, ";
 
-        if (!char.IsUpper(splitName[0][0]) || !char.IsUpper(splitName[splitName.Length - 1][0]))
-        {
-            invalidMessages += "Name must start with a capital letter, ";
-            return invalidMessages;
-        }
         return invalidMessages;
     }
 
@@ -90,30 +49,12 @@ public class PurchaseLogic
         string invalidMessages = "";
         cardNumber = cardNumber.Replace(" ", "");
 
-        if (!cardNumber.All(char.IsDigit))
-        {
-            invalidMessages += "Card number must contain only digits, ";
-            return invalidMessages;
-        }
-
-        if (cardNumber.Length < 13 || cardNumber.Length > 19)
-        {
-            invalidMessages += "Card number must be 13-19 digits, ";
-            return invalidMessages;
-        }
-
-        if (!HasValidPrefix(cardNumber))
-        {
-            invalidMessages += "Card number is not from a known provider, ";
-            return invalidMessages;
-        }
-
+        if (!cardNumber.All(char.IsDigit)) invalidMessages += "Card number must contain only digits, ";
+        else if (cardNumber.Length < 13 || cardNumber.Length > 19) invalidMessages += "Card number must be 13-19 digits, ";
+        else if (!HasValidPrefix(cardNumber)) invalidMessages += "Card number is not from a known provider, ";
         // Check if card number is mathematically valid: catch mistyped numbers and random fake numbers
-        if (!LuhnCheck(cardNumber))
-        {
-            invalidMessages += "Card number is invalid, ";
-            return invalidMessages;
-        }
+        else if (!LuhnCheck(cardNumber)) invalidMessages += "Card number is invalid, ";
+
         return invalidMessages;
     }
     static bool HasValidPrefix(string cardNumber)
@@ -158,28 +99,17 @@ public class PurchaseLogic
     static string CreditCardExpirationDateCheck(string expirationDate)
     {
         string invalidMessages = "";
+        int month = Convert.ToInt32(expirationDate.Split("/")[0]);
+        int year = Convert.ToInt32(expirationDate.Split("/")[1]) + 2000;
+        DateTime expiryDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
 
         if (expirationDate.Length != 5 || expirationDate.Count(c => c == '/') != 1 || !expirationDate.Replace("/", "").All(char.IsDigit))
         {
             invalidMessages += "Invalid expiration date format, ";
-            return invalidMessages;
         }
+        else if (month < 1 || month > 12) invalidMessages += "Month must be 01-12, ";
+        else if (expiryDate < DateTime.Today) invalidMessages += "Card is expired, ";
 
-        int month = Convert.ToInt32(expirationDate.Split("/")[0]);
-        int year = Convert.ToInt32(expirationDate.Split("/")[1]) + 2000;
-
-        if (month < 1 || month > 12)
-        {
-            invalidMessages += "Month must be 01-12, ";
-            return invalidMessages;
-        }
-
-        DateTime expiryDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-        if (expiryDate < DateTime.Today)
-        {
-            invalidMessages += "Card is expired, ";
-            return invalidMessages;
-        }
         return invalidMessages;
     }
 
@@ -187,23 +117,10 @@ public class PurchaseLogic
     {
         string invalidMessages = "";
 
-        if (!number.All(char.IsDigit))
-        {
-            invalidMessages += "CVC/CVV must contain only digits, ";
-            return invalidMessages;
-        }
+        if (!number.All(char.IsDigit)) invalidMessages += "CVC/CVV must contain only digits, ";
+        else if (number.Length < 3 || number.Length > 4) invalidMessages += "CVC/CVV must be 3-4 digits, ";
+        else if (number.Distinct().Count() == 1) invalidMessages += "CVC/CVV is invalid, ";
 
-        if (number.Length < 3 || number.Length > 4)
-        {
-            invalidMessages += "CVC/CVV must be 3-4 digits, ";
-            return invalidMessages;
-        }
-
-        if (number.Distinct().Count() == 1)
-        {
-            invalidMessages += "CVC/CVV is invalid, ";
-            return invalidMessages;
-        }
         return invalidMessages;
     }
 
@@ -215,20 +132,9 @@ public class PurchaseLogic
         if (iban.Length < 4 || !char.IsLetter(iban[0]) || !char.IsLetter(iban[1]) || !char.IsDigit(iban[2]) || !char.IsDigit(iban[3]))
         {
             invalidMessages += "IBAN must start with a country code like NL, DE, BE, ";
-            return invalidMessages;
         }
-
-        if (iban.Length < 15 || iban.Length > 34)
-        {
-            invalidMessages += "Invalid IBAN length, ";
-            return invalidMessages;
-        }
-
-        if (!Mod97Check(iban))
-        {
-            invalidMessages += "IBAN is invalid, ";
-            return invalidMessages;
-        }
+        else if (iban.Length < 15 || iban.Length > 34) invalidMessages += "Invalid IBAN length, ";
+        else if (!Mod97Check(iban))invalidMessages += "IBAN is invalid, ";
 
         return invalidMessages;
     }
