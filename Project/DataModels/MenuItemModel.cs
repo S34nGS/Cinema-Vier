@@ -7,7 +7,7 @@ public class MenuItemModel
 
     public MenuItemModel()
     {
-        Naam = "";
+        Name = "";
         Category = "";
     }
 
