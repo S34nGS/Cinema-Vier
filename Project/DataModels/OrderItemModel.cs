@@ -1,12 +1,12 @@
-public class OrederItemModel
+public class OrderItemModel
 {
     public Int64 MenuItemId { get; set; }
     public string Name { get; set; }
-    public double PricePerItem { get; set; }
+    public decimal PricePerItem { get; set; }
     public Int64 Quantity { get; set; }
-    public double SubTotal { get; set; }
+    public decimal SubTotal { get; set; }
 
-    public OrederItemModel()
+    public OrderItemModel()
     {
         Name = "";
     }

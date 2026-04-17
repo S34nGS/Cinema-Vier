@@ -4,13 +4,13 @@ public class MenuItemsAccess
     {
         List<MenuItemModel> items = new List<MenuItemModel>();
 
-        items.Add(new MenuItemModel { Id = 1, Name = "Popcorn", Category = "Snack", Price = 2.00 });
-        items.Add(new MenuItemModel { Id = 2, Name = "Nachos", Category = "Snack", Price = 3.50 });
-        items.Add(new MenuItemModel { Id = 3, Name = "Chips", Category = "Snack", Price = 1.50 });
+        items.Add(new MenuItemModel { Id = 1, Name = "Popcorn", Category = "Snack", Price = 2.00m });
+        items.Add(new MenuItemModel { Id = 2, Name = "Nachos", Category = "Snack", Price = 3.50m });
+        items.Add(new MenuItemModel { Id = 3, Name = "Chips", Category = "Snack", Price = 1.50m });
 
-        items.Add(new MenuItemModel { Id = 4, Name = "Water", Category = "Drink", Price = 1.00 });
-        items.Add(new MenuItemModel { Id = 5, Name = "Cola", Category = "Drink", Price = 2.00 });
-        items.Add(new MenuItemModel { Id = 6, Name = "Juice", Category = "Drink", Price = 2.50 });
+        items.Add(new MenuItemModel { Id = 4, Name = "Water", Category = "Drink", Price = 1.00m });
+        items.Add(new MenuItemModel { Id = 5, Name = "Cola", Category = "Drink", Price = 2.00m });
+        items.Add(new MenuItemModel { Id = 6, Name = "Juice", Category = "Drink", Price = 2.50m });
 
         return items;
     }
