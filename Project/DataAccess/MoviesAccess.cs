@@ -1,17 +1,10 @@
-using Microsoft.Data.Sqlite;
-
 using Dapper;
 
 public class MoviesAccess : DefaultAccess
 {
     protected override string Table { get; } = "Movies";
 
-    public MoviesAccess()
-    {
-        // CreateTable();
-    }
-
-    protected override void CreateTable()
+    public override void CreateTable()
     {
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
             (id INTEGER PRIMARY KEY AUTOINCREMENT,
