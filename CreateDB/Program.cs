@@ -2,6 +2,8 @@
     public static void Main() {
         CreateMoviesTable();
         CreateAccountsTable();
+        CreateRoomsTable();
+        CreateSeatsTable();
     }
 
     public static void CreateMoviesTable()
@@ -50,6 +52,20 @@
         foreach (RoomModel room in roomsList)
         {
             rooms.Write(room);
+        }
+    }
+
+    public static void CreateSeatsTable()
+    {
+        SeatsAccess seats = new();
+        seats.CreateTable();
+
+        List<SeatModel> seatsList = [
+        ];
+
+        foreach (SeatModel seat in seatsList)
+        {
+            seats.Write(seat);
         }
     }
 }
