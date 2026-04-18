@@ -22,7 +22,7 @@ static class Menu
         {
             MovieModel movie = MoviesLogic.Start();
             if (movie is null) Start();
-            PurchaseModel purchaseTicket = PurchaseTicket.Start();
+            TicketModel purchaseTicket = PurchaseTicket.Start();
         }
         else if (selected == menu.IndexOf("Exit"))
         {
