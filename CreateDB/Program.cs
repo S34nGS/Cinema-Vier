@@ -37,4 +37,19 @@
             accounts.Write(account);
         }
     }
+
+    public static void CreateRoomsTable()
+    {
+        List<RoomModel> roomsList = [
+            new RoomModel(1, "Lazer Ultra", "Dolby Atmos"),
+        ];
+
+        RoomAccess rooms = new();
+        rooms.CreateTable();
+
+        foreach (RoomModel room in roomsList)
+        {
+            rooms.Write(room);
+        }
+    }
 }
