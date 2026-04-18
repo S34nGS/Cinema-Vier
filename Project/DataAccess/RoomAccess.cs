@@ -1,0 +1,49 @@
+using Dapper;
+
+public class RoomAccess : DefaultAccess
+{
+    protected override string Table { get; } = "Room";
+
+    public override void CreateTable()
+    {
+        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
+            (id INTEGER PRIMARY KEY AUTOINCREMENT,
+            screenType TEXT NOT NULL,
+            soundType REAL NOT NULL)";
+        connection.Execute(sql);
+    }
+
+    public void Write(RoomModel room)
+    {
+        string sql = $@"INSERT INTO {Table} 
+            (screenType, soundType) 
+            VALUES (@ScreenType, @SoundType)";
+        connection.Execute(sql, room);
+    }
+
+    public List<RoomModel> GetAllRooms()
+    {
+        string sql = $"SELECT * FROM {Table}";
+        return connection.Query<RoomModel>(sql).AsList();
+    }
+
+    public RoomModel GetByScreenType(string screenType)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE screenType = @ScreenType";
+        return connection.QueryFirstOrDefault<RoomModel>(sql, new { ScreenType = screenType });
+    }
+
+    public void Update(RoomModel room)
+    {
+        string sql = $@"UPDATE {Table} 
+            SET screenType = @ScreenType, soundType = @SoundType
+            WHERE id = @Id";
+        connection.Execute(sql, room);
+    }
+
+    public void Delete(RoomModel room)
+    {
+        string sql = $"DELETE FROM {Table} WHERE id = @Id";
+        connection.Execute(sql, new { Id = room.Id });
+    }
+}
