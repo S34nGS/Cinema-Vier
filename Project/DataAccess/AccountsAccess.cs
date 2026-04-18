@@ -1,12 +1,11 @@
-using Microsoft.Data.Sqlite;
-
 using Dapper;
 
 
 public class AccountsAccess : DefaultAccess
 {
     protected override string Table { get; } = "Accounts";
-    protected override void CreateTable()
+
+    public override void CreateTable()
     {
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
             (id INTEGER AUTOINCREMENT, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, fullname TEXT NOT NULL)";
@@ -27,7 +26,8 @@ public class AccountsAccess : DefaultAccess
 
     public void Update(AccountModel account)
     {
-        string sql = $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName WHERE id = @Id";
+        string sql =
+            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName WHERE id = @Id";
         connection.Execute(sql, account);
     }
 
