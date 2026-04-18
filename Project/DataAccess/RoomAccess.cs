@@ -9,7 +9,7 @@ public class RoomAccess : DefaultAccess
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
             (id INTEGER PRIMARY KEY AUTOINCREMENT,
             screenType TEXT NOT NULL,
-            soundType REAL NOT NULL)";
+            soundType TEXT NOT NULL)";
         connection.Execute(sql);
     }
 
