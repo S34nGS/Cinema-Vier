@@ -3,6 +3,7 @@
         CreateMoviesTable();
         CreateAccountsTable();
         CreateRoomsTable();
+        CreateTimetablesTable();
     }
 
     public static void CreateMoviesTable()
@@ -53,6 +54,23 @@
         foreach (RoomModel room in roomsList)
         {
             rooms.Write(room);
+        }
+    }
+
+    public static void CreateTimetablesTable()
+    {
+        TimetablesAccess timetables = new();
+        timetables.CreateTable();
+
+        List<TimetableModel> timetablesList = [
+            new TimetableModel(1, 1, 1, 10),
+            new TimetableModel(2, 2, 2, 20),
+            new TimetableModel(3, 3, 3, 30),
+        ];
+
+        foreach (TimetableModel timetable in timetablesList)
+        {
+            timetables.Write(timetable);
         }
     }
 }
