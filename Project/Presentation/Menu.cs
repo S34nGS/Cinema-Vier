@@ -7,7 +7,7 @@ static class Menu
     static string header = "Welcome to Cinema Vier! Please select an option:";
     static public void Start()
     {
-        List<string> menu = ["View Movies", "Login", "Register", "Rules and Conditions", "Exit"];
+        List<string> menu = ["View Movies", "Login", "Register", "Cinema Info", "Exit"];
         int selected = UiLib.SelectionMenu(menu, header);
 
         if (selected == menu.IndexOf("Login"))
@@ -23,9 +23,9 @@ static class Menu
             MoviesMenu.Start();
             PurchaseModel purchaseTicket = PurchaseTicket.Start();
         }
-        else if (selected == menu.IndexOf("Rules and Conditions"))
+        else if (selected == menu.IndexOf("Cinema Info"))
         {
-            RulesAndConditions.Start();
+            CinemaInfo.Start();
         }
         else if (selected == menu.IndexOf("Exit"))
         {
