@@ -1,23 +1,25 @@
 static class UserRegistration
 {
-    static private AccountsLogic accountsLogic = new AccountsLogic();
-
+    private static AccountsLogic accountsLogic = new AccountsLogic();
 
     public static void Start()
     {
         List<string> fields = ["Full Name", "Email", "Password"];
         Dictionary<string, string> inputs = UiLib.InputForm(fields, "Please enter your registration information");
-        AccountModel acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password"], inputs["Full Name"]);
-        if (acc != null)
+        AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password"], inputs["Full Name"]);
+        string errorMessage;
+        while(acc == null)
         {
-            Console.WriteLine("Welcome back " + acc.FullName);
-            Console.WriteLine("Your email number is " + acc.EmailAddress);
+            errorMessage = "Account couldn't be created";
 
-            Menu.Start();
+            inputs = UiLib.InputForm(inputs, "Please enter your registration information", header: errorMessage);
+            acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password"], inputs["Full Name"]);
+
         }
-        else
-        {
-            Console.WriteLine("Account couldn't be created");
-        }
+
+        Console.WriteLine("Account created successfully");
+        UiLib.HoldUser();
+        
+        Menu.Start();
     }
 }
