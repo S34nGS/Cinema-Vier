@@ -34,6 +34,41 @@ static class PurchaseTicket
         }
 
         DateTime selectedDateTime = DateTime.ParseExact($"{selectedDate} {selectedTime}", "dd-MM-yyyy H:mm", null);
+
+        // added fixed ticket price for now
+        decimal ticketTotal = 12.00m;
+
+        // added list to store selected food and drink items
+        List<OrderItemModel> orderedMenuItems = new List<OrderItemModel>();
+
+        // added ask user if they want to add snacks or drinks
+        List<string> orderMenuChoices = new()
+        {
+            "Continue without food and drinks",
+            "Add food and drinks"
+        };
+
+        // added menu selection before payment
+        int selectedOrderChoice = UiLib.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
+
+        // added if user chooses menu items, open food and drink menu
+        if (selectedOrderChoice == 1)
+        {
+            orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
+        }
+
+        // added create menu logic to calculate totals
+        MenuLogic menuLogic = new MenuLogic();
+
+        // added calculate food and drink total
+        decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
+
+        // added calculate final total
+        decimal finalTotal = ticketTotal + menuTotal;
+
+        // added show booking summary before payment
+        ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
+
         string selectedPaymentMethod = PaymentMethods[UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?")];
         string invalidInputs = "";
 
@@ -71,7 +106,15 @@ static class PurchaseTicket
         }
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
-        return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
+        return new PurchaseModel(
+            null,
+            selectedDateTime,
+            selectedPaymentMethod,
+            orderedMenuItems,
+            ticketTotal,
+            menuTotal,
+            finalTotal
+        );
     }
 
     private static void SetUp_dateMenu()
@@ -97,5 +140,46 @@ static class PurchaseTicket
             }
         }
         return newTimeMenu;
+    }
+
+    // added method to show full booking summary before payment
+    static void ShowBookingSummary(
+        decimal ticketTotal,
+        List<OrderItemModel> orderedMenuItems,
+        decimal menuTotal,
+        decimal finalTotal)
+    {
+        Console.Clear();
+        Console.WriteLine("Booking Summary");
+        Console.WriteLine();
+
+        Console.WriteLine($"Ticket total: €{ticketTotal:0.00}");
+        Console.WriteLine();
+
+        if (orderedMenuItems.Count > 0)
+        {
+            Console.WriteLine("Food and drink items:");
+            Console.WriteLine();
+
+            foreach (OrderItemModel item in orderedMenuItems)
+            {
+                Console.WriteLine($"Item name: {item.Name}");
+                Console.WriteLine($"Quantity: {item.Quantity}");
+                Console.WriteLine($"Price per item: €{item.PricePerItem:0.00}");
+                Console.WriteLine($"Subtotal: €{item.SubTotal:0.00}");
+                Console.WriteLine();
+            }
+        }
+        else
+        {
+            Console.WriteLine("No food or drinks selected.");
+            Console.WriteLine();
+        }
+
+        Console.WriteLine($"Food and drink total: €{menuTotal:0.00}");
+        Console.WriteLine($"Final total: €{finalTotal:0.00}");
+        Console.WriteLine();
+
+        UiLib.HoldUser();
     }
 }
