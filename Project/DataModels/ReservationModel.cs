@@ -5,6 +5,9 @@ public class ReservationModel
     public string ReservationDate { get; set; }
     public double TotalPrice { get; set; }
     public int TimeTableId { get; set; }
+    public ReservationModel()
+    {
+    }
     public ReservationModel(Int64 id, int userId, string reservationDate, double totalPrice, int timeTableId)
     {
         Id = id;
