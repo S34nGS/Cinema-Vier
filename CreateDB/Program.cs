@@ -2,6 +2,7 @@
     public static void Main() {
         CreateMoviesTable();
         CreateAccountsTable();
+        CreateRoomsTable();
     }
 
     public static void CreateMoviesTable()
@@ -35,6 +36,23 @@
         {
             account.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(account.Password));
             accounts.Write(account);
+        }
+    }
+
+    public static void CreateRoomsTable()
+    {
+        RoomsAccess rooms = new();
+        rooms.CreateTable();
+
+        List<RoomModel> roomsList = [
+            new RoomModel(1, "Standard", "7.1 Surround Sound"),
+            new RoomModel(2, "IMAX", "IMAX Sound System"),
+            new RoomModel(3, "Dolby Cinema", "Dolby Atmos"),
+        ];
+
+        foreach (RoomModel room in roomsList)
+        {
+            rooms.Write(room);
         }
     }
 }
