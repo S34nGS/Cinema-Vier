@@ -10,7 +10,10 @@ public class TimetablesAccess : DefaultAccess
             (id INTEGER PRIMARY KEY AUTOINCREMENT,
             movieId INTEGER NOT NULL,
             roomId INTEGER NOT NULL,
-            startTime INTEGER NOT NULL)";
+            startTime INTEGER NOT NULL,
+            FOREIGN KEY (movieId) REFERENCES Movies(id),
+            FOREIGN KEY (roomId) REFERENCES Rooms(id)
+            )";
         connection.Execute(sql);
     }
 

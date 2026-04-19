@@ -3,9 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class TimetableModel
 {
     public Int64 Id {get; set;}
-    [ForeignKey("Movies")]
     public Int64 MovieId {get; set;}
-    [ForeignKey("Rooms")]
     public Int64 RoomId {get; set;}
     public Int64 StartTime {get; set;}
 
