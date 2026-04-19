@@ -8,8 +8,8 @@ public class RoomsAccess : DefaultAccess
     {
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table}
         (id INTEGER PRIMARY KEY AUTOINCREMENT,
-        screenType TEXT UNIQUE NOT NULL,
-        soundTYPE TEXT UNIQUE NOT NULL)";
+        screenType TEXT NOT NULL,
+        soundTYPE TEXT NOT NULL)";
         connection.Execute(sql);
     }
 
