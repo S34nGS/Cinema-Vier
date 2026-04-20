@@ -1,6 +1,5 @@
 static class PurchaseTicket
 {
-    // public static List<string> TimeMenu { get; } = ["9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"];
     public static List<string> DateMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
     public static List<string> CreditCardInput =
@@ -18,6 +17,7 @@ static class PurchaseTicket
 
     public static PurchaseModel? Start(MovieModel movie)
     {
+        DateMenu.Clear();
         SetUp_dateMenu(movie);
         if (DateMenu.Count == 0)
         {
