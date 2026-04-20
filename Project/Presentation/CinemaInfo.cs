@@ -1,4 +1,4 @@
-static class CinemaInfo
+public static class CinemaInfo
 {
     public static void Start()
     {
@@ -6,17 +6,9 @@ static class CinemaInfo
         {
             Console.Clear();
 
-            List<string> menu = new()
-            {
-                "About Us",
-                "Cinema Experience",
-                "Events",
-                "Prices",
-                "Policies",
-                "Back"
-            };
+            List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies"];
 
-            int selected = UiLib.SelectionMenu(menu, "About Rotterdam Pathe Cinema");
+            int selected = UiLib.SelectionMenu(menu, "About Rotterdam Pathé Cinema");
 
             if (selected == menu.IndexOf("About Us"))
             {
@@ -38,8 +30,9 @@ static class CinemaInfo
             {
                 ShowPolicies();
             }
-            else if (selected == menu.IndexOf("Back"))
+            else
             {
+                // Back handled by UiLib
                 Menu.Start();
                 return;
             }
@@ -51,10 +44,10 @@ static class CinemaInfo
         Console.Clear();
         Console.WriteLine("=== About Us ===");
         Console.WriteLine();
-        Console.WriteLine("Rotterdam Pathe Cinema is a modern cinema located in Rotterdam.");
-        Console.WriteLine("We offer a wide range of movies and a comfortable cinema experience.");
+        Console.WriteLine("Rotterdam Pathé Cinema is a modern cinema located in Rotterdam.");
+        Console.WriteLine("We offer a comfortable and simple movie experience.");
         Console.WriteLine("Users can browse movies, make reservations and enjoy their visit.");
-        Return();
+        UiLib.HoldUser();
     }
 
     static void ShowCinemaExperience()
@@ -65,7 +58,7 @@ static class CinemaInfo
         Console.WriteLine("Our cinema offers a comfortable viewing experience with modern screens and sound.");
         Console.WriteLine("Before the movie, visitors can stay in the waiting lounge.");
         Console.WriteLine("In the lounge, customers can buy popcorn and a variety of hot and cold drinks.");
-        Return();
+        UiLib.HoldUser();
     }
 
     static void ShowEvents()
@@ -75,7 +68,7 @@ static class CinemaInfo
         Console.WriteLine();
         Console.WriteLine("At the moment, we focus on providing a simple movie experience.");
         Console.WriteLine("In the future, special events or themed movie nights may be added.");
-        Return();
+        UiLib.HoldUser();
     }
 
     static void ShowPrices()
@@ -85,7 +78,7 @@ static class CinemaInfo
         Console.WriteLine();
         Console.WriteLine("Ticket prices may vary depending on the movie and time.");
         Console.WriteLine("Food and drinks such as popcorn and beverages are sold separately.");
-        Return();
+        UiLib.HoldUser();
     }
 
     static void ShowPolicies()
@@ -96,13 +89,6 @@ static class CinemaInfo
         Console.WriteLine("Users must provide correct information when making a reservation.");
         Console.WriteLine("Payment must be completed before a reservation is confirmed.");
         Console.WriteLine("Customers should follow general cinema rules during their visit.");
-        Return();
-    }
-
-    static void Return()
-    {
-        Console.WriteLine();
-        Console.WriteLine("Press any key to return...");
-        Console.ReadKey();
+        UiLib.HoldUser();
     }
 }
