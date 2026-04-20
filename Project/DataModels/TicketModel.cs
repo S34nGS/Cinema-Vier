@@ -7,14 +7,11 @@ public class TicketModel
     public string PaymentMethod { get; private set; }
     // public int TimetableId { get; private set; }
     // public int SeatId { get; private set;}
-    // [ForeignKey("Movie")]
-    // public int MovieId { get; set; }
 
     public TicketModel (Int64? userId, DateTime selectedDateTime, string paymentMethod)
     {
         UserId = userId;
         SelectedDateTime = selectedDateTime;
         PaymentMethod = paymentMethod;
-        // MovieId = movieId;
     }
 }
