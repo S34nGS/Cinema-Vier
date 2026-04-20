@@ -4,7 +4,7 @@ static class UserRegistration
 
     public static void Start()
     {
-        List<string> fields = ["First Name", "Last Name", "Email", "Password"];
+        List<string> fields = ["First Name", "Last Name", "Email", "Password (8-32 characters)"];
         Dictionary<string, string> inputs = UiLib.InputForm(fields, "Please enter your registration information");
         AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"]);
         string errorMessage;
