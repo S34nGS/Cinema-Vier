@@ -41,7 +41,7 @@ public static class UiLib
         Console.WriteLine($"╚{new string('═', 22)}╝");
     }
 
-    public static int SelectionMenu(List<string> menu, string? header = null, bool hasButtons = false)
+    public static int SelectionMenu(List<string> menu, string? header = null, bool hasNoButtons = false)
     {
         int longest = GetLongestString(menu);
         int selected = 0;
@@ -67,14 +67,14 @@ public static class UiLib
 
             Console.WriteLine($"╚{new string('═', longest + 6)}╝");
 
-            if (!hasButtons)
+            if (!hasNoButtons)
             {
                 ContinueOrBackMenu(continueOrBack);
             }
 
             ConsoleKey key = Console.ReadKey().Key;
 
-            if (!hasButtons)
+            if (!hasNoButtons)
             {
                 if (key == ConsoleKey.LeftArrow && continueOrBack > 0)
                 {
