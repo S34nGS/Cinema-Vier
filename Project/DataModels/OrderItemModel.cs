@@ -6,17 +6,12 @@ public class OrderItemModel
     public Int64 Quantity { get; set; }
     public decimal SubTotal { get; set; }
 
-    public OrderItemModel()
+    public OrderItemModel(Int64 menuItemId, string name, decimal pricePerItem, Int64 quantity)
     {
-        Name = "";
-    }
-    public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
-    {
-        decimal total = 0;
-        foreach (OrderItemModel item in orderItems)
-        {
-            total = total + item.SubTotal;
-        }
-        return total;
+        MenuItemId = menuItemId;
+        Name = name;
+        PricePerItem = pricePerItem;
+        Quantity = quantity;
+        SubTotal = pricePerItem * quantity;
     }
 }
