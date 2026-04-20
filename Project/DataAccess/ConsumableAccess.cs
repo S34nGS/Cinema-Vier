@@ -1,6 +1,6 @@
 using Dapper;
 
-public class ConsumeableAccess : DefaultAccess
+public class ConsumableAccess : DefaultAccess
 {
 	protected override string Table { get; } = "Consumable";
 
