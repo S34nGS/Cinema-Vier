@@ -71,7 +71,7 @@ static class PurchaseTicket
         }
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
-        return new TicketModel(null, selectedDateTime, selectedPaymentMethod);
+        return new TicketModel(null, null, selectedDateTime, selectedPaymentMethod);
     }
 
     private static void SetUp_dateMenu()
