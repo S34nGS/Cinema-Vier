@@ -1,3 +1,4 @@
+using System.Formats.Asn1;
 using System.Text.RegularExpressions;
 
 public class AccountsLogic
@@ -19,11 +20,16 @@ public class AccountsLogic
         return match.Success;
     }
 
-    public AccountModel? CreateAccount(string email, string password, string fullName)
+    public bool IsValidDateOfBirth(DateTime dateOfBirth)
     {
-        if (IsValidEmail(email))
+        return default;
+    }
+
+    public AccountModel? CreateAccount(string email, string password, string fullName, DateTime dateOfBirth)
+    {
+        if (IsValidEmail(email) && IsValidDateOfBirth(dateOfBirth))
         {
-            AccountModel account = new AccountModel(0, email, HashPassword(password), fullName);
+            AccountModel account = new AccountModel(0, email, HashPassword(password), fullName, dateOfBirth);
 
             _access.Write(account);
 
