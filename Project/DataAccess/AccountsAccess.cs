@@ -13,7 +13,7 @@ public class AccountsAccess : DefaultAccess
                 email TEXT UNIQUE NOT NULL, 
                 password TEXT NOT NULL, 
                 fullname TEXT NOT NULL,
-                dateOfBirth INTEGER NOT NULL
+                dateOfBirth TEXT NOT NULL
             )";
         connection.Execute(sql);
     }
