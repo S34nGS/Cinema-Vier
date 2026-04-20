@@ -11,7 +11,8 @@ public class SeatAccess : DefaultAccess
 			roomId INTEGER NOT NULL,
 			row INTEGER NOT NULL,
 			seatNumber INTEGER NOT NULL,
-			seatPriority INTEGER NOT NULL
+			seatPriority INTEGER NOT NULL,
+            FOREIGN KEY (roomId) REFERENCES Rooms(id)
 		);";
 		connection.Execute(sql);
 	}
