@@ -19,6 +19,7 @@ public class TicketAccess : DefaultAccess
             FOREIGN KEY (movieId) REFERENCES Movie(id)
         );";
         connection.Execute(sql);
+    }
 
     public void Write(TicketModel ticket)
     {
