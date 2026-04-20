@@ -2,19 +2,20 @@ using Dapper;
 
 public class MoviesAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Movies";
+    protected override string Table { get; } = "Movie";
 
     public override void CreateTable()
     {
-        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
-            (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT UNIQUE NOT NULL,
             duration INTEGER NOT NULL,
             summary TEXT NOT NULL,
             director TEXT NOT NULL,
             ageRating INTEGER NOT NULL,
             genre TEXT NOT NULL,
-            releaseDate INTEGER NOT NULL)";
+            releaseDate INTEGER NOT NULL
+        );";
         connection.Execute(sql);
     }
 
@@ -41,7 +42,7 @@ public class MoviesAccess : DefaultAccess
     public List<MovieModel> GetByPartOfTitle(string pattern)
     {
         string sql = $"SELECT * FROM {Table} WHERE title LIKE @Pattern";
-        return connection.Query<MovieModel>(sql, new { Pattern = $"%{pattern}%" }).AsList(); 
+        return connection.Query<MovieModel>(sql, new { Pattern = $"%{pattern}%" }).AsList();
     }
 
     public void Update(MovieModel movie)
