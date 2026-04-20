@@ -8,7 +8,7 @@ static class Menu
     static public void Start()
     {
         List<string> menu = ["View Movies", "Login", "Register", "Exit"];
-        int selected = UiLib.SelectionMenu(menu, header);
+        int selected = UiLib.SelectionMenu(menu, header, true);
 
         if (selected == menu.IndexOf("Login"))
         {
@@ -20,7 +20,8 @@ static class Menu
         }
         else if (selected == menu.IndexOf("View Movies"))
         {
-            MoviesMenu.Start();
+            MovieModel movie = MoviesLogic.Start();
+            if (movie is null) Start();
             PurchaseModel purchaseTicket = PurchaseTicket.Start();
         }
         else if (selected == menu.IndexOf("Exit"))
