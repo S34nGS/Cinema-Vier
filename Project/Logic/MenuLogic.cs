@@ -115,4 +115,14 @@ public class MenuLogic
 
         return total;
     }
+    
+    public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
+    {
+        decimal total = 0;
+        foreach (OrderItemModel item in orderItems)
+        {
+            total = total + item.SubTotal;
+        }
+        return total;
+    }
 }
