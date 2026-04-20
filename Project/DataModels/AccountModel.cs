@@ -9,13 +9,13 @@
     public string FullName { get; set; }
     public DateTime DateOfBirth { get; set; }
 
-    public AccountModel(Int64 id, string email, string password, string fullname, DateTime age)
+    public AccountModel(Int64 id, string email, string password, string fullname, DateTime dateOfBirth)
     {
         Id = id;
         EmailAddress = email;
         Password = password;
         FullName = fullname;
-        Age = age;
+        DateOfBirth = dateOfBirth;
     }
 }
 
