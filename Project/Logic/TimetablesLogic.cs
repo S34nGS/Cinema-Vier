@@ -22,13 +22,13 @@ public static class TimetablesLogic
 
     public static string GetDateString(DateTimeOffset dateTime)
     {
-        string date_str = dateTime.ToString("dd/MM/yyyy");
+        string date_str = dateTime.ToString("dd-MM-yyyy");
         return date_str;
     }
 
     public static string GetTimeString(DateTimeOffset dateTime)
     {
-        string time_str = dateTime.ToString("HH:mm:ss");
+        string time_str = dateTime.ToString("HH:mm");
         return time_str;
     }
 
