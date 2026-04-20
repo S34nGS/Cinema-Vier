@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 public class AccountsLogic
 {
@@ -19,7 +19,7 @@ public class AccountsLogic
     // checks if password is empty or too short
     public bool IsValidPassword(string password)
     {
-        if (String.IsNullOrEmpty())
+        if (String.IsNullOrEmpty(password))
         {
             return false;
         }
