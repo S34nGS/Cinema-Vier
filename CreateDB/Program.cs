@@ -7,6 +7,7 @@
         CreateSeatsTable();
         CreateReservationTable();
         CreateTicketTable();
+        CreateConsumableTable();
     }
 
     public static void CreateMoviesTable()
@@ -93,5 +94,11 @@
     {
         TicketAccess ticket = new();
         ticket.CreateTable();
+    }
+
+    public static void CreateConsumableTable()
+    {
+        ConsumeableAccess consumable = new();
+        consumable.CreateTable();
     }
 }
