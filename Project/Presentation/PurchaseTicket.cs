@@ -110,7 +110,9 @@ static class PurchaseTicket
                 DateTime now = DateTime.Now;
                 if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
-                    TimeMenu.Add(TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)));
+                    TimeMenu.Add(
+                        $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                    );
                 }
             }
         }
