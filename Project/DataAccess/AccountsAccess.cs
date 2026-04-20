@@ -3,7 +3,7 @@ using Dapper;
 
 public class AccountsAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Accounts";
+    protected override string Table { get; } = "Account";
 
     public override void CreateTable()
     {
