@@ -2,7 +2,7 @@ using Dapper;
 
 public class TimetablesAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Timetables";
+    protected override string Table { get; } = "Timetable";
 
     public override void CreateTable()
     {
@@ -11,8 +11,8 @@ public class TimetablesAccess : DefaultAccess
             movieId INTEGER NOT NULL,
             roomId INTEGER NOT NULL,
             startTime INTEGER NOT NULL,
-            FOREIGN KEY (movieId) REFERENCES Movies(id),
-            FOREIGN KEY (roomId) REFERENCES Rooms(id)
+            FOREIGN KEY (movieId) REFERENCES Movie(id),
+            FOREIGN KEY (roomId) REFERENCES Room(id)
         );";
         connection.Execute(sql);
     }

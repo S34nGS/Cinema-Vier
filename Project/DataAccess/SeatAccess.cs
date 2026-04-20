@@ -12,7 +12,7 @@ public class SeatAccess : DefaultAccess
 			row INTEGER NOT NULL,
 			seatNumber INTEGER NOT NULL,
 			seatPriority INTEGER NOT NULL,
-            FOREIGN KEY (roomId) REFERENCES Rooms(id)
+            FOREIGN KEY (roomId) REFERENCES Room(id)
 		);";
 		connection.Execute(sql);
 	}

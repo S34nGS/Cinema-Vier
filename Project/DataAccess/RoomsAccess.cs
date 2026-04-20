@@ -2,7 +2,7 @@ using Dapper;
 
 public class RoomsAccess : DefaultAccess
 {
-    protected override string Table {get;} = "Rooms";
+    protected override string Table {get;} = "Room";
 
     public override void CreateTable()
     {

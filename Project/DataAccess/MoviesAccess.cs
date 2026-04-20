@@ -2,7 +2,7 @@ using Dapper;
 
 public class MoviesAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Movies";
+    protected override string Table { get; } = "Movie";
 
     public override void CreateTable()
     {

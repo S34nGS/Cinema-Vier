@@ -11,7 +11,9 @@ public class ReservationAccess : DefaultAccess
 			userId INTEGER NOT NULL,
 			reservationDate INTEGER NOT NULL,
 			totalPrice REAL NOT NULL,
-			timetableId INTEGER NOT NULL
+			timetableId INTEGER NOT NULL,
+
+            FOREIGN KEY (userId) REFERENCES Account(id)
         );";
 		connection.Execute(sql);
 // CREATE TABLE Reservation(
