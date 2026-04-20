@@ -4,6 +4,7 @@
         CreateAccountsTable();
         CreateRoomsTable();
         CreateTimetablesTable();
+        CreateSeatsTable();
     }
 
     public static void CreateMoviesTable()
@@ -72,5 +73,11 @@
         {
             timetables.Write(timetable);
         }
+    }
+
+    public static void CreateSeatsTable()
+    {
+        SeatAccess seats = new();
+        seats.CreateTable();
     }
 }
