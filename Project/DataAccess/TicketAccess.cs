@@ -3,22 +3,22 @@ using Dapper;
 
 public class TicketAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Tickets";
+    protected override string Table { get; } = "Ticket";
+
     public override void CreateTable()
     {
-        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
-            (
-                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                price INTEGER NOT NULL,
-                reservationId INTEGER NOT NULL,
-                seatId INTEGER NOT NULL,
-                movieId INTEGER NOT NULL,
-                FOREIGN KEY (reservationid) REFERENCES ReservationId(id), 
-                FOREIGN KEY (seatid) REFERENCES SeatId(id), 
-                FOREIGN KEY (movieid) REFERENCES Movies(id)
-            )";
+        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            reservationId INTEGER NOT NULL,
+            seatId INTEGER NOT NULL,
+            price INTEGER NOT NULL,
+            movieId INTEGER NOT NULL,
+
+            FOREIGN KEY (seatId) REFERENCES Seat(id),
+            FOREIGN KEY (reservationId) REFERENCES Reservation(id),
+            FOREIGN KEY (movieId) REFERENCES Movie(id)
+        );";
         connection.Execute(sql);
-    }
 
     public void Write(TicketModel ticket)
     {
