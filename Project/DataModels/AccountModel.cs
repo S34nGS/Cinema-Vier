@@ -6,14 +6,16 @@
 
     public string Password { get; set; }
 
-    public string FullName { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
-    public AccountModel(Int64 id, string email, string password, string fullname)
+    public AccountModel(int id, string email, string password, string firstName, string lastName)
     {
         Id = id;
         EmailAddress = email;
         Password = password;
-        FullName = fullname;
+        FirstName = firstName;
+        LastName = lastName;
     }
 }
 
