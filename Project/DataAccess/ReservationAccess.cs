@@ -16,8 +16,6 @@ public class ReservationAccess : DefaultAccess
             FOREIGN KEY (userId) REFERENCES Account(id)
         );";
 		connection.Execute(sql);
-// CREATE TABLE Reservation(
-// );
 	}
 }
 
