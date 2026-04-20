@@ -8,7 +8,7 @@ static class Menu
     static public void Start()
     {
         List<string> menu = ["View Movies", "Login", "Register", "View Reservations", "Exit"];
-        int selected = UiLib.SelectionMenu(menu, header);
+        int selected = UiLib.SelectionMenu(menu, header, true);
 
         if (selected == menu.IndexOf("Login"))
         {

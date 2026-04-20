@@ -1,14 +1,14 @@
 public class ReservationModel
 {
     public Int64 Id { get; set; }
-    public int UserId { get; set; }
+    public Int64 UserId { get; set; }
     public string ReservationDate { get; set; }
     public double TotalPrice { get; set; }
-    public int TimeTableId { get; set; }
+    public Int64 TimeTableId { get; set; }
     public ReservationModel()
     {
     }
-    public ReservationModel(Int64 id, int userId, string reservationDate, double totalPrice, int timeTableId)
+    public ReservationModel(Int64 id, Int64 userId, string reservationDate, double totalPrice, Int64 timeTableId)
     {
         Id = id;
         UserId = userId;

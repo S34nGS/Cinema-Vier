@@ -3,18 +3,17 @@ public static class ViewReservations
     public static void Start()
     {
         // User must be logged in
-        if (AccountsLogic.CurrentAccount == null)
+        if (AccountsLogic.CurrentAccount is null)
         {
             Console.WriteLine("Please log in first to view your reservations.");
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
+            UiLib.HoldUser();
             Menu.Start();
             return;
         }
 
         while (true)
         {
-            List<string> menu = new() { "Future Reservations", "Past Reservations", "Back" };
+            List<string> menu = new() { "Future Reservations", "Past Reservations"};
             int selected = UiLib.SelectionMenu(menu, "Reservations");
 
             if (selected == menu.IndexOf("Future Reservations"))
@@ -25,7 +24,7 @@ public static class ViewReservations
             {
                 ShowPastReservations();
             }
-            else if (selected == menu.IndexOf("Back"))
+            else
             {
                 Menu.Start();
                 return;

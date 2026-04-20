@@ -1,6 +1,6 @@
 public static class ReservationsLogic
 {
-    public static List<ReservationModel> GetFutureReservations(int userId)
+    public static List<ReservationModel> GetFutureReservations(Int64 userId)
     {
         ReservationsAccess access = new ReservationsAccess();
         List<ReservationModel> allReservations = access.GetReservationsByUserId(userId);
@@ -22,7 +22,7 @@ public static class ReservationsLogic
 
         return futureReservations;
     }
-    public static List<ReservationModel> GetPastReservations(int userId)
+    public static List<ReservationModel> GetPastReservations(Int64 userId)
     {
         ReservationsAccess access = new ReservationsAccess();
         List<ReservationModel> allReservations = access.GetReservationsByUserId(userId);
