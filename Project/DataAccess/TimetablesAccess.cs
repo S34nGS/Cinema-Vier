@@ -11,6 +11,7 @@ public class TimetablesAccess : DefaultAccess
             movieId INTEGER NOT NULL,
             roomId INTEGER NOT NULL,
             startTime INTEGER NOT NULL,
+
             FOREIGN KEY (movieId) REFERENCES Movie(id),
             FOREIGN KEY (roomId) REFERENCES Room(id)
         );";
