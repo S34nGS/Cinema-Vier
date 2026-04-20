@@ -1,17 +1,10 @@
-using Microsoft.Data.Sqlite;
-
 using Dapper;
 
 public class MoviesAccess : DefaultAccess
 {
     protected override string Table { get; } = "Movies";
 
-    public MoviesAccess()
-    {
-        // CreateTable();
-    }
-
-    protected override void CreateTable()
+    public override void CreateTable()
     {
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
             (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,13 +30,18 @@ public class MoviesAccess : DefaultAccess
     {
         string sql = $"SELECT * FROM {Table}";
         return connection.Query<MovieModel>(sql).AsList();
-
     }
 
     public MovieModel GetByTitle(string title)
     {
         string sql = $"SELECT * FROM {Table} WHERE title = @Title";
         return connection.QueryFirstOrDefault<MovieModel>(sql, new { Title = title });
+    }
+
+    public List<MovieModel> GetByPartOfTitle(string pattern)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE title LIKE @Pattern";
+        return connection.Query<MovieModel>(sql, new { Pattern = $"%{pattern}%" }).AsList(); 
     }
 
     public void Update(MovieModel movie)
