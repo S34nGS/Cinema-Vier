@@ -21,7 +21,20 @@ static class Menu
         else if (selected == menu.IndexOf("View Movies"))
         {
             MovieModel movie = MoviesLogic.Start();
-            if (movie is null) Start();
+            if (movie is null)
+            {
+                Start();
+                return;
+            }
+            if (AccountsLogic.CurrentAccount != null)
+            {
+                if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
+                {
+                    UiLib.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
+                    Start();
+                    return;
+                }
+            }
             PurchaseModel purchaseTicket = PurchaseTicket.Start();
         }
         else if (selected == menu.IndexOf("Exit"))
