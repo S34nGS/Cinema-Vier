@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class PurchaseModel
 {
-    public int? UserId { get; private set; }
+    public Int64? UserId { get; private set; }
     public DateTime SelectedDateTime { get; private set; }
     public string PaymentMethod { get; private set; }
 
@@ -15,6 +17,8 @@ public class PurchaseModel
 
     // added save final total
     public decimal FinalTotal { get; private set; }
+    // [ForeignKey("Movie")]
+    // public int MovieId { get; set; }
 
     public PurchaseModel(int? userId, DateTime selectedDateTime, string paymentMethod)
     {
@@ -42,6 +46,7 @@ public class PurchaseModel
         UserId = userId;
         SelectedDateTime = selectedDateTime;
         PaymentMethod = paymentMethod;
+        // MovieId = movieId;
         OrderedMenuItems = orderedMenuItems;
         TicketTotal = ticketTotal;
         MenuTotal = menuTotal;
