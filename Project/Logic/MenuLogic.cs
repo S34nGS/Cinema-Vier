@@ -5,6 +5,9 @@ public class MenuLogic
     public MenuLogic()
     {
         menuItemsAccess = new MenuItemsAccess();
+
+        // make sure table exists
+        menuItemsAccess.CreateTable();
     }
 
     public List<MenuItemModel> GetSnacks()
@@ -19,6 +22,7 @@ public class MenuLogic
 
     public string ValidateQuantity(Int64 quantity)
     {
+        // check quantity
         if (quantity < 1)
         {
             return "Quantity must be at least 1.";
@@ -27,54 +31,55 @@ public class MenuLogic
         return "";
     }
 
-    public void AddItemToOrder(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 quantity)
+    public string AddItemToOrder(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 quantity)
     {
+        // validate quantity
         string validationMessage = ValidateQuantity(quantity);
 
         if (validationMessage != "")
         {
-            throw new Exception(validationMessage);
+            return validationMessage;
         }
 
-        MenuItemModel selectedItem = menuItemsAccess.GetMenuItemById(menuItemId);
+        // get item from access layer
+        MenuItemModel? selectedItem = menuItemsAccess.GetMenuItemById(menuItemId);
 
         if (selectedItem == null)
         {
-            throw new Exception("Item not found.");
+            return "Item not found.";
         }
 
-        bool itemAlreadyExists = false;
-
+        // update quantity if item already exists
         foreach (OrderItemModel orderItem in orderItems)
         {
             if (orderItem.MenuItemId == menuItemId)
             {
                 orderItem.Quantity = orderItem.Quantity + quantity;
                 orderItem.SubTotal = orderItem.Quantity * orderItem.PricePerItem;
-                itemAlreadyExists = true;
+                return "";
             }
         }
 
-        if (itemAlreadyExists == false)
-        {
-            OrderItemModel newOrderItem = new OrderItemModel();
-            newOrderItem.MenuItemId = selectedItem.Id;
-            newOrderItem.Name = selectedItem.Name;
-            newOrderItem.PricePerItem = selectedItem.Price;
-            newOrderItem.Quantity = quantity;
-            newOrderItem.SubTotal = selectedItem.Price * quantity;
+        // add new item
+        OrderItemModel newOrderItem = new OrderItemModel(
+            selectedItem.Id,
+            selectedItem.Name,
+            selectedItem.Price,
+            quantity
+        );
 
-            orderItems.Add(newOrderItem);
-        }
+        orderItems.Add(newOrderItem);
+        return "";
     }
 
-    public void UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
+    public string UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
     {
+        // validate new quantity
         string validationMessage = ValidateQuantity(newQuantity);
 
         if (validationMessage != "")
         {
-            throw new Exception(validationMessage);
+            return validationMessage;
         }
 
         foreach (OrderItemModel orderItem in orderItems)
@@ -83,29 +88,30 @@ public class MenuLogic
             {
                 orderItem.Quantity = newQuantity;
                 orderItem.SubTotal = orderItem.PricePerItem * newQuantity;
-                return;
+                return "";
             }
         }
 
-        throw new Exception("Item not found in order.");
+        return "Item not found in order.";
     }
 
-    public void RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
+    public string RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
     {
         for (int i = 0; i < orderItems.Count; i++)
         {
             if (orderItems[i].MenuItemId == menuItemId)
             {
                 orderItems.RemoveAt(i);
-                return;
+                return "";
             }
         }
 
-        throw new Exception("Item not found in order.");
+        return "Item not found in order.";
     }
 
     public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
     {
+        // calculate total
         decimal total = 0;
 
         foreach (OrderItemModel orderItem in orderItems)
@@ -113,16 +119,6 @@ public class MenuLogic
             total = total + orderItem.SubTotal;
         }
 
-        return total;
-    }
-    
-    public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
-    {
-        decimal total = 0;
-        foreach (OrderItemModel item in orderItems)
-        {
-            total = total + item.SubTotal;
-        }
         return total;
     }
 }
