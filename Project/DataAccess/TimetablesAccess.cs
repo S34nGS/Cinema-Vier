@@ -2,18 +2,18 @@ using Dapper;
 
 public class TimetablesAccess : DefaultAccess
 {
-    protected override string Table {get;} = "Timetables";
+    protected override string Table { get; } = "Timetables";
 
     public override void CreateTable()
     {
-        string sql = $@"CREATE TABLE IF NOT EXISTS {Table}
-            (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             movieId INTEGER NOT NULL,
             roomId INTEGER NOT NULL,
             startTime INTEGER NOT NULL,
             FOREIGN KEY (movieId) REFERENCES Movies(id),
             FOREIGN KEY (roomId) REFERENCES Rooms(id)
-            )";
+        );";
         connection.Execute(sql);
     }
 

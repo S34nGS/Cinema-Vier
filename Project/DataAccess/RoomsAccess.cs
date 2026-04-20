@@ -6,10 +6,11 @@ public class RoomsAccess : DefaultAccess
 
     public override void CreateTable()
     {
-        string sql = $@"CREATE TABLE IF NOT EXISTS {Table}
-        (id INTEGER PRIMARY KEY AUTOINCREMENT,
-        screenType TEXT NOT NULL,
-        soundTYPE TEXT NOT NULL)";
+        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            screenType TEXT NOT NULL,
+            soundTYPE TEXT NOT NULL
+        );";
         connection.Execute(sql);
     }
 
