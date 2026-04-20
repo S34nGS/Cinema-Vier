@@ -1,11 +1,16 @@
 using Dapper;
 
-public class ReservationsAccess : DefaultAccess
+public class ReservationAccess : DefaultAccess
 {
     protected override string Table { get; } = "Reservation";
 
     public override void CreateTable()
     {
+    }
+    public void Write(ReservationModel reservation)
+    {
+        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId)";
+        connection.Execute(sql, reservation);
     }
     public List<ReservationModel> GetReservationsByUserId(long userId)
     {
