@@ -9,7 +9,7 @@
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
-    public AccountModel(int id, string email, string password, string firstName, string lastName)
+    public AccountModel(int64 id, string email, string password, string firstName, string lastName)
     {
         Id = id;
         EmailAddress = email;
