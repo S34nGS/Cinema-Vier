@@ -22,7 +22,14 @@ public class AccountsLogic
 
     public bool IsValidDateOfBirth(DateTime dateOfBirth)
     {
-        return default;
+        return dateOfBirth < DateTime.Today && dateOfBirth > DateTime.Today.AddYears(-120);
+    }
+
+    public static int CalculateAge(DateTime dateOfBirth)
+    {
+        int age = DateTime.Today.Year - dateOfBirth.Year;
+        if (dateOfBirth.Date > DateTime.Today.AddYears(-age)) age--;
+        return age;
     }
 
     public AccountModel? CreateAccount(string email, string password, string fullName, DateTime dateOfBirth)
