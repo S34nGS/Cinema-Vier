@@ -7,13 +7,15 @@
     public string Password { get; set; }
 
     public string FullName { get; set; }
+    public int Age { get; set; }
 
-    public AccountModel(Int64 id, string email, string password, string fullname)
+    public AccountModel(Int64 id, string email, string password, string fullname, int age)
     {
         Id = id;
         EmailAddress = email;
         Password = password;
         FullName = fullname;
+        Age = age;
     }
 }
 
