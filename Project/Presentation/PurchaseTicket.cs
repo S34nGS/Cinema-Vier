@@ -34,7 +34,6 @@ static class PurchaseTicket
         }
 
         int selectedDate = UiLib.SelectionMenu(DateMenu, "Pick a date");
-
         if (selectedDate == -1) return null;
 
         string selectedDateString = DateMenu[selectedDate];
@@ -42,9 +41,13 @@ static class PurchaseTicket
         string today = DateTime.Today.AddDays(0).ToString("dd-MM-yyyy");
 
         List<string> customTimeMenu = CustomizeTimeMenu(movie);
-        int selectedTime = UiLib.SelectionMenu(customTimeMenu, "Pick a time");
 
-        DateTime selectedDateTime = DateTime.ParseExact($"{selectedDateString} {selectedTime}", "dd-MM-yyyy H:mm", null);
+        int selectedTime = UiLib.SelectionMenu(customTimeMenu, "Pick a time");
+        if (selectedTime == -1) return null;
+
+        string dateTimeString = $"{selectedDateString} {customTimeMenu[selectedTime]}";
+        DateTime convertedDateTime = DateTime.Parse(dateTimeString);
+
         string selectedPaymentMethod = PaymentMethods[UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?")];
         string invalidInputs = "";
 
@@ -82,7 +85,7 @@ static class PurchaseTicket
         }
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
-        return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
+        return new PurchaseModel(null, convertedDateTime, selectedPaymentMethod);
     }
 
     private static void SetUp_dateMenu(MovieModel movie)
@@ -97,20 +100,14 @@ static class PurchaseTicket
         }
     }
 
-    private static List<string> CustomizeTimeMenu(MovieModel movie, bool isToday = false)
+    private static List<string> CustomizeTimeMenu(MovieModel movie)
     {
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
         List<string> times = [];
         foreach (TimetableModel timetable in timetables)
         {
-            if (isToday)
-            {
-                DateTime now = DateTime.Now;
-                if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
-                {
-                    times.Add(TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)));
-                }
-            } else
+            DateTime now = DateTime.Now;
+            if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
             {
                 times.Add(TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)));
             }
