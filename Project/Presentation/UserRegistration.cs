@@ -6,14 +6,14 @@ static class UserRegistration
     {
         List<string> fields = ["First Name", "Last Name", "Email", "Password"];
         Dictionary<string, string> inputs = UiLib.InputForm(fields, "Please enter your registration information");
-        AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password"], inputs["First Name"], inputs["Last Name"]);
+        AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"]);
         string errorMessage;
         while(acc == null)
         {
             errorMessage = "Account couldn't be created";
 
             inputs = UiLib.InputForm(inputs, "Please enter your registration information", header: errorMessage);
-            acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password"], inputs["First Name"], inputs["Last Name"]);
+            acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"]);
 
         }
 
