@@ -29,16 +29,16 @@ public class TicketAccess : DefaultAccess
         connection.Execute(sql, ticket);
     }
 
-    public AccountModel GetByReservationId(int id)
+    public TicketModel GetByReservationId(int id)
     {
         string sql = $"SELECT * FROM {Table} WHERE reservationId = @ReservationId";
-        return connection.QueryFirstOrDefault<AccountModel>(sql, new { ReservationId = id });
+        return connection.QueryFirstOrDefault<TicketModel>(sql, new { ReservationId = id });
     }
 
-    public AccountModel GetBySeatId(int id)
+    public TicketModel GetBySeatId(int id)
     {
         string sql = $"SELECT * FROM {Table} WHERE seatId = @SeatId";
-        return connection.QueryFirstOrDefault<AccountModel>(sql, new { SeatId = id });
+        return connection.QueryFirstOrDefault<TicketModel>(sql, new { SeatId = id });
     }
 
     public void Update(TicketModel ticket)
