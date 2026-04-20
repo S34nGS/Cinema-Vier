@@ -19,7 +19,7 @@ public class AccountsLogic
     // checks if password is empty or too short
     public bool IsValidPassword(string password)
     {
-        if (password == null || password.Trim() == "")
+        if (String.IsNullOrEmpty())
         {
             return false;
         }
