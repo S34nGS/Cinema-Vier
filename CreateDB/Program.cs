@@ -6,6 +6,7 @@
         CreateTimetablesTable();
         CreateSeatsTable();
         CreateReservationTable();
+        CreateTicketTable();
     }
 
     public static void CreateMoviesTable()
@@ -86,5 +87,11 @@
     {
         ReservationAccess reservation = new();
         reservation.CreateTable();
+    }
+
+    public static void CreateTicketTable()
+    {
+        TicketAccess ticket = new();
+        ticket.CreateTable();
     }
 }
