@@ -20,25 +20,18 @@ public class MenuLogic
         return menuItemsAccess.GetMenuItemsByCategory("Drink");
     }
 
-    public string ValidateQuantity(Int64 quantity)
+    public bool ValidateQuantity(Int64 quantity)
     {
         // check quantity
-        if (quantity < 1)
-        {
-            return "Quantity must be at least 1.";
-        }
-
-        return "";
+        return quantity >= 1;
     }
 
-    public string AddItemToOrder(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 quantity)
+    public bool AddItemToOrder(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 quantity)
     {
         // validate quantity
-        string validationMessage = ValidateQuantity(quantity);
-
-        if (validationMessage != "")
+        if (ValidateQuantity(quantity) == false)
         {
-            return validationMessage;
+            return false;
         }
 
         // get item from access layer
@@ -46,7 +39,7 @@ public class MenuLogic
 
         if (selectedItem == null)
         {
-            return "Item not found.";
+            return false;
         }
 
         // update quantity if item already exists
@@ -56,7 +49,7 @@ public class MenuLogic
             {
                 orderItem.Quantity = orderItem.Quantity + quantity;
                 orderItem.SubTotal = orderItem.Quantity * orderItem.PricePerItem;
-                return "";
+                return true;
             }
         }
 
@@ -69,17 +62,15 @@ public class MenuLogic
         );
 
         orderItems.Add(newOrderItem);
-        return "";
+        return true;
     }
 
-    public string UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
+    public bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
     {
         // validate new quantity
-        string validationMessage = ValidateQuantity(newQuantity);
-
-        if (validationMessage != "")
+        if (ValidateQuantity(newQuantity) == false)
         {
-            return validationMessage;
+            return false;
         }
 
         foreach (OrderItemModel orderItem in orderItems)
@@ -88,25 +79,25 @@ public class MenuLogic
             {
                 orderItem.Quantity = newQuantity;
                 orderItem.SubTotal = orderItem.PricePerItem * newQuantity;
-                return "";
+                return true;
             }
         }
 
-        return "Item not found in order.";
+        return false;
     }
 
-    public string RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
+    public bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
     {
         for (int i = 0; i < orderItems.Count; i++)
         {
             if (orderItems[i].MenuItemId == menuItemId)
             {
                 orderItems.RemoveAt(i);
-                return "";
+                return true;
             }
         }
 
-        return "Item not found in order.";
+        return false;
     }
 
     public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
