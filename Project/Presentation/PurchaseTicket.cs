@@ -42,7 +42,7 @@ static class PurchaseTicket
         int selectedTime = UiLib.SelectionMenu(TimeMenu, "Pick a time");
         if (selectedTime == -1) return null;
 
-        string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime]}";
+        string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0,5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
 
         int selectedPaymentMethod = UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?");
