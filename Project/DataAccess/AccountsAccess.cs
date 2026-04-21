@@ -34,7 +34,7 @@ public class AccountsAccess : DefaultAccess
     {
         string sql =
             $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, dateOfBirth = @DateOfBirth WHERE id = @Id";
-        connection.Execute(sql, account);
+        connection.Execute(sql, new { account.Id, account.EmailAddress, account.Password, account.FullName, DateOfBirth = TimetablesLogic.ConvertDateToUnixTime(account.DateOfBirth) });
     }
 
     public void Delete(AccountModel account)
