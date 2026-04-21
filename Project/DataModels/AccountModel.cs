@@ -7,9 +7,9 @@
     public string Password { get; set; }
 
     public string FullName { get; set; }
-    public long DateOfBirth { get; set; }
+    public DateTime DateOfBirth { get; set; }
 
-    public AccountModel(Int64 id, string email, string password, string fullname, long dateOfBirth)
+    public AccountModel(Int64 id, string email, string password, string fullname, DateTime dateOfBirth)
     {
         Id = id;
         EmailAddress = email;
