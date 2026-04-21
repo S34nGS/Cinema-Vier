@@ -34,8 +34,8 @@
         accounts.CreateTable();
 
         List<AccountModel> accountsList = [
-            new AccountModel(1, "john@example.com","demo_password" , "John Doe"),
-            new AccountModel(2, "jane@example.com", "demo_password", "Jane Smith")
+            new AccountModel(1, "john@example.com","demo_password" , "John", "Doe"),
+            new AccountModel(2, "jane@example.com", "demo_password", "Jane", "Smith")
         ];
 
         foreach (AccountModel account in accountsList)
