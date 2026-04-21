@@ -136,9 +136,12 @@
 
         List<ReservationModel> reservationList = [
             new ReservationModel(1, 1, "2026-04-29", 10.5, 1),
-            new ReservationModel(2, 2, "2026-04-10", 15.0, 2),
-            new ReservationModel(3, 1, "2026-04-30", 20.0, 3),
+            new ReservationModel(2, 1, "2026-04-10", 15.0, 2),
+            new ReservationModel(3, 2, "2026-04-30", 20.0, 3),
             new ReservationModel(4, 2, "2026-04-11", 12.5, 1),
+            new ReservationModel(5, 3, "2026-04-29", 11.0, 1),
+            new ReservationModel(6, 3, "2026-04-10", 13.0, 2),
+
         ];
 
         foreach (ReservationModel item in reservationList)
