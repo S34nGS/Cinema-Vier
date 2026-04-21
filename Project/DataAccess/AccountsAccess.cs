@@ -27,7 +27,10 @@ public class AccountsAccess : DefaultAccess
     public AccountModel GetByEmail(string email)
     {
         string sql = $"SELECT * FROM {Table} WHERE email = @Email";
-        return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email });
+        var row = connection.QueryFirstOrDefault<dynamic>(sql, new { Email = email });
+        if (row == null) return null;
+        AccountModel account = new AccountModel(row.id, row.email, row.password, row.fullname, TimetablesLogic.ConvertUnixTimeToDateTime((long)row.dateOfBirth));
+        return account;
     }
 
     public void Update(AccountModel account)
