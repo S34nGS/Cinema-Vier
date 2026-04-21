@@ -20,9 +20,16 @@ static class Menu
         }
         else if (selected == menu.IndexOf("View Movies"))
         {
-            MovieModel movie = MoviesLogic.Start();
-            if (movie is null) Start();
-            PurchaseModel purchaseTicket = PurchaseTicket.Start();
+            while (true){
+                MovieModel? movie = MoviesLogic.Start();
+                if (movie is null) Start();
+
+                while (true)
+                {
+                    PurchaseModel? purchaseTicket = PurchaseTicket.Start(movie);
+                    if (purchaseTicket is null) break;
+                }
+            }
         }
         else if (selected == menu.IndexOf("Exit"))
         {

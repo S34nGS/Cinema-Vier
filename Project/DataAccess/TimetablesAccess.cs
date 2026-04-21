@@ -39,4 +39,10 @@ public class TimetablesAccess : DefaultAccess
         string sql = $"DELETE FROM {Table} WHERE id = @Id";
         connection.Execute(sql, new { Id = timetable.Id });
     }
+
+    public List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE movieId = @MovieId";
+        return connection.Query<TimetableModel>(sql, new { MovieId = movieId}).AsList();
+    }
 }

@@ -1,7 +1,7 @@
 static class PurchaseTicket
 {
-    public static List<string> TimeMenu { get; } = ["9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30"];
     public static List<string> DateMenu { get; } = [];
+    public static List<string> TimeMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
     public static List<string> CreditCardInput =
     [
@@ -16,28 +16,42 @@ static class PurchaseTicket
         "IBAN number (for example: NL12 ABNA 1234 5678 90)",
     ];
 
-    public static PurchaseModel Start()
+    public static PurchaseModel? Start(MovieModel movie)
     {
-        SetUp_dateMenu();
-        string selectedDate = DateMenu[UiLib.SelectionMenu(DateMenu, "Pick a date")];
-        string today = DateTime.Today.AddDays(0).ToString("dd-MM-yyyy");
+        DateMenu.Clear();
+        SetUpDateMenu(movie);
+        if (DateMenu.Count == 0)
+        {
+            int dates = UiLib.SelectionMenu(
+                ["No available dates."],
+                "Pick a date",
+                true
+            );
 
-        string selectedTime;
-        if(selectedDate == today)
-        {
-            List<string> customTimeMenu = CustomizeTimeMenu();
-            selectedTime = TimeMenu[UiLib.SelectionMenu(customTimeMenu, "Pick a time")];
-        }
-        else
-        {
-            selectedTime = TimeMenu[UiLib.SelectionMenu(TimeMenu, "Pick a time")];
+            if (dates == 0) return null;
         }
 
-        DateTime selectedDateTime = DateTime.ParseExact($"{selectedDate} {selectedTime}", "dd-MM-yyyy H:mm", null);
-        string selectedPaymentMethod = PaymentMethods[UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?")];
+        int selectedDate = UiLib.SelectionMenu(DateMenu, "Pick a date");
+        if (selectedDate == -1) return null;
+        string selectedDateString = DateMenu[selectedDate];
+
+        string today = DateTime.Today.ToString("d");
+
+        TimeMenu.Clear();
+        SetUpTimeMenu(movie, selectedDateString);
+        int selectedTime = UiLib.SelectionMenu(TimeMenu, "Pick a time");
+        if (selectedTime == -1) return null;
+
+        string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0,5)}";
+        DateTime convertedDateTime = DateTime.Parse(dateTimeString);
+
+        int selectedPaymentMethod = UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?");
+        if (selectedPaymentMethod == -1) return null;
+        string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
+
         string invalidInputs = "";
 
-        if(selectedPaymentMethod == "Credit Card")
+        if(selectedPaymentMethodString == "Credit Card")
         {
             do
             {
@@ -53,7 +67,7 @@ static class PurchaseTicket
                 }
             } while(invalidInputs != "");
         }
-        else if(selectedPaymentMethod == "IBAN")
+        else if(selectedPaymentMethodString == "IBAN")
         {
             do
             {
@@ -71,31 +85,37 @@ static class PurchaseTicket
         }
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
-        return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
+        return new PurchaseModel(null, convertedDateTime, selectedPaymentMethodString);
     }
 
-    private static void SetUp_dateMenu()
+    private static void SetUpDateMenu(MovieModel movie)
     {
-        for (int i = 0; i < 14; i ++)
+        List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
+        foreach (TimetableModel timetable in timetables)
         {
-            DateMenu.Add(DateTime.Today.AddDays(i).ToString("dd-MM-yyyy"));
-        }
-    }
-
-    private static List<string> CustomizeTimeMenu()
-    {
-        List<string> newTimeMenu = [];
-        TimeSpan now = DateTime.Now.TimeOfDay;
-        TimeSpan nowPlus20 = now.Add(TimeSpan.FromMinutes(20));
-
-        foreach(string time in TimeMenu)
-        {
-            TimeSpan timeToCompare = TimeSpan.Parse(time);
-            if(nowPlus20 <= timeToCompare)
+            if (timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now))
             {
-                newTimeMenu.Add(timeToCompare.ToString(@"h\:mm"));
+                DateMenu.Add(TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)));
             }
         }
-        return newTimeMenu;
+    }
+
+    private static void SetUpTimeMenu(MovieModel movie, string dateString)
+    {
+        List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
+        foreach (TimetableModel timetable in timetables)
+        {
+            if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
+            {
+                DateTime now = DateTime.Now;
+                if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
+                {
+                    TimeMenu.Add(
+                        $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                    );
+                }
+            }
+        }
+
     }
 }
