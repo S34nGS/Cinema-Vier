@@ -1,86 +1,146 @@
 static class PurchaseTicket
 {
-    static List<string> TimeMenu { get; } = new() { "9:30", "11:30", "13:30", "15:30", "17:30", "19:30", "21:30", "23:30" };
-    static List<string> DateMenu { get; } = [];
-    static List<string> PaymentMethods { get; } = new() { "Credit Card" };
-    static List<string> CreditCardInput = new()
-    {
+    public static List<string> DateMenu { get; } = [];
+    public static List<string> TimeMenu { get; } = [];
+    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+
+    public static List<string> CreditCardInput =
+    [
         "Cardholder name",
         "Card number (13-19 digits, for example:4111 1111 1111 1111)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
-    };
+    ];
 
-    public static PurchaseModel Start()
+    public static List<string> IBANInput =
+    [
+        "Cardholder name",
+        "IBAN number (for example: NL12 ABNA 1234 5678 90)"
+    ];
+
+    public static PurchaseModel? Start(MovieModel movie)
     {
-        SetUp_dateMenu();
+        // reset date menu
+        DateMenu.Clear();
+        SetUpDateMenu(movie);
 
-        string selectedDate = DateMenu[UiLib.SelectionMenu(DateMenu, "Pick a date")];
-        string today = DateTime.Today.AddDays(0).ToString("dd-MM-yyyy");
-
-        string selectedTime;
-
-        if (selectedDate == today)
+        if (DateMenu.Count == 0)
         {
-            List<string> customTimeMenu = CustomizeTimeMenu();
-            selectedTime = TimeMenu[UiLib.SelectionMenu(customTimeMenu, "Pick a time")];
+            int dates = UiLib.SelectionMenu(
+                ["No available dates."],
+                "Pick a date",
+                true
+            );
+
+            if (dates == 0)
+            {
+                return null;
+            }
         }
-        else
+
+        int selectedDate = UiLib.SelectionMenu(DateMenu, "Pick a date");
+        if (selectedDate == -1)
         {
-            selectedTime = TimeMenu[UiLib.SelectionMenu(TimeMenu, "Pick a time")];
+            return null;
         }
 
-        DateTime selectedDateTime = DateTime.ParseExact($"{selectedDate} {selectedTime}", "dd-MM-yyyy H:mm", null);
+        string selectedDateString = DateMenu[selectedDate];
 
-        // added fixed ticket price for now
+        // reset time menu
+        TimeMenu.Clear();
+        SetUpTimeMenu(movie, selectedDateString);
+
+        int selectedTime = UiLib.SelectionMenu(TimeMenu, "Pick a time");
+        if (selectedTime == -1)
+        {
+            return null;
+        }
+
+        string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
+        DateTime convertedDateTime = DateTime.Parse(dateTimeString);
+
+        // ticket price for summary
         decimal ticketTotal = 12.00m;
 
-        // added list to store selected food and drink items
+        // selected menu items
         List<OrderItemModel> orderedMenuItems = new List<OrderItemModel>();
 
-        // added ask user if they want to add snacks or drinks
-        List<string> orderMenuChoices = new()
-        {
+        // ask if user wants food or drinks
+        List<string> orderMenuChoices =
+        [
             "Continue without food and drinks",
             "Add food and drinks"
-        };
+        ];
 
         int selectedOrderChoice = UiLib.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
-
-        // added if user chooses menu items, open food and drink menu
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
-        // added create menu logic to calculate totals
+        // calculate totals
         MenuLogic menuLogic = new MenuLogic();
-
-        // added calculate food and drink total
         decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
-
-        // added calculate final total
         decimal finalTotal = ticketTotal + menuTotal;
 
-        // added show booking summary before payment
+        // show summary before payment
         ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
 
-        string selectedPaymentMethod = PaymentMethods[UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?")];
+        int selectedPaymentMethod = UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?");
+        if (selectedPaymentMethod == -1)
+        {
+            return null;
+        }
+
+        string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
         string invalidInputs = "";
 
-        if (selectedPaymentMethod == "Credit Card")
+        if (selectedPaymentMethodString == "Credit Card")
         {
             do
             {
                 if (invalidInputs != "")
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, $"Invalid input: {invalidInputs} please try again");
+                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
+                        CreditCardInput,
+                        $"Invalid input: {invalidInputs} please try again"
+                    );
+
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
                 }
                 else
                 {
-                    var creditCardInfo = UiLib.InputForm(CreditCardInput, $"Please fill in the payment information");
+                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
+                        CreditCardInput,
+                        "Please fill in the payment information"
+                    );
+
                     invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
+                }
+
+            } while (invalidInputs != "");
+        }
+        else if (selectedPaymentMethodString == "IBAN")
+        {
+            do
+            {
+                if (invalidInputs != "")
+                {
+                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
+                        IBANInput,
+                        $"Invalid input: {invalidInputs} please try again"
+                    );
+
+                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                }
+                else
+                {
+                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
+                        IBANInput,
+                        "Please fill in the payment information"
+                    );
+
+                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
                 }
 
             } while (invalidInputs != "");
@@ -88,37 +148,53 @@ static class PurchaseTicket
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
 
-        return new PurchaseModel(null, selectedDateTime, selectedPaymentMethod);
+        // return only purchase data
+        return new PurchaseModel(null, convertedDateTime, selectedPaymentMethodString);
     }
 
-    private static void SetUp_dateMenu()
+    private static void SetUpDateMenu(MovieModel movie)
     {
-        for (int i = 0; i < 14; i++)
+        // get all timetables for movie
+        List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
+
+        foreach (TimetableModel timetable in timetables)
         {
-            DateMenu.Add(DateTime.Today.AddDays(i).ToString("dd-MM-yyyy"));
-        }
-    }
-
-    private static List<string> CustomizeTimeMenu()
-    {
-        List<string> newTimeMenu = [];
-        TimeSpan now = DateTime.Now.TimeOfDay;
-        TimeSpan nowPlus20 = now.Add(TimeSpan.FromMinutes(20));
-
-        foreach (string time in TimeMenu)
-        {
-            TimeSpan timeToCompare = TimeSpan.Parse(time);
-
-            if (nowPlus20 <= timeToCompare)
+            if (timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now))
             {
-                newTimeMenu.Add(timeToCompare.ToString(@"h\:mm"));
+                string date = TimetablesLogic.GetDateString(
+                    TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
+                );
+
+                if (DateMenu.Contains(date) == false)
+                {
+                    DateMenu.Add(date);
+                }
             }
         }
-
-        return newTimeMenu;
     }
 
-    // added method to show full booking summary before payment
+    private static void SetUpTimeMenu(MovieModel movie, string dateString)
+    {
+        // get all times for selected date
+        List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
+
+        foreach (TimetableModel timetable in timetables)
+        {
+            if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
+            {
+                DateTime now = DateTime.Now;
+
+                if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
+                {
+                    TimeMenu.Add(
+                        $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                    );
+                }
+            }
+        }
+    }
+
+    // show booking summary before payment
     static void ShowBookingSummary(
         decimal ticketTotal,
         List<OrderItemModel> orderedMenuItems,

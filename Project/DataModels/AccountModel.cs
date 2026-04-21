@@ -6,14 +6,28 @@
 
     public string Password { get; set; }
 
-    public string FullName { get; set; }
+    public string FullName { get; private set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
 
-    public AccountModel(Int64 id, string email, string password, string fullname)
+    public AccountModel(Int64 id, string email, string password, string firstName, string lastName)
     {
         Id = id;
         EmailAddress = email;
         Password = password;
-        FullName = fullname;
+        FirstName = firstName;
+        LastName = lastName;
+        FullName = $"{firstName} {lastName}".Trim();
+    }
+
+    public AccountModel(Int64 id, string email, string password, string fullName, string firstName, string lastName)
+    {
+        Id = id;
+        EmailAddress = email;
+        Password = password;
+        FirstName = firstName;
+        LastName = lastName;
+        FullName = fullName;
     }
 }
 

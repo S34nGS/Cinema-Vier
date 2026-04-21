@@ -3,7 +3,7 @@ using Dapper;
 
 public class AccountsAccess : DefaultAccess
 {
-    protected override string Table { get; } = "Accounts";
+    protected override string Table { get; } = "Account";
 
     public override void CreateTable()
     {
@@ -12,14 +12,16 @@ public class AccountsAccess : DefaultAccess
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 email TEXT UNIQUE NOT NULL, 
                 password TEXT NOT NULL, 
-                fullname TEXT NOT NULL
+                fullname TEXT NOT NULL, 
+                firstName TEXT NOT NULL,
+                lastName TEXT NOT NULL
             )";
         connection.Execute(sql);
     }
 
     public void Write(AccountModel account)
     {
-        string sql = $"INSERT INTO {Table} (email, password, fullname) VALUES (@EmailAddress, @Password, @FullName)";
+        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName)";
         connection.Execute(sql, account);
     }
 
@@ -32,7 +34,7 @@ public class AccountsAccess : DefaultAccess
     public void Update(AccountModel account)
     {
         string sql =
-            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName WHERE id = @Id";
+            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName WHERE id = @Id";
         connection.Execute(sql, account);
     }
 
