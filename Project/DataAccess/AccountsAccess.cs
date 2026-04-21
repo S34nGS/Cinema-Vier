@@ -21,7 +21,7 @@ public class AccountsAccess : DefaultAccess
     public void Write(AccountModel account)
     {
         string sql = $"INSERT INTO {Table} (email, password, fullname, dateOfBirth) VALUES (@EmailAddress, @Password, @FullName, @DateOfBirth)";
-        connection.Execute(sql, account);
+        connection.Execute(sql, new { account.EmailAddress, account.Password, account.FullName, DateOfBirth = TimetablesLogic.ConvertDateToUnixTime(account.DateOfBirth)});
     }
 
     public AccountModel GetByEmail(string email)
