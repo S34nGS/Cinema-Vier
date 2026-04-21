@@ -51,7 +51,7 @@ public class FoodAndDrinkMenu
 
             if (Int64.TryParse(itemChoiceText, out itemChoice) == false)
             {
-                Console.WriteLine($"Invalid number. Please enter a number from the list."); // wrong number
+                Console.WriteLine($"Invalid number. Please enter a number from the list."); // wrong input
                 continue;
             }
 
@@ -76,7 +76,7 @@ public class FoodAndDrinkMenu
 
                 if (quantity < 1)
                 {
-                    Console.WriteLine($"Quantity must be at least 1."); // min 1
+                    Console.WriteLine($"Quantity must be at least 1."); // invalid quantity
                 }
 
             } while (quantity < 1);
@@ -90,7 +90,6 @@ public class FoodAndDrinkMenu
             }
 
             Console.WriteLine($"{selectedItem.Name} added to order."); // success
-
             ShowSummary(orderItems, menuLogic);
             ShowEditMenu(orderItems, menuLogic);
             break;
@@ -106,7 +105,7 @@ public class FoodAndDrinkMenu
         for (int i = 0; i < orderItems.Count; i++)
         {
             OrderItemModel item = orderItems[i];
-            Console.WriteLine($"{i + 1}. {item.Name}"); // show index
+            Console.WriteLine($"{i + 1}. {item.Name}"); // item number
             Console.WriteLine($"Quantity: {item.Quantity}");
             Console.WriteLine($"Price per item: €{item.PricePerItem}");
             Console.WriteLine($"Subtotal: €{item.SubTotal}");
@@ -135,93 +134,13 @@ public class FoodAndDrinkMenu
 
             if (choice == "1")
             {
-                while (true)
-                {
-                    Console.WriteLine($"Choose item to update:");
-
-                    for (int i = 0; i < orderItems.Count; i++)
-                    {
-                        Console.WriteLine($"{i + 1}. {orderItems[i].Name}"); // show items
-                    }
-
-                    string? input = Console.ReadLine();
-                    Int64 index;
-
-                    if (Int64.TryParse(input, out index) == false || index < 1 || index > orderItems.Count)
-                    {
-                        Console.WriteLine($"Invalid number. Please enter a number from the list."); // wrong input
-                        continue;
-                    }
-
-                    OrderItemModel selectedItem = orderItems[(int)index - 1];
-
-                    Console.WriteLine($"Selected item: {selectedItem.Name}"); // show item
-                    Console.WriteLine($"Current quantity: {selectedItem.Quantity}");
-
-                    Int64 newQuantity;
-
-                    do
-                    {
-                        Console.WriteLine($"Enter new quantity:");
-                        string? qtyText = Console.ReadLine();
-
-                        if (Int64.TryParse(qtyText, out newQuantity) == false)
-                        {
-                            newQuantity = 0;
-                        }
-
-                        if (newQuantity < 1)
-                        {
-                            Console.WriteLine($"Quantity must be at least 1."); // wrong qty
-                        }
-
-                    } while (newQuantity < 1);
-
-                    string result = menuLogic.UpdateItemQuantity(orderItems, selectedItem.MenuItemId, newQuantity);
-
-                    if (result != "")
-                    {
-                        Console.WriteLine($"{result}");
-                        continue;
-                    }
-
-                    Console.WriteLine($"Quantity updated.");
-                    return;
-                }
+                UpdateOrderItem(orderItems, menuLogic);
+                return;
             }
             else if (choice == "2")
             {
-                while (true)
-                {
-                    Console.WriteLine($"Choose item to remove:");
-
-                    for (int i = 0; i < orderItems.Count; i++)
-                    {
-                        Console.WriteLine($"{i + 1}. {orderItems[i].Name}");
-                    }
-
-                    string? input = Console.ReadLine();
-                    Int64 index;
-
-                    if (Int64.TryParse(input, out index) == false || index < 1 || index > orderItems.Count)
-                    {
-                        Console.WriteLine($"Invalid number. Please enter a number from the list.");
-                        continue;
-                    }
-
-                    OrderItemModel selectedItem = orderItems[(int)index - 1];
-
-                    string result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.MenuItemId);
-
-                    if (result != "")
-                    {
-                        Console.WriteLine($"{result}");
-                        continue;
-                    }
-
-                    Console.WriteLine($"Item removed.");
-                    return;
-                }
+                RemoveOrderItem(orderItems, menuLogic);
+                return;
             }
             else if (choice == "3")
             {
@@ -232,5 +151,100 @@ public class FoodAndDrinkMenu
                 Console.WriteLine($"Invalid choice. Please enter a number from the list.");
             }
         }
+    }
+
+    private static void UpdateOrderItem(List<OrderItemModel> orderItems, MenuLogic menuLogic)
+    {
+        Int64 index;
+
+        while (true)
+        {
+            Console.WriteLine($"Choose item to update:");
+
+            for (int i = 0; i < orderItems.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {orderItems[i].Name}"); // show items
+            }
+
+            string? input = Console.ReadLine();
+
+            if (Int64.TryParse(input, out index) == false || index < 1 || index > orderItems.Count)
+            {
+                Console.WriteLine($"Invalid number. Please enter a number from the list.");
+                continue;
+            }
+
+            break;
+        }
+
+        OrderItemModel selectedItem = orderItems[(int)index - 1];
+
+        Console.WriteLine($"Selected item: {selectedItem.Name}"); // selected item
+        Console.WriteLine($"Current quantity: {selectedItem.Quantity}");
+
+        Int64 newQuantity;
+        do
+        {
+            Console.WriteLine($"Enter new quantity:");
+            string? qtyText = Console.ReadLine();
+
+            if (Int64.TryParse(qtyText, out newQuantity) == false)
+            {
+                newQuantity = 0;
+            }
+
+            if (newQuantity < 1)
+            {
+                Console.WriteLine($"Quantity must be at least 1.");
+            }
+
+        } while (newQuantity < 1);
+
+        string result = menuLogic.UpdateItemQuantity(orderItems, selectedItem.MenuItemId, newQuantity);
+
+        if (result != "")
+        {
+            Console.WriteLine($"{result}");
+            return;
+        }
+
+        Console.WriteLine($"Quantity updated.");
+    }
+
+    private static void RemoveOrderItem(List<OrderItemModel> orderItems, MenuLogic menuLogic)
+    {
+        Int64 index;
+
+        while (true)
+        {
+            Console.WriteLine($"Choose item to remove:");
+
+            for (int i = 0; i < orderItems.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {orderItems[i].Name}");
+            }
+
+            string? input = Console.ReadLine();
+
+            if (Int64.TryParse(input, out index) == false || index < 1 || index > orderItems.Count)
+            {
+                Console.WriteLine($"Invalid number. Please enter a number from the list.");
+                continue;
+            }
+
+            break;
+        }
+
+        OrderItemModel selectedItem = orderItems[(int)index - 1];
+
+        string result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.MenuItemId);
+
+        if (result != "")
+        {
+            Console.WriteLine($"{result}");
+            return;
+        }
+
+        Console.WriteLine($"Item removed.");
     }
 }
