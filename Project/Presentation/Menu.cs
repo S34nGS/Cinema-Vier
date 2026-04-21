@@ -21,7 +21,7 @@ static class Menu
         else if (selected == menu.IndexOf("View Movies"))
         {
             while (true){
-                MovieModel movie = MoviesLogic.Start();
+                MovieModel? movie = MoviesLogic.Start();
                 if (movie is null) Start();
 
                 while (true)
