@@ -81,11 +81,11 @@ public class FoodAndDrinkMenu
 
             } while (quantity < 1);
 
-            string result = menuLogic.AddItemToOrder(orderItems, selectedItem.Id, quantity);
+            bool result = menuLogic.AddItemToOrder(orderItems, selectedItem.Id, quantity);
 
-            if (result != "")
+            if (result == false)
             {
-                Console.WriteLine($"{result}");
+                Console.WriteLine($"Could not add item.");
                 continue;
             }
 
@@ -200,11 +200,11 @@ public class FoodAndDrinkMenu
 
         } while (newQuantity < 1);
 
-        string result = menuLogic.UpdateItemQuantity(orderItems, selectedItem.MenuItemId, newQuantity);
+        bool result = menuLogic.UpdateItemQuantity(orderItems, selectedItem.MenuItemId, newQuantity);
 
-        if (result != "")
+        if (result == false)
         {
-            Console.WriteLine($"{result}");
+            Console.WriteLine($"Could not update quantity.");
             return;
         }
 
@@ -237,11 +237,11 @@ public class FoodAndDrinkMenu
 
         OrderItemModel selectedItem = orderItems[(int)index - 1];
 
-        string result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.MenuItemId);
+        bool result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.MenuItemId);
 
-        if (result != "")
+        if (result == false)
         {
-            Console.WriteLine($"{result}");
+            Console.WriteLine($"Could not remove item.");
             return;
         }
 
