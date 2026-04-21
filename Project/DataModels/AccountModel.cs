@@ -21,16 +21,6 @@
         FullName = $"{firstName} {lastName}".Trim();
         DateOfBirth = dateOfBirth;
     }
-
-    public AccountModel(Int64 id, string email, string password, string fullName, string firstName, string lastName)
-    {
-        Id = id;
-        EmailAddress = email;
-        Password = password;
-        FirstName = firstName;
-        LastName = lastName;
-        FullName = fullName;
-    }
 }
 
 

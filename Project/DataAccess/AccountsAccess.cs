@@ -14,7 +14,7 @@ public class AccountsAccess : DefaultAccess
                 password TEXT NOT NULL, 
                 fullname TEXT NOT NULL, 
                 firstName TEXT NOT NULL,
-                lastName TEXT NOT NULL，
+                lastName TEXT NOT NULL,
                 dateOfBirth INTEGER NOT NULL
             )";
         connection.Execute(sql);
@@ -31,7 +31,7 @@ public class AccountsAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE email = @Email";
         var row = connection.QueryFirstOrDefault<dynamic>(sql, new { Email = email });
         if (row == null) return null;
-        AccountModel account = new AccountModel(row.id, row.email, row.password, row.fullname, TimetablesLogic.ConvertUnixTimeToDateTime((long)row.dateOfBirth));
+        AccountModel account = new AccountModel(row.id, row.email, row.password, row.FirstName, row.FirstName, TimetablesLogic.ConvertUnixTimeToDateTime((row.dateOfBirth)));
         return account;
     }
 

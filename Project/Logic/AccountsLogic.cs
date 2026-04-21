@@ -45,7 +45,7 @@ public class AccountsLogic
         return age;
     }
 
-    public AccountModel? CreateAccount(string email, string password, string firstName, string lastName，DateTime dateOfBirth)
+    public AccountModel? CreateAccount(string email, string password, string firstName, string lastName, DateTime dateOfBirth)
     {
         // check email
         if (IsValidEmail(email) == false)
