@@ -4,32 +4,28 @@ public static class TimetablesLogic
 
     public static Int64 ConvertDateToUnixTime(DateTime dateTime)
     {
-        Int64 unixTimestamp = (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-        return unixTimestamp;
+        return (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+        
     }
 
     public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
     {
-        DateTimeOffset dateTime = DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
-        return dateTime;
+        return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
     }
 
     public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
     {
-        string date_str = dateTime.ToString("dd/MM/yyyy HH:mm:ss");
-        return date_str;
+        return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
     }
 
     public static string GetDateString(DateTimeOffset dateTime)
     {
-        string date_str = dateTime.ToString("dd-MM-yyyy");
-        return date_str;
+        return dateTime.ToString("dd-MM-yyyy");
     }
 
     public static string GetTimeString(DateTimeOffset dateTime)
     {
-        string time_str = dateTime.ToString("HH:mm");
-        return time_str;
+        return dateTime.ToString("HH:mm");
     }
 
     public static string ConvertUnixTimeToString(Int64 unixTimestamp)
@@ -39,7 +35,6 @@ public static class TimetablesLogic
 
     public static List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
     {
-        List<TimetableModel> timetables = _access.GetTimeTablesByMovieId(movieId);
-        return timetables;
+        return _access.GetTimeTablesByMovieId(movieId);
     }
 }
