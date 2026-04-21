@@ -20,7 +20,7 @@ static class UserLogin
         }
 
 
-        Console.WriteLine("Welcome back " + acc.FullName);
+        Console.WriteLine($"Welcome back {acc.FirstName} {acc.LastName}");
         UiLib.HoldUser();
         Menu.Start();
     }

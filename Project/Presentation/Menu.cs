@@ -7,8 +7,8 @@ static class Menu
     static string header = "Welcome to Cinema Vier! Please select an option:";
     static public void Start()
     {
-        List<string> menu = ["View Movies", "Login", "Register", "Exit"];
-        int selected = UiLib.SelectionMenu(menu, header, true);
+        List<string> menu = ["View Movies", "Login", "Register", "Cinema Info", "Exit"];
+        int selected = UiLib.SelectionMenu(menu, header);
 
         if (selected == menu.IndexOf("Login"))
         {
@@ -20,22 +20,34 @@ static class Menu
         }
         else if (selected == menu.IndexOf("View Movies"))
         {
-            MovieModel movie = MoviesLogic.Start();
-            if (movie is null)
-            {
-                Start();
-                return;
-            }
-            if (AccountsLogic.CurrentAccount != null)
-            {
-                if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
+            while (true){
+                MovieModel? movie = MoviesLogic.Start();
+                if (movie is null)
                 {
-                    UiLib.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
                     Start();
                     return;
                 }
+              
+                if (AccountsLogic.CurrentAccount != null)
+                {
+                    if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
+                    {
+                        UiLib.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
+                        Start();
+                        return;
+                    }
+                }
+            
+                while (true)
+                {
+                    PurchaseModel? purchaseTicket = PurchaseTicket.Start(movie);
+                    if (purchaseTicket is null) break;
+                }
             }
-            PurchaseModel purchaseTicket = PurchaseTicket.Start();
+        }
+        else if (selected == menu.IndexOf("Cinema Info"))
+        {
+            CinemaInfo.Start();
         }
         else if (selected == menu.IndexOf("Exit"))
         {

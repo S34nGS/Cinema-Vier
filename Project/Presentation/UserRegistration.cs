@@ -4,10 +4,10 @@ static class UserRegistration
 
     public static void Start()
     {
-        List<string> fields = ["Full Name", "Email", "Password (8-32 characters)", "Date of birth (dd/mm/yyyy)"];
+        List<string> fields = ["First Name", "Last Name", "Email", "Password (8-32 characters)", "Date of birth (dd/mm/yyyy)"];
         Dictionary<string, string> inputs = UiLib.InputForm(fields, "Please enter your registration information");
         DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dateOfBirth);
-        AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["Full Name"], dateOfBirth);
+        AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"], dateOfBirth);
         string errorMessage;
         while(acc == null)
         {
@@ -15,7 +15,7 @@ static class UserRegistration
 
             inputs = UiLib.InputForm(inputs, "Please enter your registration information", header: errorMessage);
             DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dateofBirth);
-            acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["Full Name"], dateofBirth);
+            acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"], dateofBirth);
 
         }
 
