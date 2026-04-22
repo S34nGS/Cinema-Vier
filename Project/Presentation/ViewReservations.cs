@@ -50,7 +50,7 @@ public static class ViewReservations
             {
                 Console.WriteLine($"Date: {reservation.ReservationDate}");
                 Console.WriteLine($"Price: {reservation.TotalPrice}");
-                Console.WriteLine($"Timetable ID: {reservation.TimeTableId}");
+                Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
             }
         }
@@ -78,7 +78,7 @@ public static class ViewReservations
             {
                 Console.WriteLine($"Date: {reservation.ReservationDate}");
                 Console.WriteLine($"Price: {reservation.TotalPrice}");
-                Console.WriteLine($"Timetable ID: {reservation.TimeTableId}");
+                Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
             }
         }

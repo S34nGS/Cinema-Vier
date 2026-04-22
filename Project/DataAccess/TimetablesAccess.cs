@@ -45,4 +45,10 @@ public class TimetablesAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE movieId = @MovieId";
         return connection.Query<TimetableModel>(sql, new { MovieId = movieId}).AsList();
     }
+
+    public RoomModel GetRoomByTimetableId(Int64 timetableId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
+        return connection.QueryFirstOrDefault<RoomModel>(sql, new {TimetableId = timetableId});
+    }
 }
