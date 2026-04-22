@@ -31,7 +31,7 @@ public class AccountsAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE email = @Email";
         var row = connection.QueryFirstOrDefault<dynamic>(sql, new { Email = email });
         if (row == null) return null;
-        AccountModel account = new AccountModel(row.id, row.email, row.password, row.FirstName, row.FirstName, TimetablesLogic.ConvertUnixTimeToDateTime((row.dateOfBirth)));
+        AccountModel account = new AccountModel((long)row.id, row.email, row.password, row.FirstName, row.LastName, TimetablesLogic.ConvertUnixTimeToDateTime((row.dateOfBirth)));
         return account;
     }
 
