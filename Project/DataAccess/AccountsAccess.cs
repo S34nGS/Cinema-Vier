@@ -23,7 +23,7 @@ public class AccountsAccess : DefaultAccess
     public void Write(AccountModel account)
     {
         string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth)";
-        connection.Execute(sql, new { account.EmailAddress, account.Password, account.FullName, account.FirstName, account.LastName, account.DateOfBirth});
+        connection.Execute(sql, new { account });
     }
 
     public AccountModel GetByEmail(string email)
@@ -36,7 +36,7 @@ public class AccountsAccess : DefaultAccess
     {
         string sql =
             $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth WHERE id = @Id";
-        connection.Execute(sql, new { account.Id, account.EmailAddress, account.Password, account.FullName, account.DateOfBirth });
+        connection.Execute(sql, new { account });
     }
 
     public void Delete(AccountModel account)
