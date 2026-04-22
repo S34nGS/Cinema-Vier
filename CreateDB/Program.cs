@@ -9,6 +9,7 @@
         CreateTicketTable();
         CreateConsumableTable();
         CreateConsumableOrderTable();
+        CreateMenuItemTable();
     }
 
     public static void CreateMoviesTable()
@@ -151,5 +152,11 @@
     {
         ConsumableOrderAccess consumable = new();
         consumable.CreateTable();
+    }
+
+    public static void CreateMenuItemTable()
+    {
+        MenuItemsAccess menuItem = new();
+        menuItem.CreateTable();
     }
 }
