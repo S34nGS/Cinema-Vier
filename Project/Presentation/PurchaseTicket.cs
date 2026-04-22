@@ -84,7 +84,10 @@ static class PurchaseTicket
             } while(invalidInputs != "");
         }
 
-        UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
+        int reservationNumber = PurchaseLogic.GenerateReservationNumber();
+
+        UiLib.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
+        ReservationsLogic.CreateReservation(new(reservationNumber, AccountsLogic.CurrentAccount.Id, selectedDateString, 10, 1));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
