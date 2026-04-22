@@ -10,8 +10,30 @@ public static class MoviesLogic
         return Titles;
     }
 
-    static public MovieModel GetMovieData(int MovieIndex)
+    public static MovieModel GetMovieData(int MovieIndex)
     {
         return _access.GetByTitle(GetMovieTitles()[MovieIndex]);
+    }
+
+    public static List<string> GetByPartOfTitle(string pattern)
+    {
+        List<string> Titles = [];
+        foreach(MovieModel Movie in _access.GetByPartOfTitle(pattern))
+        {
+            Titles.Add(Movie.Title);
+        }
+        return Titles;
+    }
+
+    public static bool IsOldEnough(MovieModel movie, AccountModel account)
+    {
+        int age = AccountsLogic.CalculateAge(TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth));
+        return age >= movie.AgeRating;
+    }
+    public static MovieModel? Start()
+    {
+        int movieIndex = MoviesMenu.Start();
+        if (movieIndex < 0) return null;
+        return GetMovieData(movieIndex);
     }
 }
