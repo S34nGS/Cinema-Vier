@@ -9,9 +9,9 @@
     public string FullName { get; private set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
-    public DateTime DateOfBirth { get; set; }
+    public Int64 DateOfBirth { get; set; }
 
-    public AccountModel(Int64 id, string email, string password, string firstName, string lastName, DateTime dateOfBirth)
+    public AccountModel(Int64 id, string email, string password, string firstName, string lastName, Int64 dateOfBirth)
     {
         Id = id;
         EmailAddress = email;
@@ -21,6 +21,8 @@
         FullName = $"{firstName} {lastName}".Trim();
         DateOfBirth = dateOfBirth;
     }
+
+        public AccountModel() { }
 }
 
 
