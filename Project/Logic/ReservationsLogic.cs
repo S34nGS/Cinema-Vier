@@ -1,5 +1,6 @@
 public static class ReservationsLogic
 {
+    private static ReservationAccess _access = new();
     public static List<ReservationModel> GetFutureReservations(Int64 userId)
     {
         ReservationAccess access = new ReservationAccess();
@@ -43,5 +44,10 @@ public static class ReservationsLogic
         }
 
         return pastReservations;
+    }
+
+    public static void CreateReservation(ReservationModel reservation)
+    {
+        _access.Write(reservation);
     }
 }
