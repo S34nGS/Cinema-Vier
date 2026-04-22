@@ -14,29 +14,28 @@ public class AccountsAccess : DefaultAccess
                 password TEXT NOT NULL, 
                 fullname TEXT NOT NULL, 
                 firstName TEXT NOT NULL,
-                lastName TEXT NOT NULL,
-                dateOfBirth INTEGER NOT NULL
+                lastName TEXT NOT NULL
             )";
         connection.Execute(sql);
     }
 
     public void Write(AccountModel account)
     {
-        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth)";
-        connection.Execute(sql, new { account });
+        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName)";
+        connection.Execute(sql, account);
     }
 
     public AccountModel GetByEmail(string email)
     {
         string sql = $"SELECT * FROM {Table} WHERE email = @Email";
-        return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email});
+        return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email });
     }
 
     public void Update(AccountModel account)
     {
         string sql =
-            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth WHERE id = @Id";
-        connection.Execute(sql, new { account });
+            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName WHERE id = @Id";
+        connection.Execute(sql, account);
     }
 
     public void Delete(AccountModel account)
