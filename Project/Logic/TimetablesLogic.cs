@@ -37,4 +37,9 @@ public static class TimetablesLogic
     {
         return _access.GetTimeTablesByMovieId(movieId);
     }
+
+    public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
+    {
+        return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime;
+    }
 }
