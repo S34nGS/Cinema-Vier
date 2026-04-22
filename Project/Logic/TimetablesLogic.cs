@@ -42,4 +42,11 @@ public static class TimetablesLogic
     {
         return _access.GetRoomByTimetableId(timetableId);
     }
+
+   public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
+    {
+        return DateTimeOffset
+            .FromUnixTimeSeconds(unixTimestamp)
+            .DateTime;
+    }
 }
