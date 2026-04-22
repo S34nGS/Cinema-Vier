@@ -38,8 +38,8 @@ public static class TimetablesLogic
         return _access.GetTimeTablesByMovieId(movieId);
     }
 
-    public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
+    public static RoomModel GetRoomByTimetableId(Int64 timetableId)
     {
-        return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp).DateTime;
+        return _access.GetRoomByTimetableId(timetableId);
     }
 }

@@ -4,6 +4,11 @@ public class RoomModel
     public string ScreenType {get; set;}
     public string SoundType {get; set;}
 
+    public RoomModel()
+    {
+        
+    }
+
     public RoomModel(Int64 id, string screenType, string soundType)
     {
         Id = id;
