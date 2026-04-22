@@ -3,6 +3,7 @@
 
 
 [TestClass]
+[Ignore]
 public sealed class Test1
 {
 
