@@ -16,7 +16,7 @@ static class PurchaseTicket
         "IBAN number (for example: NL12 ABNA 1234 5678 90)",
     ];
 
-    public static PurchaseModel? Start(MovieModel movie)
+    public static TicketModel? Start(MovieModel movie)
     {
         DateMenu.Clear();
         SetUpDateMenu(movie);
@@ -85,7 +85,7 @@ static class PurchaseTicket
         }
 
         UiLib.SelectionMenu([$"Payment successful. Reservation number: {PurchaseLogic.GenerateReservationNumber()}"], "");
-        return new PurchaseModel(null, convertedDateTime, selectedPaymentMethodString);
+        return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
     private static void SetUpDateMenu(MovieModel movie)
