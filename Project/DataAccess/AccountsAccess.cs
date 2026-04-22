@@ -23,23 +23,20 @@ public class AccountsAccess : DefaultAccess
     public void Write(AccountModel account)
     {
         string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth)";
-        connection.Execute(sql, new { account.EmailAddress, account.Password, account.FullName, account.FirstName, account.LastName, DateOfBirth = TimetablesLogic.ConvertDateToUnixTime(account.DateOfBirth)});
+        connection.Execute(sql, new { account.EmailAddress, account.Password, account.FullName, account.FirstName, account.LastName, account.DateOfBirth});
     }
 
     public AccountModel GetByEmail(string email)
     {
         string sql = $"SELECT * FROM {Table} WHERE email = @Email";
-        var row = connection.QueryFirstOrDefault<dynamic>(sql, new { Email = email });
-        if (row == null) return null;
-        AccountModel account = new AccountModel((long)row.id, row.email, row.password, row.FirstName, row.LastName, TimetablesLogic.ConvertUnixTimeToDateTime((row.dateOfBirth)));
-        return account;
+        return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email});
     }
 
     public void Update(AccountModel account)
     {
         string sql =
             $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth WHERE id = @Id";
-        connection.Execute(sql, new { account.Id, account.EmailAddress, account.Password, account.FullName, DateOfBirth = TimetablesLogic.ConvertDateToUnixTime(account.DateOfBirth) });
+        connection.Execute(sql, new { account.Id, account.EmailAddress, account.Password, account.FullName, account.DateOfBirth });
     }
 
     public void Delete(AccountModel account)
