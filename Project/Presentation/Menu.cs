@@ -7,7 +7,7 @@ static class Menu
     static public void Start()
     {
         string header = (AccountsLogic.CurrentAccount != null) ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}" : "Welcome to Cinema Vier! Please select an option:";
-        List<string> menu = ["View Movies", "Login", "Register", "View Reservations", "Cinema Info", "Exit"];
+        List<string> menu = ["Order Movie", "Login", "Register", "View Reservations", "Cinema Info", "Exit"];
         int selected = UiLib.SelectionMenu(menu, header, true);
 
         if (selected == menu.IndexOf("Login"))
@@ -18,7 +18,7 @@ static class Menu
         {
             UserRegistration.Start();
         }
-        else if (selected == menu.IndexOf("View Movies"))
+        else if (selected == menu.IndexOf("Order Movie"))
         {
             while (true){
                 MovieModel? movie = MoviesLogic.Start();
