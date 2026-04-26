@@ -160,7 +160,10 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now))
+            if (
+                timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now) &&
+                timetable.StartTime < TimetablesLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
+                )
             {
                 string date = TimetablesLogic.GetDateString(
                     TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
