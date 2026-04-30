@@ -55,15 +55,15 @@ public static class UiHelper
             WriteHeader(header);
 
             Console.WriteLine($"╔{new string('═', longest + 6)}╗");
-            for (int index = 0; index < menu.Count; index++)
+            for (int index = 0; index < localMenu.Length; index++)
             {
                 if (index == selected)
                 {
-                    Console.WriteLine($"║ > {menu[index]} {new string(' ', longest - menu[index].Length)}< ║");
+                    Console.WriteLine($"║ > {localMenu[index]} {new string(' ', longest - localMenu[index].Length)}< ║");
                 }
                 else
                 {
-                    Console.WriteLine($"║   {menu[index]} {new string(' ', longest - menu[index].Length)}  ║");
+                    Console.WriteLine($"║   {localMenu[index]} {new string(' ', longest - localMenu[index].Length)}  ║");
                 }
             }
 
@@ -98,7 +98,7 @@ public static class UiHelper
                 return -1;
             }
 
-            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < menu.Length - 1)
+            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < localMenu.Length - 1)
             {
                 selected++;
             }
