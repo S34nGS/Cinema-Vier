@@ -1,6 +1,6 @@
-public static class UiLib
+public static class UiHelper
 {
-    public static int GetLongestString(List<string> strings)
+    public static int GetLongestString(IEnumerable<string> strings)
     {
         int longest = 0;
         foreach (string item in strings)
@@ -22,6 +22,7 @@ public static class UiLib
         }
     }
 
+    // TODO: Rewrite using boolean instead of int
     public static void ContinueOrBackMenu(int continueOrBack)
     {
         Console.WriteLine($"╔{new string('═', 22)}╗");
@@ -41,9 +42,10 @@ public static class UiLib
         Console.WriteLine($"╚{new string('═', 22)}╝");
     }
 
-    public static int SelectionMenu(List<string> menu, string? header = null, bool hasButtons = false)
+    public static int SelectionMenu(IEnumerable<string> menu, string? header = null, bool hasButtons = false)
     {
-        int longest = GetLongestString(menu);
+        string[] localMenu = menu.ToArray();
+        int longest = GetLongestString(localMenu);
         int selected = 0;
         int continueOrBack = 1;
 
@@ -83,7 +85,7 @@ public static class UiLib
                 else if (key == ConsoleKey.RightArrow && continueOrBack < 1)
                 {
                     continueOrBack++;
-                } 
+                }
             }
 
             if (key == ConsoleKey.Enter)
@@ -92,10 +94,11 @@ public static class UiLib
                 {
                     break;
                 }
+
                 return -1;
             }
 
-            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < menu.Count - 1)
+            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < menu.Length - 1)
             {
                 selected++;
             }
@@ -136,7 +139,7 @@ public static class UiLib
             else if (keyInfo.Key == ConsoleKey.RightArrow && continueOrBack < 1)
             {
                 continueOrBack++;
-            } 
+            }
 
             if (keyInfo.Key == ConsoleKey.Enter)
             {
@@ -179,15 +182,9 @@ public static class UiLib
         }
     }
 
-    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form",
+    public static Dictionary<string, string> InputForm(IEnumerable<string> titles, string formTitle = "Input Form",
         int maxLength = 32)
     {
-        int longest = Math.Max(
-            Math.Max(GetLongestString(titles), maxLength),
-            formTitle.Length
-        );
-        int selected = 0;
-
         Dictionary<string, string> inputs = new();
 
         foreach (string title in titles)
