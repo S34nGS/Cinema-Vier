@@ -6,9 +6,9 @@ public static class CinemaInfo
         {
             Console.Clear();
 
-            List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies"];
+            List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies", "General Information"];
 
-            int selected = UiLib.SelectionMenu(menu, "About Rotterdam Pathé Cinema");
+            int selected = UiLib.SelectionMenu(menu, "About Cinema Vier");
 
             if (selected == menu.IndexOf("About Us"))
             {
@@ -30,6 +30,10 @@ public static class CinemaInfo
             {
                 ShowPolicies();
             }
+            else if (selected == menu.IndexOf("General Information"))
+            {
+                ShowGeneralInformation();
+            }
             else
             {
                 // Back handled by UiLib
@@ -44,7 +48,7 @@ public static class CinemaInfo
         Console.Clear();
         Console.WriteLine("=== About Us ===");
         Console.WriteLine();
-        Console.WriteLine("Rotterdam Pathé Cinema is a modern cinema located in Rotterdam.");
+        Console.WriteLine("Cinema Vier is a modern cinema located in Rotterdam.");
         Console.WriteLine("We offer a comfortable and simple movie experience.");
         Console.WriteLine("Users can browse movies, make reservations and enjoy their visit.");
         UiLib.HoldUser();
@@ -91,4 +95,19 @@ public static class CinemaInfo
         Console.WriteLine("Customers should follow general cinema rules during their visit.");
         UiLib.HoldUser();
     }
+    static void ShowGeneralInformation()
+{
+    Console.Clear();
+    Console.WriteLine("=== General Information ===");
+    Console.WriteLine();
+    Console.WriteLine("Opening Hours:");
+    Console.WriteLine("Monday - Sunday: 10:00 - 23:00");
+    Console.WriteLine();
+    Console.WriteLine("Address:");
+    Console.WriteLine("Wijnhaven 107, 3011 WN Rotterdam, Netherlands");
+    Console.WriteLine();
+    Console.WriteLine("Phone: +31 10 123 4567");
+    Console.WriteLine("Email: info@cinemavier.nl");
+    UiLib.HoldUser();
+}
 }
