@@ -6,7 +6,7 @@ public static class ViewReservations
         if (AccountsLogic.CurrentAccount is null)
         {
             Console.WriteLine("Please log in first to view your reservations.");
-            UiLib.HoldUser();
+            UiHelper.HoldUser();
             Menu.Start();
             return;
         }
@@ -14,7 +14,7 @@ public static class ViewReservations
         while (true)
         {
             List<string> menu = new() { "Future Reservations", "Past Reservations"};
-            int selected = UiLib.SelectionMenu(menu, "Reservations");
+            int selected = UiHelper.SelectionMenu(menu, "Reservations");
 
             if (selected == menu.IndexOf("Future Reservations"))
             {
