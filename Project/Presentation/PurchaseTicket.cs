@@ -153,7 +153,7 @@ static class PurchaseTicket
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
-    private static void SetUpDateMenu(MovieModel movie)
+    public static void SetUpDateMenu(MovieModel movie)
     {
         // get all timetables for movie
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
@@ -235,5 +235,17 @@ static class PurchaseTicket
         Console.WriteLine($"");
 
         UiHelper.HoldUser();
+    }
+
+    public static string GetAvailableDates( )
+    {
+        string availableDates = "";
+
+        foreach(string date in DateMenu)
+        {
+            availableDates += date + "\n";
+        }
+
+        return availableDates;
     }
 }
