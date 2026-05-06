@@ -15,4 +15,7 @@ if "8.0" not in versions_output:
 if os.path.exists("./Project/DataSources/project.db") == False:
     subprocess.run("dotnet run --project './CreateDB'", shell=True)
 
-subprocess.run("dotnet run --project './Project'", shell=True)
+try:
+    subprocess.run("dotnet run --project './Project'", shell=True)
+except:
+    exit()
