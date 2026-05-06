@@ -78,13 +78,47 @@ static class PurchaseTicket
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
+        // selected lounge pre-order drinks
+        List<OrderItemModel> loungePreOrderItems = new List<OrderItemModel>();
+
+        // ask if user wants lounge pre-order drinks
+        List<string> loungePreOrderChoices =
+        [
+            "Continue without lounge drink pre-order",
+            "Add lounge drink pre-order"
+        ];
+
+        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu(
+            loungePreOrderChoices,
+            "Do you want to pre-order drinks from the lounge/bar?"
+        );
+
+        if (selectedLoungePreOrderChoice == 1)
+        {
+            // show only drinks for lounge pre-order
+            MenuLogic loungeMenuLogic = new MenuLogic();
+            loungePreOrderItems = FoodAndDrinkMenu.ShowOnlyDrinksMenu(loungeMenuLogic);
+        }
+
         // calculate totals
         MenuLogic menuLogic = new MenuLogic();
         decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
-        decimal finalTotal = ticketTotal + menuTotal;
+
+        // calculate lounge pre-order total
+        decimal loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
+
+        // calculate final total with lounge pre-order
+        decimal finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
 
         // show summary before payment
-        ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
+        ShowBookingSummary(
+            ticketTotal,
+            orderedMenuItems,
+            menuTotal,
+            loungePreOrderItems,
+            loungePreOrderTotal,
+            finalTotal
+        );
 
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
@@ -200,6 +234,8 @@ static class PurchaseTicket
         decimal ticketTotal,
         List<OrderItemModel> orderedMenuItems,
         decimal menuTotal,
+        List<OrderItemModel> loungePreOrderItems,
+        decimal loungePreOrderTotal,
         decimal finalTotal)
     {
         Console.Clear();
@@ -231,6 +267,29 @@ static class PurchaseTicket
         }
 
         Console.WriteLine($"Food and drink total: €{menuTotal:0.00}");
+        Console.WriteLine($"");
+
+        if (loungePreOrderItems.Count > 0)
+        {
+            Console.WriteLine($"Lounge pre-order drinks:");
+            Console.WriteLine($"");
+
+            foreach (OrderItemModel item in loungePreOrderItems)
+            {
+                Console.WriteLine($"Item name: {item.Name}");
+                Console.WriteLine($"Quantity: {item.Quantity}");
+                Console.WriteLine($"Price per item: €{item.PricePerItem:0.00}");
+                Console.WriteLine($"Subtotal: €{item.SubTotal:0.00}");
+                Console.WriteLine($"");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"No lounge drinks selected.");
+            Console.WriteLine($"");
+        }
+
+        Console.WriteLine($"Lounge drink pre-order total: €{loungePreOrderTotal:0.00}");
         Console.WriteLine($"Final total: €{finalTotal:0.00}");
         Console.WriteLine($"");
 

@@ -29,6 +29,12 @@ public class PurchaseLogic
         return invalidMessages;
     }
 
+    // calculate total with ticket, normal menu and lounge pre-order
+    public static decimal CalculateFullTotal(decimal ticketTotal, decimal menuTotal, decimal loungePreOrderTotal)
+    {
+        return ticketTotal + menuTotal + loungePreOrderTotal;
+    }
+
     private static string CardHolderNameCheck(string fullname)
     {
         string invalidMessages = "";
