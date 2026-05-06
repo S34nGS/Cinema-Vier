@@ -10,23 +10,23 @@ public static class CinemaInfo
 
             int selected = UiLib.SelectionMenu(menu, "About Cinema Vier");
 
-            if (selected == menu.IndexOf("About Us"))
+            if (selected == Array.IndexOf(menu, "About Us"))
             {
                 ShowAboutUs();
             }
-            else if (selected == menu.IndexOf("Cinema Experience"))
+            else if (selected == Array.IndexOf(menu, "Cinema Experience"))
             {
                 ShowCinemaExperience();
             }
-            else if (selected == menu.IndexOf("Events"))
+            else if (selected == Array.IndexOf(menu, "Events"))
             {
                 ShowEvents();
             }
-            else if (selected == menu.IndexOf("Prices"))
+            else if (selected == Array.IndexOf(menu, "Prices"))
             {
                 ShowPrices();
             }
-            else if (selected == menu.IndexOf("Policies"))
+            else if (selected == Array.IndexOf(menu, "Policies"))
             {
                 ShowPolicies();
             }

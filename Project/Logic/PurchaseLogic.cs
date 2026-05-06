@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 public class PurchaseLogic  
 {
-    public static PurchaseModel? CurrentPayment { get; private set; }
+    public static TicketModel? CurrentPayment { get; private set; }
     public static Random rng = new();
 
     public static string CreditCardCheck(Dictionary<string, string> creditCardInfo)
