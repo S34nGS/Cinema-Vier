@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+using System.Formats.Asn1;
+using System.Text.RegularExpressions;
 
 public class AccountsLogic
 {
@@ -32,7 +33,19 @@ public class AccountsLogic
         return true;
     }
 
-    public AccountModel? CreateAccount(string email, string password, string firstName, string lastName)
+    public bool IsValidDateOfBirth(DateTime dateOfBirth)
+    {
+        return dateOfBirth < DateTime.Today && dateOfBirth > DateTime.Today.AddYears(-120);
+    }
+
+    public static int CalculateAge(DateTime dateOfBirth)
+    {
+        int age = DateTime.Today.Year - dateOfBirth.Year;
+        if (dateOfBirth.Date > DateTime.Today.AddYears(-age)) age--;
+        return age;
+    }
+
+    public AccountModel? CreateAccount(string email, string password, string firstName, string lastName, DateTime dateOfBirth)
     {
         // check email
         if (IsValidEmail(email) == false)
@@ -45,9 +58,15 @@ public class AccountsLogic
         {
             return null;
         }
+        
+        // check date of birth
+        if (IsValidDateOfBirth(dateOfBirth) == false)
+        {
+            return null;
+        }
 
         // create account with first and last name
-        AccountModel account = new AccountModel(0, email, HashPassword(password), firstName, lastName);
+        AccountModel account = new AccountModel(0, email, HashPassword(password), firstName, lastName, TimetablesLogic.ConvertDateToUnixTime(dateOfBirth));
 
         _access.Write(account);
 

@@ -9,6 +9,7 @@
         CreateTicketTable();
         CreateConsumableTable();
         CreateConsumableOrderTable();
+        CreateMenuItemTable();
     }
 
     public static void CreateMoviesTable()
@@ -34,8 +35,8 @@
         accounts.CreateTable();
 
         List<AccountModel> accountsList = [
-            new AccountModel(1, "john@example.com","demo_password" , "John", "Doe"),
-            new AccountModel(2, "jane@example.com", "demo_password", "Jane", "Smith")
+            new AccountModel(1, "john@example.com","demo_password" , "John", "Doe" , TimetablesLogic.ConvertDateToUnixTime(new DateTime(2000, 1, 1))),
+            new AccountModel(2, "jane@example.com", "demo_password", "Jane", "Smith", TimetablesLogic.ConvertDateToUnixTime(new DateTime(2010, 1, 1)))
         ];
 
         foreach (AccountModel account in accountsList)
@@ -133,6 +134,18 @@
     {
         ReservationAccess reservation = new();
         reservation.CreateTable();
+
+        List<ReservationModel> reservationList = [
+            new ReservationModel(0, 1, "2026-04-29", 10.5, 1),
+            new ReservationModel(0, 1, "2026-04-10", 15.0, 2),
+            new ReservationModel(0, 2, "2026-04-30", 20.0, 3),
+            new ReservationModel(0, 2, "2026-04-11", 12.5, 1),
+        ];
+
+        foreach (ReservationModel item in reservationList)
+        {
+            reservation.Write(item);
+        }
     }
 
     public static void CreateTicketTable()
@@ -151,5 +164,11 @@
     {
         ConsumableOrderAccess consumable = new();
         consumable.CreateTable();
+    }
+
+    public static void CreateMenuItemTable()
+    {
+        MenuItemsAccess menuItem = new();
+        menuItem.CreateTable();
     }
 }
