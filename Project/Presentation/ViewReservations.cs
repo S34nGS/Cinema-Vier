@@ -13,7 +13,7 @@ public static class ViewReservations
 
         while (true)
         {
-            List<string> menu = new() { "Future Reservations", "Past Reservations"};
+            List<string> menu = ["Future Reservations", "Past Reservations"];
             int selected = UiHelper.SelectionMenu(menu, "Reservations");
 
             if (selected == menu.IndexOf("Future Reservations"))
@@ -37,7 +37,7 @@ public static class ViewReservations
         Console.WriteLine("=== Future Reservations ===");
         Console.WriteLine();
 
-        int userId = (int)AccountsLogic.CurrentAccount!.Id;
+        long userId = (int)AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetFutureReservations(userId);
 
         if (reservations.Count == 0)
@@ -48,15 +48,15 @@ public static class ViewReservations
         {
             foreach (ReservationModel reservation in reservations)
             {
-                Console.WriteLine($"Date: {reservation.ReservationDate}");
+                DateTime date = DateTime.Parse(reservation.ReservationDate);
+                Console.WriteLine($"Date: {date:dd-MM-yyyy}");
                 Console.WriteLine($"Price: {reservation.TotalPrice}");
                 Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
             }
         }
 
-        Console.WriteLine("Press any key to continue...");
-        Console.ReadKey();
+        UiHelper.HoldUser();
     }
 
     static void ShowPastReservations()
@@ -65,7 +65,7 @@ public static class ViewReservations
         Console.WriteLine("=== Past Reservations ===");
         Console.WriteLine();
 
-        int userId = (int)AccountsLogic.CurrentAccount!.Id;
+        long userId = (int)AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetPastReservations(userId);
 
         if (reservations.Count == 0)
@@ -76,14 +76,14 @@ public static class ViewReservations
         {
             foreach (ReservationModel reservation in reservations)
             {
-                Console.WriteLine($"Date: {reservation.ReservationDate}");
+                DateTime date = DateTime.Parse(reservation.ReservationDate);
+                Console.WriteLine($"Date: {date:dd-MM-yyyy}");
                 Console.WriteLine($"Price: {reservation.TotalPrice}");
                 Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
             }
         }
 
-        Console.WriteLine("Press any key to continue...");
-        Console.ReadKey();
+        UiHelper.HoldUser();
     }
 }
