@@ -33,7 +33,7 @@ public class MoviesAccess : DefaultAccess
         return connection.Query<MovieModel>(sql).AsList();
     }
 
-    public MovieModel GetByTitle(string title)
+    public MovieModel? GetByTitle(string title)
     {
         string sql = $"SELECT * FROM {Table} WHERE title = @Title";
         return connection.QueryFirstOrDefault<MovieModel>(sql, new { Title = title });
