@@ -26,7 +26,7 @@ static class PurchaseTicket
 
         if (DateMenu.Count == 0)
         {
-            int dates = UiLib.SelectionMenu(
+            int dates = UiHelper.SelectionMenu(
                 ["No available dates."],
                 "Pick a date",
                 true
@@ -38,7 +38,7 @@ static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiLib.SelectionMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu(DateMenu, "Pick a date");
         if (selectedDate == -1)
         {
             return null;
@@ -50,7 +50,7 @@ static class PurchaseTicket
         TimeMenu.Clear();
         SetUpTimeMenu(movie, selectedDateString);
 
-        int selectedTime = UiLib.SelectionMenu(TimeMenu, "Pick a time");
+        int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
         if (selectedTime == -1)
         {
             return null;
@@ -72,7 +72,7 @@ static class PurchaseTicket
             "Add food and drinks"
         ];
 
-        int selectedOrderChoice = UiLib.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
+        int selectedOrderChoice = UiHelper.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
@@ -86,7 +86,7 @@ static class PurchaseTicket
         // show summary before payment
         ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
 
-        int selectedPaymentMethod = UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?");
+        int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
             return null;
@@ -101,7 +101,7 @@ static class PurchaseTicket
             {
                 if (invalidInputs != "")
                 {
-                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
+                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
                         CreditCardInput,
                         $"Invalid input: {invalidInputs} please try again"
                     );
@@ -110,7 +110,7 @@ static class PurchaseTicket
                 }
                 else
                 {
-                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
+                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
                         CreditCardInput,
                         "Please fill in the payment information"
                     );
@@ -126,7 +126,7 @@ static class PurchaseTicket
             {
                 if (invalidInputs != "")
                 {
-                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
+                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
                         IBANInput,
                         $"Invalid input: {invalidInputs} please try again"
                     );
@@ -135,7 +135,7 @@ static class PurchaseTicket
                 }
                 else
                 {
-                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
+                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
                         IBANInput,
                         "Please fill in the payment information"
                     );
@@ -148,7 +148,7 @@ static class PurchaseTicket
 
         int reservationNumber = PurchaseLogic.GenerateReservationNumber();
 
-        UiLib.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
+        UiHelper.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
         ReservationsLogic.CreateReservation(new(reservationNumber, AccountsLogic.CurrentAccount.Id, selectedDateString, 10, 1));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
@@ -237,6 +237,6 @@ static class PurchaseTicket
         Console.WriteLine($"Final total: €{finalTotal:0.00}");
         Console.WriteLine($"");
 
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 }
