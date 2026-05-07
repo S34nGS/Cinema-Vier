@@ -236,16 +236,4 @@ static class PurchaseTicket
 
         UiHelper.HoldUser();
     }
-
-    public static string GetAvailableDates( )
-    {
-        string availableDates = "";
-
-        foreach(string date in DateMenu)
-        {
-            availableDates += date + "\n";
-        }
-
-        return availableDates;
-    }
 }
