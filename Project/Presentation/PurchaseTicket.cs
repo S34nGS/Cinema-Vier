@@ -3,6 +3,7 @@ static class PurchaseTicket
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    private static List<TimetableModel> CurrentTimetables = [];
 
     public static List<string> CreditCardInput =
     [
@@ -51,6 +52,7 @@ static class PurchaseTicket
         SetUpTimeMenu(movie, selectedDateString);
 
         int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
+        TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
         if (selectedTime == -1)
         {
             return null;
@@ -149,7 +151,7 @@ static class PurchaseTicket
         int reservationNumber = PurchaseLogic.GenerateReservationNumber();
 
         UiHelper.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
-        ReservationsLogic.CreateReservation(new ReservationModel(reservationNumber,AccountsLogic.CurrentAccount!.Id,TimetablesLogic.ConvertDateToUnixTime(convertedDateTime),10,1));
+        ReservationsLogic.CreateReservation(new ReservationModel(reservationNumber,AccountsLogic.CurrentAccount!.Id,TimetablesLogic.ConvertDateToUnixTime(convertedDateTime),(double)finalTotal,selectedTimetable.Id));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
@@ -179,6 +181,8 @@ static class PurchaseTicket
         // get all times for selected date
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
+        CurrentTimetables.Clear();
+
         foreach (TimetableModel timetable in timetables)
         {
             if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
@@ -187,6 +191,7 @@ static class PurchaseTicket
 
                 if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
+                    CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
                         $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
                     );

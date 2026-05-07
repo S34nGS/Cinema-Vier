@@ -37,7 +37,7 @@ public static class ViewReservations
         Console.WriteLine("=== Future Reservations ===");
         Console.WriteLine();
 
-        long userId = (int)AccountsLogic.CurrentAccount!.Id;
+        long userId = AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetFutureReservations(userId);
 
         if (reservations.Count == 0)
@@ -49,8 +49,14 @@ public static class ViewReservations
             foreach (ReservationModel reservation in reservations)
             {
                 DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+
+                TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
+
+                DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
+
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-                Console.WriteLine($"Price: {reservation.TotalPrice}");
+                Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
+                Console.WriteLine($"Price: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
             }
@@ -65,7 +71,7 @@ public static class ViewReservations
         Console.WriteLine("=== Past Reservations ===");
         Console.WriteLine();
 
-        long userId = (int)AccountsLogic.CurrentAccount!.Id;
+        long userId = AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetPastReservations(userId);
 
         if (reservations.Count == 0)
@@ -77,8 +83,14 @@ public static class ViewReservations
             foreach (ReservationModel reservation in reservations)
             {
                 DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+
+                TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
+
+                DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
+                
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-                Console.WriteLine($"Price: {reservation.TotalPrice}");
+                Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
+                Console.WriteLine($"Price: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
             }

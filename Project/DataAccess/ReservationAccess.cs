@@ -28,4 +28,10 @@ public class ReservationAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE userId = @UserId";
         return connection.Query<ReservationModel>(sql, new { UserId = userId }).AsList();
     }
+
+    public TimetableModel GetById(Int64 timetableId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
+        return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
+    }
 }
