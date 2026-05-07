@@ -32,11 +32,8 @@ static class Menu
                 if (AccountsLogic.CurrentAccount != null)
                 {
                     PurchaseTicket.SetUpDateMenu(movie);
-                    UiHelper.HoldUser(
-                        $"Title: {movie.Title}\nDescription: {movie.Summary}\nGenre: {movie.Genre}\nDuration: {movie.Duration}\nAge rating: {movie.AgeRating}\nAvailable dates:\n{PurchaseTicket.GetAvailableDates()}"
-                    );
+                    UiHelper.HoldUser(movie.ToString());
                     
-
                     if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                     {
                         UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
