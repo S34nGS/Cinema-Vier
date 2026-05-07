@@ -24,7 +24,10 @@ static class Menu
             while (true)
             {
                 MovieModel? movie = MoviesLogic.Start();
-                if (movie is null) Start();
+                if (movie is null) 
+                {
+                    Start();
+                }
 
                 if (AccountsLogic.CurrentAccount != null)
                 {
