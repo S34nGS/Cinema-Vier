@@ -56,11 +56,13 @@ public static class ViewReservations
 
                 DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
+                RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
+
                 Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
                 Console.WriteLine($"Price: €{reservation.TotalPrice}");
-                Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
+                Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
             }
         }
@@ -93,11 +95,13 @@ public static class ViewReservations
 
                 DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
+                RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
+
                 Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
                 Console.WriteLine($"Price: €{reservation.TotalPrice}");
-                Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
+                Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
             }
         }
