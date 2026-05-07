@@ -8,25 +8,25 @@ public static class CinemaInfo
 
             List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies", "General Information"];
 
-            int selected = UiLib.SelectionMenu(menu, "About Cinema Vier");
+            int selected = UiHelper.SelectionMenu(menu, "About Cinema Vier");
 
-            if (selected == Array.IndexOf(menu, "About Us"))
+            if (selected == menu.IndexOf("About Us"))
             {
                 ShowAboutUs();
             }
-            else if (selected == Array.IndexOf(menu, "Cinema Experience"))
+            else if (selected == menu.IndexOf("Cinema Experience"))
             {
                 ShowCinemaExperience();
             }
-            else if (selected == Array.IndexOf(menu, "Events"))
+            else if (selected == menu.IndexOf("Events"))
             {
                 ShowEvents();
             }
-            else if (selected == Array.IndexOf(menu, "Prices"))
+            else if (selected == menu.IndexOf("Prices"))
             {
                 ShowPrices();
             }
-            else if (selected == Array.IndexOf(menu, "Policies"))
+            else if (selected == menu.IndexOf("Policies"))
             {
                 ShowPolicies();
             }
@@ -36,7 +36,7 @@ public static class CinemaInfo
             }
             else
             {
-                // Back handled by UiLib
+                // Back handled by UiHelper
                 Menu.Start();
                 return;
             }
@@ -53,7 +53,7 @@ Cinema Vier is a modern cinema located in Rotterdam.
 We offer a comfortable and simple movie experience.
 Users can browse movies, make reservations and enjoy their visit.
 ");
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 
     static void ShowCinemaExperience()
@@ -66,7 +66,7 @@ Our cinema offers a comfortable viewing experience with modern screens and sound
 Before the movie, visitors can stay in the waiting lounge.
 In the lounge, customers can buy popcorn and a variety of hot and cold drinks.
 ");
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 
     static void ShowEvents()
@@ -78,7 +78,7 @@ In the lounge, customers can buy popcorn and a variety of hot and cold drinks.
 At the moment, we focus on providing a simple movie experience.
 In the future, special events or themed movie nights may be added.
 ");
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 
     static void ShowPrices()
@@ -90,7 +90,7 @@ In the future, special events or themed movie nights may be added.
 Ticket prices may vary depending on the movie and time.
 Food and drinks such as popcorn and beverages are sold separately.
 ");
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 
     static void ShowPolicies()
@@ -103,7 +103,7 @@ Users must provide correct information when making a reservation.
 Payment must be completed before a reservation is confirmed.
 Customers should follow general cinema rules during their visit.
 ");
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
     static void ShowGeneralInformation()
     {
@@ -123,6 +123,6 @@ Phone: +31 10 123 4567
 
 Email: info@cinemavier.nl
 ");
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 }
