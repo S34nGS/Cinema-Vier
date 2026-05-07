@@ -10,7 +10,7 @@ public class ReservationAccess : DefaultAccess
             CREATE TABLE IF NOT EXISTS {Table} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 userId INTEGER NOT NULL,
-                reservationDate TEXT NOT NULL,
+                reservationDate INTEGER NOT NULL,
                 totalPrice REAL NOT NULL,
                 timeTableId INTEGER NOT NULL,
                 FOREIGN KEY (userId) REFERENCES Account(id),

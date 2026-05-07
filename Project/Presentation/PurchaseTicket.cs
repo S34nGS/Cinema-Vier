@@ -149,7 +149,7 @@ static class PurchaseTicket
         int reservationNumber = PurchaseLogic.GenerateReservationNumber();
 
         UiHelper.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
-        ReservationsLogic.CreateReservation(new(reservationNumber, AccountsLogic.CurrentAccount.Id, selectedDateString, 10, 1));
+        ReservationsLogic.CreateReservation(new ReservationModel(reservationNumber,AccountsLogic.CurrentAccount!.Id,TimetablesLogic.ConvertDateToUnixTime(convertedDateTime),10,1));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 

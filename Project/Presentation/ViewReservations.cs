@@ -48,8 +48,8 @@ public static class ViewReservations
         {
             foreach (ReservationModel reservation in reservations)
             {
-                DateTime date = DateTime.Parse(reservation.ReservationDate);
-                Console.WriteLine($"Date: {date:dd-MM-yyyy}");
+                DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+                Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Price: {reservation.TotalPrice}");
                 Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
@@ -76,8 +76,8 @@ public static class ViewReservations
         {
             foreach (ReservationModel reservation in reservations)
             {
-                DateTime date = DateTime.Parse(reservation.ReservationDate);
-                Console.WriteLine($"Date: {date:dd-MM-yyyy}");
+                DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+                Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Price: {reservation.TotalPrice}");
                 Console.WriteLine($"Room number: {TimetablesLogic.GetRoomByTimetableId(reservation.TimeTableId).Id}");
                 Console.WriteLine("----------------------------");
