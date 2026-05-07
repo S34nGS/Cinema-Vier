@@ -36,4 +36,9 @@ public static class MoviesLogic
         if (movieIndex < 0) return null;
         return GetMovieData(movieIndex);
     }
+
+    public static MovieModel? GetMovieByTitle(string title)
+    {
+        return _access.GetByTitle(title);
+    }
 }
