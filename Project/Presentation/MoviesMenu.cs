@@ -7,7 +7,7 @@ static class MoviesMenu
     {
         while (true)
         {
-            int selected = UiLib.SelectionMenu(MoviesLogic.GetMovieTitles().Prepend("Search").ToList(), header);
+            int selected = UiHelper.SelectionMenu(MoviesLogic.GetMovieTitles().Prepend("Search").ToList(), header);
             
             if (selected == -1) return -1;
 
@@ -15,19 +15,19 @@ static class MoviesMenu
             {
                 while (true)
                 {
-                    string input = UiLib.Input("Search movie:");
+                    string input = UiHelper.Input("Search movie:");
                     if (input == "-1") break;
                     List<string> searchedMovieList = MoviesLogic.GetByPartOfTitle(input);
                     if (searchedMovieList.Count == 0)
                     {
-                        UiLib.SelectionMenu(
+                        UiHelper.SelectionMenu(
                             ["No movies found."],
                             "Results",
                             true
                         );
                         continue;
                     }
-                    int selectedSearch = UiLib.SelectionMenu(searchedMovieList, header);
+                    int selectedSearch = UiHelper.SelectionMenu(searchedMovieList, header);
                     if (selectedSearch == -1) continue;
                     return selectedSearch;
                 }
