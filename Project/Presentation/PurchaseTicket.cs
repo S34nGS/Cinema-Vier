@@ -52,11 +52,13 @@ static class PurchaseTicket
         SetUpTimeMenu(movie, selectedDateString);
 
         int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
-        TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
+
         if (selectedTime == -1)
         {
             return null;
         }
+        
+        TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);

@@ -52,8 +52,11 @@ public static class ViewReservations
 
                 TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
 
+                MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
+
                 DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
+                Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
                 Console.WriteLine($"Price: €{reservation.TotalPrice}");
@@ -86,8 +89,11 @@ public static class ViewReservations
 
                 TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
 
+                MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
+
                 DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
-                
+
+                Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
                 Console.WriteLine($"Price: €{reservation.TotalPrice}");
