@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 public class PurchaseLogic  
@@ -89,21 +90,26 @@ public class PurchaseLogic
     private static bool LuhnCheck(string cardNumber)
     {
         int sum = 0;
-        bool alternate = false;
+        bool shouldDouble = false;
 
         for (int i = cardNumber.Length - 1; i >= 0; i--)
         {
-            int digit = cardNumber[i] - '0';
 
-            if (alternate)
+            int digit = (int)char.GetNumericValue(cardNumber[i]);
+
+            if (shouldDouble)
             {
                 digit *= 2;
-                if (digit > 9) digit -= 9;
+                if (digit > 9)
+                {
+                    digit -= 9;
+                }
             }
 
             sum += digit;
-            alternate = !alternate;
+            shouldDouble = !shouldDouble;
         }
+
         return sum % 10 == 0;
     }
 
