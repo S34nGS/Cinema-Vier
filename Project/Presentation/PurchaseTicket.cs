@@ -103,10 +103,11 @@ static class PurchaseTicket
                 {
                     Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
                         CreditCardInput,
-                        $"Invalid input: {invalidInputs} please try again"
+                        $"Invalid input: {invalidInputs}please try again"
                     );
 
-                    invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
+                    bool[] isValidInput = PurchaseLogic.CreditCardCheck(creditCardInfo);
+                    invalidInputs = InValidMessage(isValidInput, "credit card");
                 }
                 else
                 {
@@ -115,7 +116,8 @@ static class PurchaseTicket
                         "Please fill in the payment information"
                     );
 
-                    invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
+                    bool[] isValidInput = PurchaseLogic.CreditCardCheck(creditCardInfo);
+                    invalidInputs = InValidMessage(isValidInput, "credit card");
                 }
 
             } while (invalidInputs != "");
@@ -128,10 +130,11 @@ static class PurchaseTicket
                 {
                     Dictionary<string, string> iBANInfo = UiHelper.InputForm(
                         IBANInput,
-                        $"Invalid input: {invalidInputs} please try again"
+                        $"Invalid input: {invalidInputs}please try again"
                     );
 
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                    bool[] isValidInput = PurchaseLogic.IBANCheck(iBANInfo);
+                    invalidInputs = InValidMessage(isValidInput, "iban");
                 }
                 else
                 {
@@ -140,9 +143,9 @@ static class PurchaseTicket
                         "Please fill in the payment information"
                     );
 
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
+                    bool[] isValidInput = PurchaseLogic.IBANCheck(iBANInfo);
+                    invalidInputs = InValidMessage(isValidInput, "iban");
                 }
-
             } while (invalidInputs != "");
         }
 
