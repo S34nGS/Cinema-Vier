@@ -94,7 +94,6 @@ public class PurchaseLogic
 
         for (int i = cardNumber.Length - 1; i >= 0; i--)
         {
-
             int digit = (int)char.GetNumericValue(cardNumber[i]);
 
             if (shouldDouble)
