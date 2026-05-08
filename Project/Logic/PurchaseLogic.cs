@@ -69,23 +69,21 @@ public class PurchaseLogic
 
         return cardNumber.All(char.IsDigit)
         && cardNumber.Length >= 13 && cardNumber.Length <= 19
-        && HasValidPrefix(cardNumber)
+        && CheckCardtype(cardNumber)
         && LuhnCheck(cardNumber);
     }
-    private static bool HasValidPrefix(string cardNumber)
+    private static bool CheckCardtype(string cardNumber)
     {
-        // Visa
-        if (cardNumber.StartsWith("4")) return true;
-
-        // Mastercard
-        if (cardNumber.Length >= 2)
+        string[][] cardtypes =
         {
-            int firstTwo = int.Parse(cardNumber[..2]);
-            if (firstTwo >= 51 && firstTwo <= 55) return true;
-        }
+            new[] {"4"},                             // Visa
+            new[] {"51", "52", "53", "54", "55"},    // Mastercard
+            new[] {"34", "37"}                       // Amex
+        };
 
-        // Amex
-        return (cardNumber.StartsWith("34") || cardNumber.StartsWith("37"));
+        return cardtypes[0].Contains(cardNumber.Substring(0, 1))
+        || cardtypes[1].Contains(cardNumber.Substring(0, 2))
+        || cardtypes[2].Contains(cardNumber.Substring(0, 2));
     }
 
     private static bool LuhnCheck(string cardNumber)
