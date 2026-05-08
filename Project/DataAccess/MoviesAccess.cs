@@ -45,6 +45,12 @@ public class MoviesAccess : DefaultAccess
         return connection.Query<MovieModel>(sql, new { Pattern = $"%{pattern}%" }).AsList();
     }
 
+    public MovieModel GetById(Int64 movieId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @MovieId";
+        return connection.QueryFirstOrDefault<MovieModel>(sql, new { MovieId = movieId });
+    }
+
     public void Update(MovieModel movie)
     {
         string sql = $@"UPDATE {Table} 

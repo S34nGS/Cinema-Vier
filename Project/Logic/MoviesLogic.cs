@@ -25,6 +25,11 @@ public static class MoviesLogic
         return Titles;
     }
 
+    public static MovieModel GetById(Int64 movieId)
+    {
+        return _access.GetById(movieId);
+    }
+
     public static bool IsOldEnough(MovieModel movie, AccountModel account)
     {
         int age = AccountsLogic.CalculateAge(TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth));
