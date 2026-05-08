@@ -24,19 +24,20 @@ static class Menu
             while (true)
             {
                 MovieModel? movie = MoviesLogic.Start();
-                if (movie is null)
+                if (movie is null) 
                 {
                     Start();
-                    return;
                 }
 
                 if (AccountsLogic.CurrentAccount != null)
                 {
+                    PurchaseTicket.SetUpDateMenu(movie);
+                    UiHelper.HoldUser(movie.ToString());
+                    
                     if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                     {
                         UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
                         Start();
-                        return;
                     }
                 }
 
