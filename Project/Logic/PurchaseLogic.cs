@@ -141,27 +141,41 @@ public class PurchaseLogic
         && Mod97Check(iban);
     }
 
-    // Validates an IBAN using the Mod-97 checksum algorithm.
-    // Mod-97 check is a rule that every valid IBAN must follow.
-    // Ensures the IBAN is correctly formatted
     private static bool Mod97Check(string iban)
     {
-        // Move the first 4 characters to the end
-        string rearranged = iban[4..] + iban[..4];
-
-        // Replace letters with numbers: A=10, B=11 ... Z=35
-        string numericIban = string.Concat(
-            rearranged.Select(c => char.IsLetter(c) ? (c - 'A' + 10).ToString() : c.ToString())
-        );
-
-        // Calculate remainder — a valid IBAN always gives 1
-        int remainder = 0;
-        foreach (char c in numericIban)
+        Dictionary<char, string> replaceLetter = new()
         {
-            remainder = (remainder * 10 + (c - '0')) % 97;
+            {'A', "10"}, {'B', "11"}, {'C', "12"}, {'D', "13"},
+            {'E', "14"}, {'F', "15"}, {'G', "16"}, {'H', "17"},
+            {'I', "18"}, {'J', "19"}, {'K', "20"}, {'L', "21"},
+            {'M', "22"}, {'N', "23"}, {'O', "24"}, {'P', "25"},
+            {'Q', "26"}, {'R', "27"}, {'S', "28"}, {'T', "29"},
+            {'U', "30"}, {'V', "31"}, {'W', "32"}, {'X', "33"},
+            {'Y', "34"}, {'Z', "35"}
+        };
+        string moveIban = iban.Substring(4, iban.Length - 4) + iban.Substring(0, 4);
+        string ibanAsNumber = "";
+
+        foreach(char c in moveIban)
+        {
+            if (replaceLetter.ContainsKey(c)) 
+            {
+                ibanAsNumber += replaceLetter[c];
+            }
+            else
+            {
+                ibanAsNumber += c;
+            }
         }
 
-        return remainder == 1;
+        int divisionResult = 0;
+        foreach(char c in ibanAsNumber)
+        {
+            int digit = (int)char.GetNumericValue(c);
+            divisionResult = (divisionResult * 10 + digit) % 97;
+        }
+
+        return divisionResult == 1;
     }
 
     public static int GenerateReservationNumber()
