@@ -25,4 +25,10 @@ public class SeatAccess : DefaultAccess
             VALUES (@RoomId, @Row, @SeatNumber, @SeatPriority)";
         connection.Execute(sql, seat);
 	}
+
+	public List<SeatModel> GetAllSeatsByRoomId(Int64 roomId)
+	{
+        string sql = $"SELECT * FROM {Table} WHERE roomId = @RoomId";
+        return connection.Query<SeatModel>(sql, new { RoomId = roomId }).AsList();
+	}
 }
