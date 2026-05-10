@@ -128,6 +128,20 @@
     {
         SeatAccess seats = new();
         seats.CreateTable();
+
+        int small_theatre_height = 16;
+        int small_theatre_width = 12;
+
+        for (int y_axis = 0; y_axis < small_theatre_height; y_axis++)
+        {
+            for (int x_axis = 0; x_axis < small_theatre_width; x_axis++)
+            {
+
+                // public SeatModel(Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority)
+                SeatModel seat = new(-1, 1, y_axis + 1, x_axis + 1, 1);
+                seats.Write(seat);
+            }
+        }
     }
 
     public static void CreateReservationTable()
