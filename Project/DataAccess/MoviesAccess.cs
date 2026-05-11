@@ -33,7 +33,7 @@ public class MoviesAccess : DefaultAccess
         return connection.Query<MovieModel>(sql).AsList();
     }
 
-    public MovieModel GetByTitle(string title)
+    public MovieModel? GetByTitle(string title)
     {
         string sql = $"SELECT * FROM {Table} WHERE title = @Title";
         return connection.QueryFirstOrDefault<MovieModel>(sql, new { Title = title });
@@ -43,6 +43,12 @@ public class MoviesAccess : DefaultAccess
     {
         string sql = $"SELECT * FROM {Table} WHERE title LIKE @Pattern";
         return connection.Query<MovieModel>(sql, new { Pattern = $"%{pattern}%" }).AsList();
+    }
+
+    public MovieModel GetById(Int64 movieId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @MovieId";
+        return connection.QueryFirstOrDefault<MovieModel>(sql, new { MovieId = movieId });
     }
 
     public void Update(MovieModel movie)

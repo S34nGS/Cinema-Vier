@@ -29,4 +29,20 @@ public class MovieModel
         Genre = genre;
         ReleaseDate = releaseDate;
     }
+
+    public override string ToString()
+    {
+        string dates = "";
+        foreach(string date in PurchaseTicket.DateMenu)
+        {
+            dates += $"{date}{Environment.NewLine}";
+        }
+
+        return $"Title: {Title}{Environment.NewLine}" +
+            $"Description: {Summary}{Environment.NewLine}" +
+            $"Genre: {Genre}{Environment.NewLine}" +
+            $"Duration: {Duration}{Environment.NewLine}" +
+            $"Age Rating: {AgeRating}{Environment.NewLine}" +
+            $"Available dates: {dates}";
+    }
 }
