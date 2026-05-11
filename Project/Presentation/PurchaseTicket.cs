@@ -7,7 +7,7 @@ static class PurchaseTicket
     public static List<string> CreditCardInput =
     [
         "Cardholder name",
-        "Card number (13-19 digits, for example:4111 1111 1111 1111)",
+        "Card number (13-19 digits)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
     ];
