@@ -136,10 +136,10 @@
         reservation.CreateTable();
 
         List<ReservationModel> reservationList = [
-            new ReservationModel(0, 1, "2026-04-29", 10.5, 1),
-            new ReservationModel(0, 1, "2026-04-10", 15.0, 2),
-            new ReservationModel(0, 2, "2026-04-30", 20.0, 3),
-            new ReservationModel(0, 2, "2026-04-11", 12.5, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1),
         ];
 
         foreach (ReservationModel item in reservationList)

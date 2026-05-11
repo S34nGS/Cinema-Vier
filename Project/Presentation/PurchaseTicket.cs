@@ -3,6 +3,7 @@ static class PurchaseTicket
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    private static List<TimetableModel> CurrentTimetables = [];
 
     public static List<string> CreditCardInput =
     [
@@ -26,7 +27,7 @@ static class PurchaseTicket
 
         if (DateMenu.Count == 0)
         {
-            int dates = UiLib.SelectionMenu(
+            int dates = UiHelper.SelectionMenu(
                 ["No available dates."],
                 "Pick a date",
                 true
@@ -38,7 +39,7 @@ static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiLib.SelectionMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu(DateMenu, "Pick a date");
         if (selectedDate == -1)
         {
             return null;
@@ -50,11 +51,14 @@ static class PurchaseTicket
         TimeMenu.Clear();
         SetUpTimeMenu(movie, selectedDateString);
 
-        int selectedTime = UiLib.SelectionMenu(TimeMenu, "Pick a time");
+        int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
+
         if (selectedTime == -1)
         {
             return null;
         }
+        
+        TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
@@ -72,7 +76,7 @@ static class PurchaseTicket
             "Add food and drinks"
         ];
 
-        int selectedOrderChoice = UiLib.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
+        int selectedOrderChoice = UiHelper.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
@@ -86,7 +90,7 @@ static class PurchaseTicket
         // show summary before payment
         ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
 
-        int selectedPaymentMethod = UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?");
+        int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
             return null;
@@ -101,7 +105,7 @@ static class PurchaseTicket
             {
                 if (invalidInputs != "")
                 {
-                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
+                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
                         CreditCardInput,
                         $"Invalid input: {invalidInputs} please try again"
                     );
@@ -110,7 +114,7 @@ static class PurchaseTicket
                 }
                 else
                 {
-                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
+                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
                         CreditCardInput,
                         "Please fill in the payment information"
                     );
@@ -126,7 +130,7 @@ static class PurchaseTicket
             {
                 if (invalidInputs != "")
                 {
-                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
+                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
                         IBANInput,
                         $"Invalid input: {invalidInputs} please try again"
                     );
@@ -135,7 +139,7 @@ static class PurchaseTicket
                 }
                 else
                 {
-                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
+                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
                         IBANInput,
                         "Please fill in the payment information"
                     );
@@ -148,12 +152,12 @@ static class PurchaseTicket
 
         int reservationNumber = PurchaseLogic.GenerateReservationNumber();
 
-        UiLib.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
-        ReservationsLogic.CreateReservation(new(reservationNumber, AccountsLogic.CurrentAccount.Id, selectedDateString, 10, 1));
+        UiHelper.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
+        ReservationsLogic.CreateReservation(new ReservationModel(reservationNumber,AccountsLogic.CurrentAccount!.Id,TimetablesLogic.ConvertDateToUnixTime(convertedDateTime),(double)finalTotal,selectedTimetable.Id));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
-    private static void SetUpDateMenu(MovieModel movie)
+    public static void SetUpDateMenu(MovieModel movie)
     {
         // get all timetables for movie
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
@@ -179,6 +183,8 @@ static class PurchaseTicket
         // get all times for selected date
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
+        CurrentTimetables.Clear();
+
         foreach (TimetableModel timetable in timetables)
         {
             if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
@@ -187,6 +193,7 @@ static class PurchaseTicket
 
                 if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
+                    CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
                         $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
                     );
@@ -234,6 +241,6 @@ static class PurchaseTicket
         Console.WriteLine($"Final total: €{finalTotal:0.00}");
         Console.WriteLine($"");
 
-        UiLib.HoldUser();
+        UiHelper.HoldUser();
     }
 }

@@ -10,14 +10,11 @@ public static class ReservationsLogic
 
         foreach (ReservationModel reservation in allReservations)
         {
-            DateTime reservationDate;
+            DateTime reservationDate = TimetablesLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
 
-            if (DateTime.TryParse(reservation.ReservationDate, out reservationDate))
+            if (reservationDate.Date >= DateTime.Today)
             {
-                if (reservationDate.Date >= DateTime.Today)
-                {
-                    futureReservations.Add(reservation);
-                }
+                futureReservations.Add(reservation);
             }
         }
 
@@ -32,14 +29,11 @@ public static class ReservationsLogic
 
         foreach (ReservationModel reservation in allReservations)
         {
-            DateTime reservationDate;
+            DateTime reservationDate = TimetablesLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
 
-            if (DateTime.TryParse(reservation.ReservationDate, out reservationDate))
+            if (reservationDate.Date < DateTime.Today)
             {
-                if (reservationDate.Date < DateTime.Today)
-                {
-                    pastReservations.Add(reservation);
-                }
+                pastReservations.Add(reservation);
             }
         }
 
