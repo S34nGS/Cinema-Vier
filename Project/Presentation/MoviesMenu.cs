@@ -2,55 +2,24 @@ using System.Linq;
 
 static class MoviesMenu
 {
-    public static string header = "All available movies:";
-    // public static int Start()
-    // {
-    //     while (true)
-    //     {
-    //         int selected = UiLib.SelectionMenu(MoviesLogic.GetMovieTitles().Prepend("Search").ToList(), header);
-            
-    //         if (selected == -1) return -1;
-
-    //         if (selected == 0)
-    //         {
-    //             while (true)
-    //             {
-    //                 string input = UiLib.Input("Search movie:");
-    //                 if (input == "-1") break;
-    //                 List<string> searchedMovieList = MoviesLogic.GetByPartOfTitle(input);
-    //                 if (searchedMovieList.Count == 0)
-    //                 {
-    //                     UiLib.SelectionMenu(
-    //                         ["No movies found."],
-    //                         "Results",
-    //                         true
-    //                     );
-    //                     continue;
-    //                 }
-    //                 int selectedSearch = UiLib.SelectionMenu(searchedMovieList, header);
-    //                 if (selectedSearch == -1) continue;
-    //                 return selectedSearch;
-    //             }
-    //             continue;
-    //         }
-            
-    //         return selected - 1;
-    //     }
-    // }
+    public static string header = "All available movies";
 
     public static int Start()
     {
         while (true)
         {
-            int selected = UiHelper.SelectionMenu(MoviesLogic.GetMovieTitles().Prepend("Search").ToList(), header);
-            
-            if (selected == -1) return -1;
+            int preMovieListMenu = UiHelper.SelectionMenu(["Search by name", "Search by date", "View available movies"]);
 
-            if (selected == 0)
+            if (preMovieListMenu == -1)
+            {
+                return -1;
+            }
+
+            if (preMovieListMenu == 0)
             {
                 while (true)
                 {
-                    string input = UiHelper.Input("Search movie:");
+                    string input = UiHelper.Input("Fill in title");
                     if (input == "-1") break;
                     List<string> searchedMovieList = MoviesLogic.GetByPartOfTitle(input);
                     if (searchedMovieList.Count == 0)
@@ -62,14 +31,60 @@ static class MoviesMenu
                         );
                         continue;
                     }
-                    int selectedSearch = UiHelper.SelectionMenu(searchedMovieList, header);
-                    if (selectedSearch == -1) continue;
-                    return selectedSearch;
+                    int movieListMenuSearch = UiHelper.SelectionMenu(searchedMovieList, header);
+                    if (movieListMenuSearch == -1) continue;
+                    return movieListMenuSearch;
                 }
                 continue;
             }
-            
-            return selected - 1;
+
+            if (preMovieListMenu == 1)
+            {
+                while (true)
+                {
+                    List<string> dates = [];
+                    for (int i = 0; i < 14; i++)
+                    {
+                        dates.Add(TimetablesLogic.GetDateString(DateTime.Today.AddDays(i).AddHours(13)));
+                    }
+
+                    int pickedDate = UiHelper.SelectionMenu(dates, header);
+
+                    if (pickedDate == -1) break;
+
+                    List<string> searchedDateMovieList = [];
+                    List<TimetableModel> searchedDateTimetableList = TimetablesLogic.GetTimetablesByDate(dates[pickedDate]);
+
+                    foreach (TimetableModel timetable in searchedDateTimetableList)
+                    {
+                        searchedDateMovieList.Add(MoviesLogic.GetById(timetable.MovieId).Title);
+                    }
+
+                    if (searchedDateMovieList.Count == 0)
+                    {
+                        UiHelper.SelectionMenu(
+                            ["No movies found."],
+                            "Results",
+                            true
+                        );
+                        continue;
+                    }
+                    int movieListMenuSearch = UiHelper.SelectionMenu(searchedDateMovieList, header);
+                    if (movieListMenuSearch == -1) continue;
+                    return movieListMenuSearch;
+                }
+                continue;
+            }
+
+            if (preMovieListMenu == 2)
+            {
+                while (true)
+                {
+                    int movieListMenu = UiHelper.SelectionMenu(MoviesLogic.GetMovieTitles(), header);
+                    if (movieListMenu == -1) return -1;
+                    return movieListMenu;
+                }
+            }
         }
     }
 }

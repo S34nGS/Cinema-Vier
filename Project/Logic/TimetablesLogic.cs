@@ -13,6 +13,11 @@ public static class TimetablesLogic
         return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
     }
 
+    public static DateTime ConvertStringToDateTime(string dateString)
+    {
+        return DateTime.Parse(dateString);
+    }
+
     public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
     {
         return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
@@ -53,5 +58,22 @@ public static class TimetablesLogic
     public static TimetableModel GetById(Int64 timetableId)
     {
         return _access.GetById(timetableId);
+    }
+
+    public static List<TimetableModel> GetTimetablesByDate(string dateString)
+    {
+        DateTime date = ConvertStringToDateTime(dateString);
+        Int64 startUnixTime = ConvertDateToUnixTime(date.Date);
+        Int64 endUnixTime = ConvertDateToUnixTime(date.Date.AddDays(1)) - 1;
+        
+        return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
+    }
+
+    public static List<TimetableModel> GetTimetablesByDateRange(DateTime startDate, DateTime endDate)
+    {
+        Int64 startUnixTime = ConvertDateToUnixTime(startDate.Date);
+        Int64 endUnixTime = ConvertDateToUnixTime(endDate.Date);
+        
+        return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
     }
 }
