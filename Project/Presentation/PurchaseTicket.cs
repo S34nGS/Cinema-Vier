@@ -240,58 +240,66 @@ static class PurchaseTicket
     {
         Console.Clear();
 
-        Console.WriteLine($"Booking Summary");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Booking Summary
 
-        Console.WriteLine($"Ticket total: €{ticketTotal:0.00}");
-        Console.WriteLine($"");
+Ticket total: €{ticketTotal:0.00}
+");
 
         if (orderedMenuItems.Count > 0)
         {
-            Console.WriteLine($"Food and drink items:");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+Food and drink items:
+");
 
             foreach (OrderItemModel item in orderedMenuItems)
             {
-                Console.WriteLine($"Item name: {item.Name}");
-                Console.WriteLine($"Quantity: {item.Quantity}");
-                Console.WriteLine($"Price per item: €{item.PricePerItem:0.00}");
-                Console.WriteLine($"Subtotal: €{item.SubTotal:0.00}");
-                Console.WriteLine($"");
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
             }
         }
         else
         {
-            Console.WriteLine($"No food or drinks selected.");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+No food or drinks selected.
+");
         }
 
-        Console.WriteLine($"Food and drink total: €{menuTotal:0.00}");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Food and drink total: €{menuTotal:0.00}
+");
 
         if (loungePreOrderItems.Count > 0)
         {
-            Console.WriteLine($"Lounge pre-order drinks:");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+Lounge pre-order drinks:
+");
 
             foreach (OrderItemModel item in loungePreOrderItems)
             {
-                Console.WriteLine($"Item name: {item.Name}");
-                Console.WriteLine($"Quantity: {item.Quantity}");
-                Console.WriteLine($"Price per item: €{item.PricePerItem:0.00}");
-                Console.WriteLine($"Subtotal: €{item.SubTotal:0.00}");
-                Console.WriteLine($"");
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
             }
         }
         else
         {
-            Console.WriteLine($"No lounge drinks selected.");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+No lounge drinks selected.
+");
         }
 
-        Console.WriteLine($"Lounge drink pre-order total: €{loungePreOrderTotal:0.00}");
-        Console.WriteLine($"Final total: €{finalTotal:0.00}");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
+Final total: €{finalTotal:0.00}
+");
 
         UiHelper.HoldUser();
     }
