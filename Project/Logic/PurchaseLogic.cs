@@ -54,6 +54,7 @@ public class PurchaseLogic
 
     private static bool CardHolderNameCheck(string fullname)
     {
+        if (string.IsNullOrWhiteSpace(fullname)) return false;
         string fullnameWithoutSpaces = fullname.Replace(" ", "");
         string[] splitName = fullname.Split(' ');
 
@@ -66,6 +67,7 @@ public class PurchaseLogic
 
     private static bool CreditCardNumberCheck(string cardNumber)
     {
+        if (string.IsNullOrWhiteSpace(cardNumber)) return false;
         cardNumber = cardNumber.Replace(" ", "");
 
         return cardNumber.All(char.IsDigit)
@@ -114,6 +116,7 @@ public class PurchaseLogic
 
     private static bool CreditCardExpirationDateCheck(string expirationDate)
     {
+        if (string.IsNullOrWhiteSpace(expirationDate)) return false;
         int month = Convert.ToInt32(expirationDate.Split("/")[0]);
         int year = Convert.ToInt32(expirationDate.Split("/")[1]) + 2000;
         DateTime expiryDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
@@ -127,6 +130,7 @@ public class PurchaseLogic
 
     private static bool CreditCardCVCCVVCheck(string number)
     {
+        if (string.IsNullOrWhiteSpace(number)) return false;
         return number.All(char.IsDigit)
         && number.Length == 3 || number.Length == 4
         && number.Distinct().Count() != 1;
@@ -134,6 +138,7 @@ public class PurchaseLogic
 
     private static bool IBANNumberCheck(string iban)
     {
+        if (string.IsNullOrWhiteSpace(iban)) return false;
         iban = iban.Replace(" ", "").ToUpper();
 
         return iban.Length >= 15 && iban.Length <= 34
