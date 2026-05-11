@@ -8,7 +8,21 @@ static class Menu
         string header = (AccountsLogic.CurrentAccount != null)
             ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
             : "Welcome to Cinema Vier! Please select an option:";
-        List<string> menu = ["View Movies", "Login", "Register", "View Reservations", "Cinema Info", "Exit"];
+        List<string> menu = [];
+
+        if (AccountsLogic.CurrentAccount is null)
+        {
+            menu = ["View Movies", "Login", "Register", "Cinema Info", "Exit"];
+        }
+        else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
+        {
+            menu = ["Add Movie", "Edit Movie", "Disable Movie", "Logout"];
+        }
+        else
+        {
+            menu = ["View Movies","View Reservations", "Cinema Info", "Logout", "Exit"];
+        }
+
         int selected = UiHelper.SelectionMenu(menu, header, true);
 
         if (selected == menu.IndexOf("Login"))
@@ -55,6 +69,23 @@ static class Menu
         else if (selected == menu.IndexOf("View Reservations"))
         {
             ViewReservations.Start();
+        }
+        else if (selected == menu.IndexOf("Add Movie"))
+        {
+            
+        }
+        else if (selected == menu.IndexOf("Edit Movie"))
+        {
+            
+        }
+        else if (selected == menu.IndexOf("Disable Movie"))
+        {
+            
+        }
+        else if (selected == menu.IndexOf("Logout"))
+        {
+            AccountsLogic.Logout();
+            Start();
         }
         else if (selected == menu.IndexOf("Exit"))
         {

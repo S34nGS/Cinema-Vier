@@ -92,7 +92,7 @@ public class AccountsLogic
         CurrentAccount = account;
     }
 
-    public void Logout()
+    public static void Logout()
     {
         CurrentAccount = null;
     }
