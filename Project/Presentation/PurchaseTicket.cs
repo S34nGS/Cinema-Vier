@@ -90,6 +90,8 @@ static class PurchaseTicket
         // show summary before payment
         ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
 
+        if (AccountsLogic.CurrentAccount == null) UserLogin.Start();
+
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
