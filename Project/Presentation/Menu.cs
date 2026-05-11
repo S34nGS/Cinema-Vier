@@ -80,7 +80,8 @@ static class Menu
         }
         else if (selected == menu.IndexOf("Disable Movie"))
         {
-            
+            DisableMovie.Start();
+            Start();
         }
         else if (selected == menu.IndexOf("Logout"))
         {

@@ -5,7 +5,10 @@ public static class MoviesLogic
         List<string> Titles = [];
         foreach(MovieModel Movie in _access.GetAllMovies())
         {
-            Titles.Add(Movie.Title);
+            if (Movie.IsActive == 1)
+            {
+                Titles.Add(Movie.Title);
+            }
         }
         return Titles;
     }
@@ -45,5 +48,10 @@ public static class MoviesLogic
     public static MovieModel? GetMovieByTitle(string title)
     {
         return _access.GetByTitle(title);
+    }
+
+    public static void DisableMovie(MovieModel movie)
+    {
+        _access.Update(movie);
     }
 }

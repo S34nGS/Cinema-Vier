@@ -8,6 +8,7 @@ public class MovieModel
     public Int64 AgeRating {get; set;}
     public string Genre {get; set;}
     public Int64 ReleaseDate {get; set;}
+    public Int64 IsActive {get; set;}
 
     public MovieModel(
         Int64 id,
@@ -17,7 +18,8 @@ public class MovieModel
         string director,
         Int64 ageRating,
         string genre,
-        Int64 releaseDate
+        Int64 releaseDate,
+        Int64 isActive = 1
     )
     {
         Id = id;
@@ -28,6 +30,7 @@ public class MovieModel
         AgeRating = ageRating;
         Genre = genre;
         ReleaseDate = releaseDate;
+        IsActive = isActive;
     }
 
     public override string ToString()
