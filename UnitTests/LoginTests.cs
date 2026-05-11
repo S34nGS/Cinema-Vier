@@ -1,11 +1,11 @@
 namespace UnitTests;
 
 [TestClass]
-[Ignore("Temporarily skipped during development. Remove Ignore before running the test as evidence.")]
+// [Ignore("Temporarily skipped during development. Remove Ignore before running the test as evidence.")]
 public sealed class LoginTests
 {
     [DataTestMethod]
-    [DataRow("kevin@kevin.nl", "kevin")]
+    [DataRow("john@example.com", "demo_password")]
     public void LoginValidCredentials_ReturnsAccount(string email, string password)
     {
         // Arrange
@@ -17,12 +17,12 @@ public sealed class LoginTests
         // Assert
         Assert.IsNotNull(result);
         Assert.AreEqual(email, result.EmailAddress);
-        Assert.AreEqual(password, result.Password);
+        Assert.AreEqual(logic.HashPassword(password), result.Password);
     }
 
     [DataTestMethod]
-    [DataRow("kevin@kevin.nl", "wrong")]
-    [DataRow("wrong1", "kevin")]
+    [DataRow("john@example.com", "wrong")]
+    [DataRow("wrong1", "demo_password")]
     [DataRow("wrong2", "wrong")]
     [DataRow("", "")]
     [DataRow(null, null)]
@@ -35,14 +35,6 @@ public sealed class LoginTests
         AccountModel result = logic.CheckLogin(email, password);
 
         // Assert
-        Assert.IsNull(result);
-    }
-}        AccountsLogic l = new();
-
-        // act 
-        AccountModel result = l.CheckLogin(m, p);
-
-        // assert
-        Assert.IsNull(result);
+        Assert.IsNull(result); 
     }
 }
