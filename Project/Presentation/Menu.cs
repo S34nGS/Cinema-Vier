@@ -20,7 +20,7 @@ static class Menu
         }
         else
         {
-            menu = ["View Movies","View Reservations", "Cinema Info", "Logout", "Exit"];
+            menu = ["View Movies", "View Reservations", "Cinema Info", "Logout", "Exit"];
         }
 
         int selected = UiHelper.SelectionMenu(menu, header, true);
@@ -38,7 +38,7 @@ static class Menu
             while (true)
             {
                 MovieModel? movie = MoviesLogic.Start();
-                if (movie is null) 
+                if (movie is null)
                 {
                     Start();
                 }
@@ -47,7 +47,7 @@ static class Menu
                 {
                     PurchaseTicket.SetUpDateMenu(movie);
                     UiHelper.HoldUser(movie.ToString());
-                    
+
                     if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                     {
                         UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
@@ -72,11 +72,13 @@ static class Menu
         }
         else if (selected == menu.IndexOf("Add Movie"))
         {
-            
+            AddMovie.Start();
+            Start();
         }
         else if (selected == menu.IndexOf("Edit Movie"))
         {
-            
+            EditMovie.Start();
+            Start();
         }
         else if (selected == menu.IndexOf("Disable Movie"))
         {
