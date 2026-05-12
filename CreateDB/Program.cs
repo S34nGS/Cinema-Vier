@@ -52,9 +52,9 @@
         rooms.CreateTable();
 
         List<RoomModel> roomsList = [
-            new RoomModel(1, "Standard", "7.1 Surround Sound"),
-            new RoomModel(2, "IMAX", "IMAX Sound System"),
-            new RoomModel(3, "Dolby Cinema", "Dolby Atmos"),
+            new RoomModel(1, "Standard", "7.1 Surround Sound", 14, 12),
+            new RoomModel(2, "IMAX", "IMAX Sound System", 20, 30),
+            new RoomModel(3, "Dolby Cinema", "Dolby Atmos", 19, 18),
         ];
 
         foreach (RoomModel room in roomsList)
@@ -129,7 +129,7 @@
         SeatAccess seats = new();
         seats.CreateTable();
 
-        int small_theatre_height = 16;
+        int small_theatre_height = 14;
         int small_theatre_width = 12;
 
         for (int y_axis = 0; y_axis < small_theatre_height; y_axis++)
