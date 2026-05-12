@@ -17,13 +17,10 @@ public class SeatModel
         Available = true;
     }
 
-    public SeatModel(Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority, Int64 available)
+    public SeatModel(
+        Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority, Int64 available
+    ) : this(id, roomId, row, seatNumber, seatPriority)
     {
-        Id = id;
-        RoomId = roomId;
-        Row = row;
-        SeatNumber = seatNumber;
-        SeatPriority = seatPriority;
-        Available = available !> 0;
+        Available = available != 0;
     }
 }
