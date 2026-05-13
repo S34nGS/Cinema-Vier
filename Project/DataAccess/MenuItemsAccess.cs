@@ -17,25 +17,17 @@ public class MenuItemsAccess : DefaultAccess
         ";
 
         connection.Execute(sql);
+    }
 
-        // add default items if table is empty
-        string countSql = $"SELECT COUNT(*) FROM {Table}";
-        int count = connection.ExecuteScalar<int>(countSql);
+    public void Write(MenuItemModel item)
+    {
+        // added write menu item from CreateDB
+        string sql = $@"
+            INSERT INTO {Table} (Name, Category, Price)
+            VALUES (@Name, @Category, @Price)
+        ";
 
-        if (count == 0)
-        {
-            string insertSql = $@"
-                INSERT INTO {Table} (Name, Category, Price) VALUES
-                ('Popcorn', 'Snack', 2.00),
-                ('Nachos', 'Snack', 3.50),
-                ('Chips', 'Snack', 1.50),
-                ('Water', 'Drink', 1.00),
-                ('Cola', 'Drink', 2.00),
-                ('Juice', 'Drink', 2.50);
-            ";
-
-            connection.Execute(insertSql);
-        }
+        connection.Execute(sql, item);
     }
 
     public List<MenuItemModel> GetAllMenuItems()
