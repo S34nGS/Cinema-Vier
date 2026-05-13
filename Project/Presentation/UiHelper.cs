@@ -270,12 +270,12 @@ public static class UiHelper
         return key == ConsoleKey.RightArrow || (includeL && key == ConsoleKey.L);
     }
 
-    private static bool IsUpKey(ConsoleKey key, bool includeK = true)
+    public static bool IsUpKey(ConsoleKey key, bool includeK = true)
     {
         return key == ConsoleKey.UpArrow || (includeK && key == ConsoleKey.K);
     }
 
-    private static bool IsDownKey(ConsoleKey key, bool includeJ = true)
+    public static bool IsDownKey(ConsoleKey key, bool includeJ = true)
     {
         return key == ConsoleKey.DownArrow || (includeJ && key == ConsoleKey.J);
     }
