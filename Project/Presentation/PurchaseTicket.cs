@@ -158,7 +158,7 @@ static class PurchaseTicket
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
          
-             bool[] isValidInput = PurchaseLogic.CreditCardCheck(creditCardInfo);
+             bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
              invalidInputs = InValidMessage(isValidInput, "credit card");
             } while (invalidInputs != "");
         }
@@ -176,7 +176,7 @@ static class PurchaseTicket
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
 
-             bool[] isValidInput = PurchaseLogic.IBANCheck(iBANInfo);
+             bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
              invalidInputs = InValidMessage(isValidInput, "iban");
 
 
