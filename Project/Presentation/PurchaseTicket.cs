@@ -132,54 +132,41 @@ static class PurchaseTicket
 
         string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
         string invalidInputs = "";
+        Dictionary<string, string> paymentInfo = [];
 
         if (selectedPaymentMethodString == "Credit Card")
         {
+            foreach (string field in CreditCardInput)
+            {
+                paymentInfo[field] = "";
+            }
+
             do
             {
-                if (invalidInputs != "")
-                {
-                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
-                        CreditCardInput,
-                        $"Invalid input: {invalidInputs} please try again"
-                    );
+                paymentInfo = UiHelper.InputForm(
+                    paymentInfo,
+                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                );
 
-                    invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
-                }
-                else
-                {
-                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
-                        CreditCardInput,
-                        "Please fill in the payment information"
-                    );
-
-                    invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
-                }
+                invalidInputs = PurchaseLogic.CreditCardCheck(paymentInfo);
 
             } while (invalidInputs != "");
         }
         else if (selectedPaymentMethodString == "IBAN")
         {
+            foreach (string field in IBANInput)
+            {
+                paymentInfo[field] = "";
+            }
+
             do
             {
-                if (invalidInputs != "")
-                {
-                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
-                        IBANInput,
-                        $"Invalid input: {invalidInputs} please try again"
-                    );
+                paymentInfo = UiHelper.InputForm(
+                    paymentInfo,
+                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                );
 
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-                }
-                else
-                {
-                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
-                        IBANInput,
-                        "Please fill in the payment information"
-                    );
-
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-                }
+                invalidInputs = PurchaseLogic.IBANCheck(paymentInfo);
 
             } while (invalidInputs != "");
         }
