@@ -52,6 +52,12 @@ public class PurchaseLogic
         return isValidInput;
     }
 
+    // calculate total with ticket, normal menu and lounge pre-order
+    public static decimal CalculateFullTotal(decimal ticketTotal, decimal menuTotal, decimal loungePreOrderTotal)
+    {
+        return ticketTotal + menuTotal + loungePreOrderTotal;
+    }
+
     private static bool CardHolderNameCheck(string fullname)
     {
         if (string.IsNullOrWhiteSpace(fullname)) return false;

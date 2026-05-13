@@ -3,6 +3,7 @@ static class PurchaseTicket
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    private static List<TimetableModel> CurrentTimetables = [];
 
     public static List<string> CreditCardInput =
     [
@@ -51,10 +52,13 @@ static class PurchaseTicket
         SetUpTimeMenu(movie, selectedDateString);
 
         int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
+
         if (selectedTime == -1)
         {
             return null;
         }
+        
+        TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
@@ -78,13 +82,47 @@ static class PurchaseTicket
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
+        // selected lounge pre-order drinks
+        List<OrderItemModel> loungePreOrderItems = new List<OrderItemModel>();
+
+        // ask if user wants lounge pre-order drinks
+        List<string> loungePreOrderChoices =
+        [
+            "Continue without lounge drink pre-order",
+            "Add lounge drink pre-order"
+        ];
+
+        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu(
+            loungePreOrderChoices,
+            "Do you want to pre-order drinks from the lounge/bar?"
+        );
+
+        if (selectedLoungePreOrderChoice == 1)
+        {
+            // show only drinks for lounge pre-order
+            MenuLogic loungeMenuLogic = new MenuLogic();
+            loungePreOrderItems = FoodAndDrinkMenu.ShowOnlyDrinksMenu(loungeMenuLogic);
+        }
+
         // calculate totals
         MenuLogic menuLogic = new MenuLogic();
         decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
-        decimal finalTotal = ticketTotal + menuTotal;
+
+        // calculate lounge pre-order total
+        decimal loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
+
+        // calculate final total with lounge pre-order
+        decimal finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
 
         // show summary before payment
-        ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
+        ShowBookingSummary(
+            ticketTotal,
+            orderedMenuItems,
+            menuTotal,
+            loungePreOrderItems,
+            loungePreOrderTotal,
+            finalTotal
+        );
 
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
@@ -149,14 +187,12 @@ static class PurchaseTicket
             } while (invalidInputs != "");
         }
 
-        int reservationNumber = PurchaseLogic.GenerateReservationNumber();
-
-        UiHelper.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
-        ReservationsLogic.CreateReservation(new(reservationNumber, AccountsLogic.CurrentAccount.Id, selectedDateString, 10, 1));
+        UiHelper.SelectionMenu([$"Payment successful."], "");
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
-    private static void SetUpDateMenu(MovieModel movie)
+    public static void SetUpDateMenu(MovieModel movie)
     {
         // get all timetables for movie
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
@@ -182,6 +218,8 @@ static class PurchaseTicket
         // get all times for selected date
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
+        CurrentTimetables.Clear();
+
         foreach (TimetableModel timetable in timetables)
         {
             if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
@@ -190,6 +228,7 @@ static class PurchaseTicket
 
                 if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
+                    CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
                         $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
                     );
@@ -203,39 +242,72 @@ static class PurchaseTicket
         decimal ticketTotal,
         List<OrderItemModel> orderedMenuItems,
         decimal menuTotal,
+        List<OrderItemModel> loungePreOrderItems,
+        decimal loungePreOrderTotal,
         decimal finalTotal)
     {
         Console.Clear();
 
-        Console.WriteLine($"Booking Summary");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Booking Summary
 
-        Console.WriteLine($"Ticket total: €{ticketTotal:0.00}");
-        Console.WriteLine($"");
+Ticket total: €{ticketTotal:0.00}
+");
 
         if (orderedMenuItems.Count > 0)
         {
-            Console.WriteLine($"Food and drink items:");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+Food and drink items:
+");
 
             foreach (OrderItemModel item in orderedMenuItems)
             {
-                Console.WriteLine($"Item name: {item.Name}");
-                Console.WriteLine($"Quantity: {item.Quantity}");
-                Console.WriteLine($"Price per item: €{item.PricePerItem:0.00}");
-                Console.WriteLine($"Subtotal: €{item.SubTotal:0.00}");
-                Console.WriteLine($"");
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
             }
         }
         else
         {
-            Console.WriteLine($"No food or drinks selected.");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+No food or drinks selected.
+");
         }
 
-        Console.WriteLine($"Food and drink total: €{menuTotal:0.00}");
-        Console.WriteLine($"Final total: €{finalTotal:0.00}");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Food and drink total: €{menuTotal:0.00}
+");
+
+        if (loungePreOrderItems.Count > 0)
+        {
+            Console.WriteLine($@"
+Lounge pre-order drinks:
+");
+
+            foreach (OrderItemModel item in loungePreOrderItems)
+            {
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
+            }
+        }
+        else
+        {
+            Console.WriteLine($@"
+No lounge drinks selected.
+");
+        }
+
+        Console.WriteLine($@"
+Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
+Final total: €{finalTotal:0.00}
+");
 
         UiHelper.HoldUser();
     }

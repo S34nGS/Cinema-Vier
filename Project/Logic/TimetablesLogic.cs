@@ -49,4 +49,9 @@ public static class TimetablesLogic
             .FromUnixTimeSeconds(unixTimestamp)
             .DateTime;
     }
+
+    public static TimetableModel GetById(Int64 timetableId)
+    {
+        return _access.GetById(timetableId);
+    }
 }

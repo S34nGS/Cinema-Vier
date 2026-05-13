@@ -51,4 +51,10 @@ public class TimetablesAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
         return connection.QueryFirstOrDefault<RoomModel>(sql, new {TimetableId = timetableId});
     }
+
+    public TimetableModel GetById(Int64 timetableId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
+        return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
+    }
 }
