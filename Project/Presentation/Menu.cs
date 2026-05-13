@@ -12,7 +12,7 @@ static class Menu
 
         if (AccountsLogic.CurrentAccount is null)
         {
-            menu = ["View Movies", "Login", "Register", "Cinema Info", "Exit"];
+            menu = ["Book Movie", "Login", "Register", "Cinema Info", "Exit"];
         }
         else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
         {
@@ -20,7 +20,7 @@ static class Menu
         }
         else
         {
-            menu = ["View Movies", "View Reservations", "Cinema Info", "Logout", "Exit"];
+            menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
         }
 
         int selected = UiHelper.SelectionMenu(menu, header, true);
@@ -33,7 +33,7 @@ static class Menu
         {
             UserRegistration.Start();
         }
-        else if (selected == menu.IndexOf("View Movies"))
+        else if (selected == menu.IndexOf("Book Movie"))
         {
             while (true)
             {

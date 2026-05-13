@@ -59,6 +59,11 @@ static class PurchaseTicket
         }
         
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
+        List<SeatModel> selectedSeats = [];
+        if(selectedTimetable.RoomId == 1)
+        {
+            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
+        }
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
@@ -124,6 +129,11 @@ static class PurchaseTicket
             finalTotal
         );
 
+        if (AccountsLogic.CurrentAccount == null)
+        {
+            UserLogin.Start();
+        }
+
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
@@ -132,63 +142,54 @@ static class PurchaseTicket
 
         string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
         string invalidInputs = "";
+        Dictionary<string, string> paymentInfo = [];
 
         if (selectedPaymentMethodString == "Credit Card")
         {
+            foreach (string field in CreditCardInput)
+            {
+                paymentInfo[field] = "";
+            }
+
             do
             {
-                if (invalidInputs != "")
-                {
-                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
-                        CreditCardInput,
-                        $"Invalid input: {invalidInputs}please try again"
-                    );
-
-                    bool[] isValidInput = PurchaseLogic.CreditCardCheck(creditCardInfo);
-                    invalidInputs = InValidMessage(isValidInput, "credit card");
-                }
-                else
-                {
-                    Dictionary<string, string> creditCardInfo = UiHelper.InputForm(
-                        CreditCardInput,
-                        "Please fill in the payment information"
-                    );
-
-                    bool[] isValidInput = PurchaseLogic.CreditCardCheck(creditCardInfo);
-                    invalidInputs = InValidMessage(isValidInput, "credit card");
-                }
-
+                paymentInfo = UiHelper.InputForm(
+                    paymentInfo,
+                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                );
+         
+             bool[] isValidInput = PurchaseLogic.CreditCardCheck(creditCardInfo);
+             invalidInputs = InValidMessage(isValidInput, "credit card");
             } while (invalidInputs != "");
         }
         else if (selectedPaymentMethodString == "IBAN")
         {
+            foreach (string field in IBANInput)
+            {
+                paymentInfo[field] = "";
+            }
+
             do
             {
-                if (invalidInputs != "")
-                {
-                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
-                        IBANInput,
-                        $"Invalid input: {invalidInputs}please try again"
-                    );
+                paymentInfo = UiHelper.InputForm(
+                    paymentInfo,
+                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                );
 
-                    bool[] isValidInput = PurchaseLogic.IBANCheck(iBANInfo);
-                    invalidInputs = InValidMessage(isValidInput, "iban");
-                }
-                else
-                {
-                    Dictionary<string, string> iBANInfo = UiHelper.InputForm(
-                        IBANInput,
-                        "Please fill in the payment information"
-                    );
+             bool[] isValidInput = PurchaseLogic.IBANCheck(iBANInfo);
+             invalidInputs = InValidMessage(isValidInput, "iban");
 
-                    bool[] isValidInput = PurchaseLogic.IBANCheck(iBANInfo);
-                    invalidInputs = InValidMessage(isValidInput, "iban");
-                }
+
             } while (invalidInputs != "");
         }
 
         UiHelper.SelectionMenu([$"Payment successful."], "");
-        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id));
+        foreach(SeatModel seat in selectedSeats)
+        {
+
+    // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
+            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
+        }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
@@ -199,7 +200,10 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now))
+            if (
+                timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now) &&
+                timetable.StartTime < TimetablesLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
+                )
             {
                 string date = TimetablesLogic.GetDateString(
                     TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)

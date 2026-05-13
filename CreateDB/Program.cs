@@ -53,9 +53,9 @@ public static class Program {
         rooms.CreateTable();
 
         List<RoomModel> roomsList = [
-            new RoomModel(1, "Standard", "7.1 Surround Sound"),
-            new RoomModel(2, "IMAX", "IMAX Sound System"),
-            new RoomModel(3, "Dolby Cinema", "Dolby Atmos"),
+            new RoomModel(1, "Standard", "7.1 Surround Sound", 14, 12),
+            new RoomModel(2, "IMAX", "IMAX Sound System", 20, 30),
+            new RoomModel(3, "Dolby Cinema", "Dolby Atmos", 19, 18),
         ];
 
         foreach (RoomModel room in roomsList)
@@ -68,30 +68,32 @@ public static class Program {
     {
         TimetablesAccess timetables = new();
         timetables.CreateTable();
+        
+        DateTime baseDate = DateTime.Today;
 
         // Movie 1
-        DateTime date1 = new(2026, 1, 1, 13, 0, 0);
-        DateTime date2 = new(2026, 2, 2, 14, 0, 0);
-        DateTime date3 = new(2026, 3, 3, 15, 0, 0);
-        DateTime date4 = new(2026, 5, 7, 15, 0, 0);
-        DateTime date5 = new(2026, 5, 9, 15, 0, 0);
-        DateTime date6 = new(2026, 5, 14, 15, 0, 0);
+        DateTime date1 = baseDate.AddDays(1).AddHours(13);
+        DateTime date2 = baseDate.AddDays(2).AddHours(14);
+        DateTime date3 = baseDate.AddDays(3).AddHours(15);
+        DateTime date4 = baseDate.AddDays(7).AddHours(15);
+        DateTime date5 = baseDate.AddDays(9).AddHours(15);
+        DateTime date6 = baseDate.AddDays(14).AddHours(15);
 
         // Movie 2
-        DateTime date7 = new(2026, 1, 1, 15, 0, 0);
-        DateTime date8 = new(2026, 5, 7, 15, 0, 0);
-        DateTime date9 = new(2026, 5, 9, 15, 0, 0);
-        DateTime date10 = new(2026, 5, 14, 15, 0, 0);
-        DateTime date11 = new(2026, 5, 15, 15, 0, 0);
-        DateTime date12 = new(2026, 5, 17, 15, 0, 0);
+        DateTime date7 = baseDate.AddDays(1).AddHours(15);
+        DateTime date8 = baseDate.AddDays(2).AddHours(15);
+        DateTime date9 = baseDate.AddDays(4).AddHours(15);
+        DateTime date10 = baseDate.AddDays(5).AddHours(15);
+        DateTime date11 = baseDate.AddDays(6).AddHours(15);
+        DateTime date12 = baseDate.AddDays(8).AddHours(15);
 
         // Movie 3
-        DateTime date13 = new(2026, 5, 7, 15, 0, 0);
-        DateTime date14 = new(2026, 5, 8, 15, 0, 0);
-        DateTime date15 = new(2026, 5, 9, 15, 0, 0);
-        DateTime date16 = new(2026, 5, 10, 15, 0, 0);
-        DateTime date17 = new(2026, 5, 11, 15, 0, 0);
-        DateTime date18 = new(2026, 5, 12, 15, 0, 0);
+        DateTime date13 = baseDate.AddDays(9).AddHours(15);
+        DateTime date14 = baseDate.AddDays(10).AddHours(15);
+        DateTime date15 = baseDate.AddDays(11).AddHours(15);
+        DateTime date16 = baseDate.AddDays(12).AddHours(15);
+        DateTime date17 = baseDate.AddDays(13).AddHours(15);
+        DateTime date18 = baseDate.AddDays(14).AddHours(15);
 
         List<TimetableModel> timetablesList = [
             // Movie 1
@@ -129,6 +131,20 @@ public static class Program {
     {
         SeatAccess seats = new();
         seats.CreateTable();
+
+        int small_theatre_height = 14;
+        int small_theatre_width = 12;
+
+        for (int y_axis = 0; y_axis < small_theatre_height; y_axis++)
+        {
+            for (int x_axis = 0; x_axis < small_theatre_width; x_axis++)
+            {
+
+                // public SeatModel(Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority)
+                SeatModel seat = new(-1, 1, y_axis + 1, x_axis + 1, 1);
+                seats.Write(seat);
+            }
+        }
     }
 
     public static void CreateReservationTable()
@@ -137,10 +153,10 @@ public static class Program {
         reservation.CreateTable();
 
         List<ReservationModel> reservationList = [
-            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1),
-            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2),
-            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3),
-            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2, 2),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3, 3),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1, 4),
         ];
 
         foreach (ReservationModel item in reservationList)
