@@ -253,7 +253,7 @@ static class PurchaseTicket
                     {
                         message += "Invalid name, ";
                     }
-                    else if(CreditCardInput[i] == "Card number (13-19 digits, for example:4111 1111 1111 1111)")
+                    else if(CreditCardInput[i] == "Card number (13-19 digits)")
                     {
                         message += "Invalid card number, ";
                     }
