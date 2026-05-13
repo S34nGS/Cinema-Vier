@@ -78,11 +78,11 @@ public static class UiHelper
 
             if (!hasButtons)
             {
-                if (key == ConsoleKey.LeftArrow && continueOrBack > 0)
+                if (IsLeftKey(key) && continueOrBack > 0)
                 {
                     continueOrBack--;
                 }
-                else if (key == ConsoleKey.RightArrow && continueOrBack < 1)
+                else if (IsRightKey(key) && continueOrBack < 1)
                 {
                     continueOrBack++;
                 }
@@ -98,11 +98,11 @@ public static class UiHelper
                 return -1;
             }
 
-            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < localMenu.Length - 1)
+            if (IsDownKey(key) && selected < localMenu.Length - 1)
             {
                 selected++;
             }
-            else if ((key == ConsoleKey.UpArrow || key == ConsoleKey.K) && selected > 0)
+            else if (IsUpKey(key) && selected > 0)
             {
                 selected--;
             }
@@ -132,11 +132,11 @@ public static class UiHelper
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-            if (keyInfo.Key == ConsoleKey.LeftArrow && continueOrBack > 0)
+            if (IsLeftKey(keyInfo.Key, false) && continueOrBack > 0)
             {
                 continueOrBack--;
             }
-            else if (keyInfo.Key == ConsoleKey.RightArrow && continueOrBack < 1)
+            else if (IsRightKey(keyInfo.Key, false) && continueOrBack < 1)
             {
                 continueOrBack++;
             }
@@ -234,11 +234,11 @@ public static class UiHelper
             {
                 break;
             }
-            else if (key.Key == ConsoleKey.DownArrow && selected < fields.Count - 1)
+            else if (IsDownKey(key.Key, false) && selected < fields.Count - 1)
             {
                 selected++;
             }
-            else if (key.Key == ConsoleKey.UpArrow && selected > 0)
+            else if (IsUpKey(key.Key, false) && selected > 0)
             {
                 selected--;
             }
