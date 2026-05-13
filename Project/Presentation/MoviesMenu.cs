@@ -20,7 +20,10 @@ static class MoviesMenu
                 while (true)
                 {
                     string input = UiHelper.Input("Fill in title");
-                    if (input == "-1") break;
+                    if (input == "-1")
+                    {
+                        break;
+                    }
                     List<string> searchedMovieList = MoviesLogic.GetByPartOfTitle(input);
                     if (searchedMovieList.Count == 0)
                     {
@@ -32,7 +35,10 @@ static class MoviesMenu
                         continue;
                     }
                     int movieListMenuSearch = UiHelper.SelectionMenu(searchedMovieList, header);
-                    if (movieListMenuSearch == -1) continue;
+                    if (movieListMenuSearch == -1)
+                    {
+                        continue;
+                    }
                     return movieListMenuSearch;
                 }
                 continue;
@@ -50,7 +56,10 @@ static class MoviesMenu
 
                     int pickedDate = UiHelper.SelectionMenu(dates, header);
 
-                    if (pickedDate == -1) break;
+                    if (pickedDate == -1)
+                    {
+                        break;
+                    }
 
                     List<string> searchedDateMovieList = [];
                     List<TimetableModel> searchedDateTimetableList = TimetablesLogic.GetTimetablesByDate(dates[pickedDate]);
@@ -70,7 +79,10 @@ static class MoviesMenu
                         continue;
                     }
                     int movieListMenuSearch = UiHelper.SelectionMenu(searchedDateMovieList, header);
-                    if (movieListMenuSearch == -1) continue;
+                    if (movieListMenuSearch == -1)
+                    {
+                        continue;
+                    }
                     return movieListMenuSearch;
                 }
                 continue;
@@ -81,7 +93,10 @@ static class MoviesMenu
                 while (true)
                 {
                     int movieListMenu = UiHelper.SelectionMenu(MoviesLogic.GetMovieTitles(), header);
-                    if (movieListMenu == -1) return -1;
+                    if (movieListMenu == -1)
+                    {
+                        return -1;
+                    }
                     return movieListMenu;
                 }
             }
