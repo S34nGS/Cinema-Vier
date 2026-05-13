@@ -1,45 +1,40 @@
-﻿namespace UnitTests;
-
-
+namespace UnitTests;
 
 [TestClass]
-[Ignore]
-public sealed class Test1
+// [Ignore("Temporarily skipped during development. Remove Ignore before running the test as evidence.")]
+public sealed class LoginTests
 {
-
-
     [DataTestMethod]
-    [DataRow("kevin@kevin.nl", "kevin")]
-    public void LoginValidCredentials(string m, string p)
+    [DataRow("john@example.com", "demo_password")]
+    public void LoginValidCredentials_ReturnsAccount(string email, string password)
     {
-        // arrange
-        AccountsLogic l = new();
-        AccountsAccess access = new();
+        // Arrange
+        AccountsLogic logic = new();
 
-        // act 
-        AccountModel result = l.CheckLogin(m, p);
+        // Act 
+        AccountModel result = logic.CheckLogin(email, password);
 
-        // assert
+        // Assert
         Assert.IsNotNull(result);
-        Assert.AreEqual(m, result.EmailAddress);
-        Assert.AreEqual(p, result.Password);
+        Assert.AreEqual(email, result.EmailAddress);
+        Assert.AreEqual(logic.HashPassword(password), result.Password);
     }
 
     [DataTestMethod]
-    [DataRow("kevin@kevin.nl", "wrong")] // wrong password
-    [DataRow("wrong1", "kevin")] // wrong email
-    [DataRow("wrong2", "wrong")] // everything wrong
+    [DataRow("john@example.com", "wrong")]
+    [DataRow("wrong1", "demo_password")]
+    [DataRow("wrong2", "wrong")]
     [DataRow("", "")]
     [DataRow(null, null)]
-    public void LoginInvalidCredentials(string m, string p)
+    public void LoginInvalidCredentials_ReturnsNull(string email, string password)
     {
-        // arrange
-        AccountsLogic l = new();
+        // Arrange
+        AccountsLogic logic = new();
 
-        // act 
-        AccountModel result = l.CheckLogin(m, p);
+        // Act 
+        AccountModel result = logic.CheckLogin(email, password);
 
-        // assert
-        Assert.IsNull(result);
+        // Assert
+        Assert.IsNull(result); 
     }
 }
