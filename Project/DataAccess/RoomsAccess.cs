@@ -38,7 +38,7 @@ public class RoomsAccess : DefaultAccess
         connection.Execute(sql, new { Id = room.Id });
     }
 
-    public RoomModel GetById(int id)
+    public RoomModel GetById(Int64 id)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @Id";
         return connection.QueryFirstOrDefault<RoomModel>(sql, new {Id = id});
