@@ -14,7 +14,8 @@ public class MoviesAccess : DefaultAccess
             director TEXT NOT NULL,
             ageRating INTEGER NOT NULL,
             genre TEXT NOT NULL,
-            releaseDate INTEGER NOT NULL
+            releaseDate INTEGER NOT NULL,
+            isActive INTEGER NOT NULL
         );";
         connection.Execute(sql);
     }
@@ -22,8 +23,8 @@ public class MoviesAccess : DefaultAccess
     public void Write(MovieModel movie)
     {
         string sql = $@"INSERT INTO {Table} 
-            (title, duration, summary, director, ageRating, genre, releaseDate) 
-            VALUES (@Title, @Duration, @Summary, @Director, @AgeRating, @Genre, @ReleaseDate)";
+            (title, duration, summary, director, ageRating, genre, releaseDate, isActive) 
+            VALUES (@Title, @Duration, @Summary, @Director, @AgeRating, @Genre, @ReleaseDate, @IsActive)";
         connection.Execute(sql, movie);
     }
 
@@ -54,7 +55,7 @@ public class MoviesAccess : DefaultAccess
     public void Update(MovieModel movie)
     {
         string sql = $@"UPDATE {Table} 
-            SET title = @Title, duration = @Duration, summary = @Summary, director = @Director, ageRating = @AgeRating, genre = @Genre, releaseDate = @ReleaseDate
+            SET title = @Title, duration = @Duration, summary = @Summary, director = @Director, ageRating = @AgeRating, genre = @Genre, releaseDate = @ReleaseDate, isActive = @IsActive
             WHERE id = @Id";
         connection.Execute(sql, movie);
     }
