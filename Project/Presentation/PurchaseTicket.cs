@@ -129,6 +129,11 @@ static class PurchaseTicket
             finalTotal
         );
 
+        if (AccountsLogic.CurrentAccount == null)
+        {
+            UserLogin.Start();
+        }
+
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
@@ -193,7 +198,10 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now))
+            if (
+                timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now) &&
+                timetable.StartTime < TimetablesLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
+                )
             {
                 string date = TimetablesLogic.GetDateString(
                     TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
