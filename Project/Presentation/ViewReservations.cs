@@ -13,14 +13,14 @@ public static class ViewReservations
 
         while (true)
         {
-            List<string> menu = ["Future Reservations", "Past Reservations"];
+            List<string> menu = ["Upcoming Orders", "Previous Orders"];
             int selected = UiHelper.SelectionMenu(menu, "Reservations");
 
-            if (selected == menu.IndexOf("Future Reservations"))
+            if (selected == menu.IndexOf("Upcoming Orders"))
             {
                 ShowFutureReservations();
             }
-            else if (selected == menu.IndexOf("Past Reservations"))
+            else if (selected == menu.IndexOf("Previous Orders"))
             {
                 ShowPastReservations();
             }
@@ -34,7 +34,7 @@ public static class ViewReservations
     static void ShowFutureReservations()
     {
         Console.Clear();
-        Console.WriteLine("=== Future Reservations ===");
+        Console.WriteLine("=== Upcoming Orders ===");
         Console.WriteLine();
 
         long userId = AccountsLogic.CurrentAccount!.Id;
@@ -42,7 +42,7 @@ public static class ViewReservations
 
         if (reservations.Count == 0)
         {
-            Console.WriteLine("No future reservations found.");
+            Console.WriteLine("No upcoming orders found.");
         }
         else
         {
@@ -61,7 +61,7 @@ public static class ViewReservations
                 Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
-                Console.WriteLine($"Price: €{reservation.TotalPrice}");
+                Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
             }
@@ -73,7 +73,7 @@ public static class ViewReservations
     static void ShowPastReservations()
     {
         Console.Clear();
-        Console.WriteLine("=== Past Reservations ===");
+        Console.WriteLine("=== Previous Orders ===");
         Console.WriteLine();
 
         long userId = AccountsLogic.CurrentAccount!.Id;
@@ -81,7 +81,7 @@ public static class ViewReservations
 
         if (reservations.Count == 0)
         {
-            Console.WriteLine("No past reservations found.");
+            Console.WriteLine("No previous orders found.");
         }
         else
         {
@@ -100,7 +100,7 @@ public static class ViewReservations
                 Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
-                Console.WriteLine($"Price: €{reservation.TotalPrice}");
+                Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
             }
