@@ -1,4 +1,4 @@
-﻿public static class Program {
+public static class Program {
     public static void Main() {
         CreateMoviesTable();
         CreateAccountsTable();
@@ -36,7 +36,8 @@
 
         List<AccountModel> accountsList = [
             new AccountModel(1, "john@example.com","demo_password" , "John", "Doe" , TimetablesLogic.ConvertDateToUnixTime(new DateTime(2000, 1, 1))),
-            new AccountModel(2, "jane@example.com", "demo_password", "Jane", "Smith", TimetablesLogic.ConvertDateToUnixTime(new DateTime(2010, 1, 1)))
+            new AccountModel(2, "jane@example.com", "demo_password", "Jane", "Smith", TimetablesLogic.ConvertDateToUnixTime(new DateTime(2010, 1, 1))),
+            new AccountModel(3, "admin@example.com", "demo_password", "Admin", "Admin", TimetablesLogic.ConvertDateToUnixTime(new DateTime(2000, 1, 1)), 1)
         ];
 
         foreach (AccountModel account in accountsList)
@@ -172,5 +173,20 @@
     {
         MenuItemsAccess menuItem = new();
         menuItem.CreateTable();
+
+        // added default menu items in CreateDB
+        List<MenuItemModel> menuItemsList = [
+            new MenuItemModel(0, "Popcorn", "Snack", 2.00m),
+            new MenuItemModel(0, "Nachos", "Snack", 3.50m),
+            new MenuItemModel(0, "Chips", "Snack", 1.50m),
+            new MenuItemModel(0, "Water", "Drink", 1.00m),
+            new MenuItemModel(0, "Cola", "Drink", 2.00m),
+            new MenuItemModel(0, "Juice", "Drink", 2.50m)
+        ];
+
+        foreach (MenuItemModel item in menuItemsList)
+        {
+            menuItem.Write(item);
+        }
     }
 }

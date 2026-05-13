@@ -15,14 +15,15 @@ public class AccountsAccess : DefaultAccess
                 fullname TEXT NOT NULL, 
                 firstName TEXT NOT NULL,
                 lastName TEXT NOT NULL,
-                dateOfBirth INTEGER NOT NULL
+                dateOfBirth INTEGER NOT NULL,
+                isAdmin INTEGER NOT NULL
             );";
         connection.Execute(sql);
     }
 
     public void Write(AccountModel account)
     {
-        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth)";
+        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth, isAdmin) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin)";
         connection.Execute(sql, account);
     }
 
@@ -35,7 +36,7 @@ public class AccountsAccess : DefaultAccess
     public void Update(AccountModel account)
     {
         string sql =
-            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth WHERE id = @Id";
+            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin WHERE id = @Id";
         connection.Execute(sql, account);
     }
 

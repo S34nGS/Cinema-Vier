@@ -8,7 +8,21 @@ static class Menu
         string header = (AccountsLogic.CurrentAccount != null)
             ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
             : "Welcome to Cinema Vier! Please select an option:";
-        List<string> menu = ["Book Movie", "Login", "Register", "View Reservations", "Cinema Info", "Exit"];
+        List<string> menu = [];
+
+        if (AccountsLogic.CurrentAccount is null)
+        {
+            menu = ["Book Movie", "Login", "Register", "Cinema Info", "Exit"];
+        }
+        else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
+        {
+            menu = ["Add Movie", "Edit Movie", "Disable Movie", "Logout"];
+        }
+        else
+        {
+            menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
+        }
+
         int selected = UiHelper.SelectionMenu(menu, header, true);
 
         if (selected == menu.IndexOf("Login"))
@@ -24,7 +38,7 @@ static class Menu
             while (true)
             {
                 MovieModel? movie = MoviesLogic.Start();
-                if (movie is null) 
+                if (movie is null)
                 {
                     Start();
                 }
@@ -33,7 +47,7 @@ static class Menu
                 {
                     PurchaseTicket.SetUpDateMenu(movie);
                     UiHelper.HoldUser(movie.ToString());
-                    
+
                     if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                     {
                         UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
@@ -44,7 +58,14 @@ static class Menu
                 while (true)
                 {
                     TicketModel? purchaseTicket = PurchaseTicket.Start(movie);
-                    if (purchaseTicket is null) break;
+                    if (purchaseTicket is null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Start();
+                    }
                 }
             }
         }
@@ -55,6 +76,26 @@ static class Menu
         else if (selected == menu.IndexOf("View Reservations"))
         {
             ViewReservations.Start();
+        }
+        else if (selected == menu.IndexOf("Add Movie"))
+        {
+            AddMovie.Start();
+            Start();
+        }
+        else if (selected == menu.IndexOf("Edit Movie"))
+        {
+            EditMovie.Start();
+            Start();
+        }
+        else if (selected == menu.IndexOf("Disable Movie"))
+        {
+            DisableMovie.Start();
+            Start();
+        }
+        else if (selected == menu.IndexOf("Logout"))
+        {
+            AccountsLogic.Logout();
+            Start();
         }
         else if (selected == menu.IndexOf("Exit"))
         {

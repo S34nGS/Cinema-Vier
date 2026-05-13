@@ -10,8 +10,9 @@
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public Int64 DateOfBirth { get; set; }
+    public Int64 IsAdmin {get; set;}
 
-    public AccountModel(Int64 id, string email, string password, string firstName, string lastName, Int64 dateOfBirth)
+    public AccountModel(Int64 id, string email, string password, string firstName, string lastName, Int64 dateOfBirth, Int64 isAdmin = 0)
     {
         Id = id;
         EmailAddress = email;
@@ -20,6 +21,7 @@
         LastName = lastName;
         FullName = $"{firstName} {lastName}".Trim();
         DateOfBirth = dateOfBirth;
+        IsAdmin = isAdmin;
     }
 
         public AccountModel() { }
