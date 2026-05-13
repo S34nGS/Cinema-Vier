@@ -8,7 +8,7 @@ static class PurchaseTicket
     public static List<string> CreditCardInput =
     [
         "Cardholder name",
-        "Card number (13-19 digits, for example:4111 1111 1111 1111)",
+        "Card number (13-19 digits)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
     ];
@@ -157,9 +157,9 @@ static class PurchaseTicket
                     paymentInfo,
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
-
-                invalidInputs = PurchaseLogic.CreditCardCheck(paymentInfo);
-
+         
+             bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
+             invalidInputs = InValidMessage(isValidInput, "credit card");
             } while (invalidInputs != "");
         }
         else if (selectedPaymentMethodString == "IBAN")
@@ -176,7 +176,9 @@ static class PurchaseTicket
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
 
-                invalidInputs = PurchaseLogic.IBANCheck(paymentInfo);
+             bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
+             invalidInputs = InValidMessage(isValidInput, "iban");
+
 
             } while (invalidInputs != "");
         }
@@ -312,5 +314,54 @@ Final total: €{finalTotal:0.00}
 ");
 
         UiHelper.HoldUser();
+    }
+
+    public static string InValidMessage(bool[] isValidInput, string paymentMethod)
+    {
+        string message = "";
+        if(paymentMethod == "credit card")
+        {
+            for(int i = 0; i < isValidInput.Length; i++)
+            {
+                if(isValidInput[i] == false)
+                {
+                    if(CreditCardInput[i] == "Cardholder name")
+                    {
+                        message += "Invalid name, ";
+                    }
+                    else if(CreditCardInput[i] == "Card number (13-19 digits)")
+                    {
+                        message += "Invalid card number, ";
+                    }
+                    else if(CreditCardInput[i] == "Expiration date (MM/YY)")
+                    {
+                        message += "Invalid date, ";
+                    }
+                    else if(CreditCardInput[i] == "CVC/CVV code (3-4 digits)")
+                    {
+                        message += "Invalid CVC/CVV code, ";
+                    }
+                }
+            }
+        }
+        else if(paymentMethod == "iban")
+        {
+            for(int i = 0; i < isValidInput.Length; i++)
+            {
+                if(isValidInput[i] == false)
+                {
+                    if(CreditCardInput[i] == "Cardholder name")
+                    {
+                        message += "Invalid name, ";
+                    }
+                    else if(CreditCardInput[i] == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+                    {
+                        message += "Invalid IBAN number, ";
+                    }
+                }
+            }
+        }
+
+        return message;
     }
 }
