@@ -1,71 +1,148 @@
 public static class SeatSelection
 {
     private static SeatLogic _logic = new();
-    public static void Start(int roomId = 1)
+    public static List<SeatModel> Start(int roomId = 1)
     {
-
         List<SeatModel> seats = _logic.GetSeatsByRoomId(roomId);
+        RoomModel room = RoomsLogic.GetRoomById(roomId);
+
         Dictionary<string, int> Coordinates = new();
         Coordinates["x"] = 1;
         Coordinates["y"] = 1;
-        bool has_active_input = true;
-        do
+
+        List<(Int64 Row, Int64 Seat)> selectedSeats = new();
+        bool hasActiveInput = true;
+
+        while (hasActiveInput)
         {
             Console.Clear();
+            WriteScreen(seats, selectedSeats, Coordinates, room);
 
-            WriteScreen(seats, Coordinates);
-            ConsoleKey keyPressed = Console.ReadKey().Key;
+            ConsoleKey keyPressed = Console.ReadKey(true).Key;
 
-            if(keyPressed == ConsoleKey.H && Coordinates["x"] > 1)
+            if (UiHelper.IsLeftKey(keyPressed) && Coordinates["x"] > 1)
             {
                 Coordinates["x"]--;
             }
-            else if(keyPressed == ConsoleKey.L)
+            else if (UiHelper.IsRightKey(keyPressed) && Coordinates["x"] < room.Width)
             {
                 Coordinates["x"]++;
             }
-            else if(keyPressed == ConsoleKey.J)
+            else if (UiHelper.IsDownKey(keyPressed) && Coordinates["y"] < room.Height)
             {
                 Coordinates["y"]++;
             }
-            else if(keyPressed == ConsoleKey.K)
+            else if (UiHelper.IsUpKey(keyPressed) && Coordinates["y"] > 1)
             {
                 Coordinates["y"]--;
             }
-        } while(has_active_input);
-
+            else if (keyPressed == ConsoleKey.Spacebar)
+            {
+                ToggleSeat(selectedSeats, Coordinates["y"], Coordinates["x"]);
+            }
+            else if (keyPressed == ConsoleKey.Enter)
+            {
+                return selectedSeats;
+            }
+            else if (keyPressed == ConsoleKey.S)
+            {
+                ShowSelectionSummary(selectedSeats);
+            }
+        }
     }
 
-    public static void WriteScreen(List<SeatModel> seats, Dictionary<string, int> Coordinates)
+    public static void WriteScreen(
+        List<SeatModel> seats,
+        List<(Int64 Row, Int64 Seat)> selectedSeats,
+        Dictionary<string, int> Coordinates,
+        RoomModel room)
     {
-        Int64 current_row = 1;
+        Console.WriteLine("Seat Selection");
+        Console.WriteLine($"Room {room.Id} | {room.ScreenType} | {room.SoundType}");
+        Console.WriteLine("Arrows/HJKL: move  Space/Enter: toggle  S: summary  Esc: back");
+        Console.WriteLine($"Selected: {selectedSeats.Count}");
+        Console.WriteLine();
 
-        foreach(SeatModel seat in seats)
+        Int64 currentRow = 0;
+
+        foreach (SeatModel seat in seats)
         {
-            if(seat.Row > current_row)
+            if (seat.Row != currentRow)
             {
-                Console.WriteLine();
-                Console.WriteLine();
-                current_row = seat.Row;
-            }
+                if (currentRow != 0)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
 
-            if(seat.SeatNumber == 1)
-            {
-                Console.Write(seat.Row < 10 ? $" {seat.Row}" : seat.Row); 
+                currentRow = seat.Row;
+                Console.Write(currentRow < 10 ? $" {currentRow}" : currentRow.ToString());
                 Console.Write("  ");
             }
-            if(Coordinates["x"] == seat.SeatNumber && Coordinates["y"] == seat.Row)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("█");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            else
-            {
-                Console.Write("░");
-            }
+
+            bool isCursor = seat.Row == Coordinates["y"] && seat.SeatNumber == Coordinates["x"];
+            bool isSelected = selectedSeats.Contains((seat.Row, seat.SeatNumber));
+            WriteSeatCell(isSelected, isCursor);
             Console.Write(" ");
         }
+
         Console.WriteLine();
+        Console.WriteLine();
+    }
+
+    private static void WriteSeatCell(bool isSelected, bool isCursor)
+    {
+        if (isCursor)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write(isSelected ? "█" : "█");
+            Console.ForegroundColor = ConsoleColor.White;
+            return;
+        }
+
+        if (isSelected)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("■");
+            Console.ForegroundColor = ConsoleColor.White;
+            return;
+        }
+
+        Console.Write("░");
+    }
+
+    private static void ToggleSeat(List<(Int64 Row, Int64 Seat)> selectedSeats, Int64 row, Int64 seat)
+    {
+        var key = (row, seat);
+        int existingIndex = selectedSeats.IndexOf(key);
+        if (existingIndex >= 0)
+        {
+            selectedSeats.RemoveAt(existingIndex);
+            return;
+        }
+
+        selectedSeats.Add(key);
+    }
+
+    private static void ShowSelectionSummary(List<(Int64 Row, Int64 Seat)> selectedSeats)
+    {
+        Console.Clear();
+        Console.WriteLine("Selected seats");
+        Console.WriteLine();
+
+        if (selectedSeats.Count == 0)
+        {
+            Console.WriteLine("No seats selected.");
+        }
+        else
+        {
+            foreach ((Int64 row, Int64 seat) in selectedSeats.OrderBy(item => item.Row).ThenBy(item => item.Seat))
+            {
+                Console.WriteLine($"Row {row}, Seat {seat}");
+            }
+        }
+
+        Console.WriteLine();
+        UiHelper.HoldUser();
     }
 }
