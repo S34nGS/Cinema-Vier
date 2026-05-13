@@ -58,6 +58,7 @@ public static class ViewReservations
 
                 RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
 
+                Console.WriteLine($"Reservation Number: {reservation.Id}");
                 Console.WriteLine($"Movie: {movie.Title}");
                 Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
                 Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");

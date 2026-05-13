@@ -184,10 +184,8 @@ static class PurchaseTicket
             } while (invalidInputs != "");
         }
 
-        int reservationNumber = PurchaseLogic.GenerateReservationNumber();
-
-        UiHelper.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
-        ReservationsLogic.CreateReservation(new ReservationModel(reservationNumber,AccountsLogic.CurrentAccount!.Id,TimetablesLogic.ConvertDateToUnixTime(convertedDateTime),(double)finalTotal,selectedTimetable.Id));
+        UiHelper.SelectionMenu([$"Payment successful."], "");
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id));
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
