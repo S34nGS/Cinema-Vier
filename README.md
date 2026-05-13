@@ -10,6 +10,9 @@ python run.py
 
 # of alleen op Mac/Linux
 ./run.py 
+
+# of alleen op windows
+.\run.py
 ```
 
 ## Hoe maak ik de database opnieuw aan?
@@ -22,4 +25,7 @@ python CreateDB.py
 
 # of alleen op Mac/Linux
 ./CreateDB.py
+
+# of alleen op windows
+.\CreateDB.py
 ```
