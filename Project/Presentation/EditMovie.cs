@@ -5,6 +5,7 @@ public static class EditMovie
         List<string> movies = MoviesLogic.GetMovieTitles();
 
         int selectedMovie = UiHelper.SelectionMenu(movies);
+        if (selectedMovie == -1) return;
 
         MovieModel movie = MoviesLogic.GetMovieByTitle(movies[selectedMovie]);
 
