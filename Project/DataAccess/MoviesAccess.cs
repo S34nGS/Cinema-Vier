@@ -14,7 +14,8 @@ public class MoviesAccess : DefaultAccess
             director TEXT NOT NULL,
             ageRating INTEGER NOT NULL,
             genre TEXT NOT NULL,
-            releaseDate INTEGER NOT NULL
+            releaseDate INTEGER NOT NULL,
+            isActive INTEGER NOT NULL
         );";
         connection.Execute(sql);
     }
@@ -22,8 +23,8 @@ public class MoviesAccess : DefaultAccess
     public void Write(MovieModel movie)
     {
         string sql = $@"INSERT INTO {Table} 
-            (title, duration, summary, director, ageRating, genre, releaseDate) 
-            VALUES (@Title, @Duration, @Summary, @Director, @AgeRating, @Genre, @ReleaseDate)";
+            (title, duration, summary, director, ageRating, genre, releaseDate, isActive) 
+            VALUES (@Title, @Duration, @Summary, @Director, @AgeRating, @Genre, @ReleaseDate, @IsActive)";
         connection.Execute(sql, movie);
     }
 
@@ -33,7 +34,7 @@ public class MoviesAccess : DefaultAccess
         return connection.Query<MovieModel>(sql).AsList();
     }
 
-    public MovieModel GetByTitle(string title)
+    public MovieModel? GetByTitle(string title)
     {
         string sql = $"SELECT * FROM {Table} WHERE title = @Title";
         return connection.QueryFirstOrDefault<MovieModel>(sql, new { Title = title });
@@ -45,10 +46,16 @@ public class MoviesAccess : DefaultAccess
         return connection.Query<MovieModel>(sql, new { Pattern = $"%{pattern}%" }).AsList();
     }
 
+    public MovieModel GetById(Int64 movieId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @MovieId";
+        return connection.QueryFirstOrDefault<MovieModel>(sql, new { MovieId = movieId });
+    }
+
     public void Update(MovieModel movie)
     {
         string sql = $@"UPDATE {Table} 
-            SET title = @Title, duration = @Duration, summary = @Summary, director = @Director, ageRating = @AgeRating, genre = @Genre, releaseDate = @ReleaseDate
+            SET title = @Title, duration = @Duration, summary = @Summary, director = @Director, ageRating = @AgeRating, genre = @Genre, releaseDate = @ReleaseDate, isActive = @IsActive
             WHERE id = @Id";
         connection.Execute(sql, movie);
     }

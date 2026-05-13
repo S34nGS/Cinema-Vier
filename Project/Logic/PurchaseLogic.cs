@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
 public class PurchaseLogic  
@@ -5,201 +6,187 @@ public class PurchaseLogic
     public static TicketModel? CurrentPayment { get; private set; }
     public static Random rng = new();
 
-    public static string CreditCardCheck(Dictionary<string, string> creditCardInfo)
+    public static bool[] CreditCardCheck(Dictionary<string, string> creditCardInfo)
     {
-        string invalidMessages = "";
+        bool[] isValidInput = new bool[creditCardInfo.Count];
+
         foreach(KeyValuePair<string, string> info in creditCardInfo)
         {
-            if(info.Key == "Cardholder name") invalidMessages += CardHolderNameCheck(info.Value);
-            else if(info.Key == "Card number (13-19 digits)") invalidMessages += CreditCardNumberCheck(info.Value);
-            else if(info.Key == "Expiration date (MM/YY)") invalidMessages += CreditCardExpirationDateCheck(info.Value);
-            else if(info.Key == "CVC/CVV code (3-4 digits)") invalidMessages += CreditCardCVCCVVCheck(info.Value);
+            if(info.Key == "Cardholder name") 
+            {
+                isValidInput[0] = CardHolderNameCheck(info.Value);
+            }
+            else if(info.Key == "Card number (13-19 digits)")
+            {
+                isValidInput[1] = CreditCardNumberCheck(info.Value);
+            }
+            else if(info.Key == "Expiration date (MM/YY)")
+            {
+                isValidInput[2] = CreditCardExpirationDateCheck(info.Value);
+            }
+            else if(info.Key == "CVC/CVV code (3-4 digits)")
+            {
+                isValidInput[3] = CreditCardCVCCVVCheck(info.Value);
+            }
         }
-        return invalidMessages;
+
+        return isValidInput;
     }
 
-    public static string IBANCheck(Dictionary<string, string> iBANInfo)
+    public static bool[] IBANCheck(Dictionary<string, string> iBANInfo)
     {
-        string invalidMessages = "";
+        bool[] isValidInput = new bool[iBANInfo.Count];
+
         foreach(KeyValuePair<string, string> info in iBANInfo)
         {
-            if(info.Key == "Cardholder name") invalidMessages += CardHolderNameCheck(info.Value);
-            else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)") invalidMessages += IBANNumberCheck(info.Value);
+            if(info.Key == "Cardholder name")
+            {
+                isValidInput[0] = CardHolderNameCheck(info.Value);
+            }
+            else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+            {
+                isValidInput[1] = IBANNumberCheck(info.Value);
+            }
         }
-        return invalidMessages;
+
+        return isValidInput;
     }
 
-    private static string CardHolderNameCheck(string fullname)
+    // calculate total with ticket, normal menu and lounge pre-order
+    public static decimal CalculateFullTotal(decimal ticketTotal, decimal menuTotal, decimal loungePreOrderTotal)
     {
-        string invalidMessages = "";
-        string spacesRemovedFromInput = fullname.Replace(" ", "");
+        return ticketTotal + menuTotal + loungePreOrderTotal;
+    }
+
+    private static bool CardHolderNameCheck(string fullname)
+    {
+        if (string.IsNullOrWhiteSpace(fullname)) return false;
+        string fullnameWithoutSpaces = fullname.Replace(" ", "");
         string[] splitName = fullname.Split(' ');
 
-        if (!spacesRemovedFromInput.All(char.IsLetter))
-        {
-            invalidMessages += "Special characters are not allowed, ";
-        }
-        else if (!fullname.Contains(' '))
-        {
-            invalidMessages += "Enter your full name, ";
-        }
-        else if (splitName[0].Length < 2 || splitName[splitName.Length - 1].Length < 2)
-        {
-            invalidMessages += "First and last name must be at least 2 letters, ";
-        }
-        else if (splitName[0].Length > 30 || splitName[splitName.Length - 1].Length > 30)
-        {
-            invalidMessages += "First and last name cannot exceed 30 letters, ";
-        }
-        else if (!char.IsUpper(splitName[0][0]) || !char.IsUpper(splitName[splitName.Length - 1][0]))
-        {
-            invalidMessages += "Name must start with a capital letter, ";
-        }
-
-        return invalidMessages;
+        return fullnameWithoutSpaces.All(char.IsLetter)
+        && fullname.Contains(' ')
+        && splitName[0].Length > 2 && splitName[splitName.Length - 1].Length > 2
+        && splitName[0].Length < 30 && splitName[splitName.Length - 1].Length < 30
+        && char.IsUpper(splitName[0][0]) && char.IsUpper(splitName[splitName.Length - 1][0]);
     }
 
-    private static string CreditCardNumberCheck(string cardNumber)
+    private static bool CreditCardNumberCheck(string cardNumber)
     {
-        string invalidMessages = "";
+        if (string.IsNullOrWhiteSpace(cardNumber)) return false;
         cardNumber = cardNumber.Replace(" ", "");
 
-        if (!cardNumber.All(char.IsDigit))
-        {
-            invalidMessages += "Card number must contain only digits, ";
-        }
-        else if (cardNumber.Length < 13 || cardNumber.Length > 19)
-        {
-            invalidMessages += "Card number must be 13-19 digits, ";
-        }
-        else if (!HasValidPrefix(cardNumber))
-        {
-            invalidMessages += "Card number is not from a known provider, ";
-        }
-        // Check if card number is mathematically valid: catch mistyped numbers and random fake numbers
-        else if (!LuhnCheck(cardNumber))
-        {
-            invalidMessages += "Card number is invalid, ";
-        }
-
-        return invalidMessages;
+        return cardNumber.All(char.IsDigit)
+        && cardNumber.Length >= 13 && cardNumber.Length <= 19
+        && CheckCardtype(cardNumber)
+        && LuhnCheck(cardNumber);
     }
-    private static bool HasValidPrefix(string cardNumber)
+    private static bool CheckCardtype(string cardNumber)
     {
-        // Visa
-        if (cardNumber.StartsWith("4")) return true;
-
-        // Mastercard
-        if (cardNumber.Length >= 2)
+        string[][] cardtypes =
         {
-            int firstTwo = int.Parse(cardNumber[..2]);
-            if (firstTwo >= 51 && firstTwo <= 55) return true;
-        }
+            new[] {"4"},                             // Visa
+            new[] {"51", "52", "53", "54", "55"},    // Mastercard
+            new[] {"34", "37"}                       // Amex
+        };
 
-        // Amex
-        return (cardNumber.StartsWith("34") || cardNumber.StartsWith("37"));
+        return cardtypes[0].Contains(cardNumber.Substring(0, 1))
+        || cardtypes[1].Contains(cardNumber.Substring(0, 2))
+        || cardtypes[2].Contains(cardNumber.Substring(0, 2));
     }
 
     private static bool LuhnCheck(string cardNumber)
     {
         int sum = 0;
-        bool alternate = false;
+        bool shouldDouble = false;
 
         for (int i = cardNumber.Length - 1; i >= 0; i--)
         {
-            int digit = cardNumber[i] - '0';
+            int digit = (int)char.GetNumericValue(cardNumber[i]);
 
-            if (alternate)
+            if (shouldDouble)
             {
                 digit *= 2;
-                if (digit > 9) digit -= 9;
+                if (digit > 9)
+                {
+                    digit -= 9;
+                }
             }
 
             sum += digit;
-            alternate = !alternate;
+            shouldDouble = !shouldDouble;
         }
+
         return sum % 10 == 0;
     }
 
-    private static string CreditCardExpirationDateCheck(string expirationDate)
+    private static bool CreditCardExpirationDateCheck(string expirationDate)
     {
-        string invalidMessages = "";
+        if (string.IsNullOrWhiteSpace(expirationDate)) return false;
         int month = Convert.ToInt32(expirationDate.Split("/")[0]);
         int year = Convert.ToInt32(expirationDate.Split("/")[1]) + 2000;
         DateTime expiryDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
 
-        if (expirationDate.Length != 5 || expirationDate.Count(c => c == '/') != 1 || !expirationDate.Replace("/", "").All(char.IsDigit))
-        {
-            invalidMessages += "Invalid expiration date format, ";
-        }
-        else if (month < 1 || month > 12) invalidMessages += "Month must be 01-12, ";
-        else if (expiryDate < DateTime.Today) invalidMessages += "Card is expired, ";
-
-        return invalidMessages;
+        return expirationDate.Length == 5
+        && expirationDate.Count(c => c == '/') == 1
+        && expirationDate.Replace("/", "").All(char.IsDigit)
+        && month >= 1 && month <= 12
+        && expiryDate > DateTime.Today;
     }
 
-    private static string CreditCardCVCCVVCheck(string number)
+    private static bool CreditCardCVCCVVCheck(string number)
     {
-        string invalidMessages = "";
-
-        if (!number.All(char.IsDigit))
-        {
-            invalidMessages += "CVC/CVV must contain only digits, ";
-        }
-        else if (number.Length < 3 || number.Length > 4)
-        {
-            invalidMessages += "CVC/CVV must be 3-4 digits, ";
-        }
-        else if (number.Distinct().Count() == 1)
-        {
-            invalidMessages += "CVC/CVV is invalid, ";
-        }
-
-        return invalidMessages;
+        if (string.IsNullOrWhiteSpace(number)) return false;
+        return number.All(char.IsDigit)
+        && number.Length == 3 || number.Length == 4
+        && number.Distinct().Count() != 1;
     }
 
-    private static string IBANNumberCheck(string iban)
+    private static bool IBANNumberCheck(string iban)
     {
-        string invalidMessages = "";
+        if (string.IsNullOrWhiteSpace(iban)) return false;
         iban = iban.Replace(" ", "").ToUpper();
 
-        if (iban.Length < 4 || !char.IsLetter(iban[0]) || !char.IsLetter(iban[1]) || !char.IsDigit(iban[2]) || !char.IsDigit(iban[3]))
-        {
-            invalidMessages += "IBAN must start with a country code like NL, DE, BE, ";
-        }
-        else if (iban.Length < 15 || iban.Length > 34)
-        {
-            invalidMessages += "Invalid IBAN length, ";
-        }
-        else if (!Mod97Check(iban))
-        {
-            invalidMessages += "IBAN is invalid, ";
-        }
-
-        return invalidMessages;
+        return iban.Length >= 15 && iban.Length <= 34
+        && char.IsLetter(iban[0]) && char.IsLetter(iban[1]) && char.IsDigit(iban[2]) && char.IsDigit(iban[3])
+        && Mod97Check(iban);
     }
 
-    // Validates an IBAN using the Mod-97 checksum algorithm.
-    // Mod-97 check is a rule that every valid IBAN must follow.
-    // Ensures the IBAN is correctly formatted
     private static bool Mod97Check(string iban)
     {
-        // Move the first 4 characters to the end
-        string rearranged = iban[4..] + iban[..4];
-
-        // Replace letters with numbers: A=10, B=11 ... Z=35
-        string numericIban = string.Concat(
-            rearranged.Select(c => char.IsLetter(c) ? (c - 'A' + 10).ToString() : c.ToString())
-        );
-
-        // Calculate remainder — a valid IBAN always gives 1
-        int remainder = 0;
-        foreach (char c in numericIban)
+        Dictionary<char, string> replaceLetter = new()
         {
-            remainder = (remainder * 10 + (c - '0')) % 97;
+            {'A', "10"}, {'B', "11"}, {'C', "12"}, {'D', "13"},
+            {'E', "14"}, {'F', "15"}, {'G', "16"}, {'H', "17"},
+            {'I', "18"}, {'J', "19"}, {'K', "20"}, {'L', "21"},
+            {'M', "22"}, {'N', "23"}, {'O', "24"}, {'P', "25"},
+            {'Q', "26"}, {'R', "27"}, {'S', "28"}, {'T', "29"},
+            {'U', "30"}, {'V', "31"}, {'W', "32"}, {'X', "33"},
+            {'Y', "34"}, {'Z', "35"}
+        };
+        string moveIban = iban.Substring(4, iban.Length - 4) + iban.Substring(0, 4);
+        string ibanAsNumber = "";
+
+        foreach(char c in moveIban)
+        {
+            if (replaceLetter.ContainsKey(c)) 
+            {
+                ibanAsNumber += replaceLetter[c];
+            }
+            else
+            {
+                ibanAsNumber += c;
+            }
         }
 
-        return remainder == 1;
+        int divisionResult = 0;
+        foreach(char c in ibanAsNumber)
+        {
+            int digit = (int)char.GetNumericValue(c);
+            divisionResult = (divisionResult * 10 + digit) % 97;
+        }
+
+        return divisionResult == 1;
     }
 
     public static int GenerateReservationNumber()

@@ -16,7 +16,7 @@ public class FoodAndDrinkMenu
                 "Finish order"
             };
 
-            int categoryChoice = UiLib.SelectionMenu(categoryMenu, "Choose a category");
+            int categoryChoice = UiHelper.SelectionMenu(categoryMenu, "Choose a category");
 
             if (categoryChoice == 0)
             {
@@ -31,6 +31,17 @@ public class FoodAndDrinkMenu
                 break;
             }
         }
+
+        return orderItems;
+    }
+
+    public static List<OrderItemModel> ShowOnlyDrinksMenu(MenuLogic menuLogic)
+    {
+        // list for selected lounge drinks
+        List<OrderItemModel> orderItems = new List<OrderItemModel>();
+
+        // show only drinks
+        ShowCategoryItems(menuLogic.GetDrinks(), menuLogic, orderItems);
 
         return orderItems;
     }
@@ -125,6 +136,7 @@ public class FoodAndDrinkMenu
 
         while (true)
         {
+            // show edit options
             Console.WriteLine($"Do you want to edit the order?");
             Console.WriteLine($"1. Update quantity");
             Console.WriteLine($"2. Remove item");
@@ -135,12 +147,27 @@ public class FoodAndDrinkMenu
             if (choice == "1")
             {
                 UpdateOrderItem(orderItems, menuLogic);
-                return;
+
+                // show summary after update
+                ShowSummary(orderItems, menuLogic);
+
+                // go back to edit menu
+                continue;
             }
             else if (choice == "2")
             {
                 RemoveOrderItem(orderItems, menuLogic);
-                return;
+
+                // show summary after remove
+                ShowSummary(orderItems, menuLogic);
+
+                if (orderItems.Count == 0)
+                {
+                    return;
+                }
+
+                // go back to edit menu
+                continue;
             }
             else if (choice == "3")
             {
@@ -221,8 +248,10 @@ public class FoodAndDrinkMenu
 
             for (int i = 0; i < orderItems.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {orderItems[i].Name}");
+                Console.WriteLine($"{i + 1}. {orderItems[i].Name}"); // show items
             }
+
+            Console.WriteLine($"Enter the item number you want to remove:");
 
             string? input = Console.ReadLine();
 
@@ -245,6 +274,6 @@ public class FoodAndDrinkMenu
             return;
         }
 
-        Console.WriteLine($"Item removed.");
+        Console.WriteLine($"{selectedItem.Name} removed from order.");
     }
 }

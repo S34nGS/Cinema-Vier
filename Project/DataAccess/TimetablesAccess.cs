@@ -51,4 +51,16 @@ public class TimetablesAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
         return connection.QueryFirstOrDefault<RoomModel>(sql, new {TimetableId = timetableId});
     }
+
+    public TimetableModel GetById(Int64 timetableId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
+        return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
+    }
+
+    public List<TimetableModel> GetTimetablesByDateRange(Int64 startTime, Int64 endTime)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime AND startTime <= @EndTime";
+        return connection.Query<TimetableModel>(sql, new { StartTime = startTime, EndTime = endTime }).AsList();
+    }
 }

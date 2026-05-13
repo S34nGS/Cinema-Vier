@@ -6,9 +6,9 @@ public static class CinemaInfo
         {
             Console.Clear();
 
-            List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies"];
+            List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies", "General Information"];
 
-            int selected = UiLib.SelectionMenu(menu, "About Rotterdam Pathé Cinema");
+            int selected = UiHelper.SelectionMenu(menu, "About Cinema Vier");
 
             if (selected == menu.IndexOf("About Us"))
             {
@@ -30,9 +30,13 @@ public static class CinemaInfo
             {
                 ShowPolicies();
             }
+            else if (selected == menu.IndexOf("General Information"))
+            {
+                ShowGeneralInformation();
+            }
             else
             {
-                // Back handled by UiLib
+                // Back handled by UiHelper
                 Menu.Start();
                 return;
             }
@@ -42,53 +46,83 @@ public static class CinemaInfo
     static void ShowAboutUs()
     {
         Console.Clear();
-        Console.WriteLine("=== About Us ===");
-        Console.WriteLine();
-        Console.WriteLine("Rotterdam Pathé Cinema is a modern cinema located in Rotterdam.");
-        Console.WriteLine("We offer a comfortable and simple movie experience.");
-        Console.WriteLine("Users can browse movies, make reservations and enjoy their visit.");
-        UiLib.HoldUser();
+        Console.WriteLine(@"
+=== About Us ===
+
+Cinema Vier is a modern cinema located in Rotterdam.
+We offer a comfortable and simple movie experience.
+Users can browse movies, make reservations and enjoy their visit.
+");
+        UiHelper.HoldUser();
     }
 
     static void ShowCinemaExperience()
     {
         Console.Clear();
-        Console.WriteLine("=== Cinema Experience ===");
-        Console.WriteLine();
-        Console.WriteLine("Our cinema offers a comfortable viewing experience with modern screens and sound.");
-        Console.WriteLine("Before the movie, visitors can stay in the waiting lounge.");
-        Console.WriteLine("In the lounge, customers can buy popcorn and a variety of hot and cold drinks.");
-        UiLib.HoldUser();
+        Console.WriteLine(@"
+=== Cinema Experience ===
+
+Our cinema offers a comfortable viewing experience with modern screens and sound.
+Before the movie, visitors can stay in the waiting lounge.
+In the lounge, customers can buy popcorn and a variety of hot and cold drinks.
+");
+        UiHelper.HoldUser();
     }
 
     static void ShowEvents()
     {
         Console.Clear();
-        Console.WriteLine("=== Events ===");
-        Console.WriteLine();
-        Console.WriteLine("At the moment, we focus on providing a simple movie experience.");
-        Console.WriteLine("In the future, special events or themed movie nights may be added.");
-        UiLib.HoldUser();
+        Console.WriteLine(@"
+=== Events ===
+
+At the moment, we focus on providing a simple movie experience.
+In the future, special events or themed movie nights may be added.
+");
+        UiHelper.HoldUser();
     }
 
     static void ShowPrices()
     {
         Console.Clear();
-        Console.WriteLine("=== Prices ===");
-        Console.WriteLine();
-        Console.WriteLine("Ticket prices may vary depending on the movie and time.");
-        Console.WriteLine("Food and drinks such as popcorn and beverages are sold separately.");
-        UiLib.HoldUser();
+        Console.WriteLine(@"
+=== Prices ===
+
+Ticket prices may vary depending on the movie and time.
+Food and drinks such as popcorn and beverages are sold separately.
+");
+        UiHelper.HoldUser();
     }
 
     static void ShowPolicies()
     {
         Console.Clear();
-        Console.WriteLine("=== Policies ===");
-        Console.WriteLine();
-        Console.WriteLine("Users must provide correct information when making a reservation.");
-        Console.WriteLine("Payment must be completed before a reservation is confirmed.");
-        Console.WriteLine("Customers should follow general cinema rules during their visit.");
-        UiLib.HoldUser();
+        Console.WriteLine(@"
+=== Policies ===
+
+Users must provide correct information when making a reservation.
+Payment must be completed before a reservation is confirmed.
+Customers should follow general cinema rules during their visit.
+");
+        UiHelper.HoldUser();
+    }
+    static void ShowGeneralInformation()
+    {
+        Console.Clear();
+        Console.WriteLine(@"
+=== General Information ===
+
+Opening Hours:
+
+Monday - Sunday: 10:00 - 23:00
+
+Address:
+
+Wijnhaven 107, 3011 WN Rotterdam, Netherlands
+
+Phone: +31 10 123 4567
+
+Email: info@cinemavier.nl
+");
+        UiHelper.HoldUser();
     }
 }

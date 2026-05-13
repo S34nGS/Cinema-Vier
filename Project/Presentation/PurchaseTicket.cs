@@ -3,11 +3,12 @@ static class PurchaseTicket
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    private static List<TimetableModel> CurrentTimetables = [];
 
     public static List<string> CreditCardInput =
     [
         "Cardholder name",
-        "Card number (13-19 digits, for example:4111 1111 1111 1111)",
+        "Card number (13-19 digits)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
     ];
@@ -26,7 +27,7 @@ static class PurchaseTicket
 
         if (DateMenu.Count == 0)
         {
-            int dates = UiLib.SelectionMenu(
+            int dates = UiHelper.SelectionMenu(
                 ["No available dates."],
                 "Pick a date",
                 true
@@ -38,7 +39,7 @@ static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiLib.SelectionMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu(DateMenu, "Pick a date");
         if (selectedDate == -1)
         {
             return null;
@@ -50,10 +51,18 @@ static class PurchaseTicket
         TimeMenu.Clear();
         SetUpTimeMenu(movie, selectedDateString);
 
-        int selectedTime = UiLib.SelectionMenu(TimeMenu, "Pick a time");
+        int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
+
         if (selectedTime == -1)
         {
             return null;
+        }
+        
+        TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
+        List<SeatModel> selectedSeats = [];
+        if(selectedTimetable.RoomId == 1)
+        {
+            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
         }
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
@@ -72,21 +81,60 @@ static class PurchaseTicket
             "Add food and drinks"
         ];
 
-        int selectedOrderChoice = UiLib.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
+        int selectedOrderChoice = UiHelper.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
+        // selected lounge pre-order drinks
+        List<OrderItemModel> loungePreOrderItems = new List<OrderItemModel>();
+
+        // ask if user wants lounge pre-order drinks
+        List<string> loungePreOrderChoices =
+        [
+            "Continue without lounge drink pre-order",
+            "Add lounge drink pre-order"
+        ];
+
+        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu(
+            loungePreOrderChoices,
+            "Do you want to pre-order drinks from the lounge/bar?"
+        );
+
+        if (selectedLoungePreOrderChoice == 1)
+        {
+            // show only drinks for lounge pre-order
+            MenuLogic loungeMenuLogic = new MenuLogic();
+            loungePreOrderItems = FoodAndDrinkMenu.ShowOnlyDrinksMenu(loungeMenuLogic);
+        }
+
         // calculate totals
         MenuLogic menuLogic = new MenuLogic();
         decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
-        decimal finalTotal = ticketTotal + menuTotal;
+
+        // calculate lounge pre-order total
+        decimal loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
+
+        // calculate final total with lounge pre-order
+        decimal finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
 
         // show summary before payment
-        ShowBookingSummary(ticketTotal, orderedMenuItems, menuTotal, finalTotal);
+        ShowBookingSummary(
+            ticketTotal,
+            orderedMenuItems,
+            menuTotal,
+            loungePreOrderItems,
+            loungePreOrderTotal,
+            finalTotal
+        );
 
-        int selectedPaymentMethod = UiLib.SelectionMenu(PaymentMethods, "How do you want to pay?");
+        if (AccountsLogic.CurrentAccount == null)
+        {
+            UserLogin.Start();
+        }
+
+        int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
             return null;
@@ -94,73 +142,68 @@ static class PurchaseTicket
 
         string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
         string invalidInputs = "";
+        Dictionary<string, string> paymentInfo = [];
 
         if (selectedPaymentMethodString == "Credit Card")
         {
+            foreach (string field in CreditCardInput)
+            {
+                paymentInfo[field] = "";
+            }
+
             do
             {
-                if (invalidInputs != "")
-                {
-                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
-                        CreditCardInput,
-                        $"Invalid input: {invalidInputs} please try again"
-                    );
-
-                    invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
-                }
-                else
-                {
-                    Dictionary<string, string> creditCardInfo = UiLib.InputForm(
-                        CreditCardInput,
-                        "Please fill in the payment information"
-                    );
-
-                    invalidInputs = PurchaseLogic.CreditCardCheck(creditCardInfo);
-                }
-
+                paymentInfo = UiHelper.InputForm(
+                    paymentInfo,
+                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                );
+         
+             bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
+             invalidInputs = InValidMessage(isValidInput, "credit card");
             } while (invalidInputs != "");
         }
         else if (selectedPaymentMethodString == "IBAN")
         {
+            foreach (string field in IBANInput)
+            {
+                paymentInfo[field] = "";
+            }
+
             do
             {
-                if (invalidInputs != "")
-                {
-                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
-                        IBANInput,
-                        $"Invalid input: {invalidInputs} please try again"
-                    );
+                paymentInfo = UiHelper.InputForm(
+                    paymentInfo,
+                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                );
 
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-                }
-                else
-                {
-                    Dictionary<string, string> iBANInfo = UiLib.InputForm(
-                        IBANInput,
-                        "Please fill in the payment information"
-                    );
+             bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
+             invalidInputs = InValidMessage(isValidInput, "iban");
 
-                    invalidInputs = PurchaseLogic.IBANCheck(iBANInfo);
-                }
 
             } while (invalidInputs != "");
         }
 
-        int reservationNumber = PurchaseLogic.GenerateReservationNumber();
+        UiHelper.SelectionMenu([$"Payment successful."], "");
+        foreach(SeatModel seat in selectedSeats)
+        {
 
-        UiLib.SelectionMenu([$"Payment successful. Reservation number: {reservationNumber}"], "");
-        ReservationsLogic.CreateReservation(new(reservationNumber, AccountsLogic.CurrentAccount.Id, selectedDateString, 10, 1));
+    // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
+            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
+        }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
-    private static void SetUpDateMenu(MovieModel movie)
+    public static void SetUpDateMenu(MovieModel movie)
     {
         // get all timetables for movie
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now))
+            if (
+                timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now) &&
+                timetable.StartTime < TimetablesLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
+                )
             {
                 string date = TimetablesLogic.GetDateString(
                     TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
@@ -179,6 +222,8 @@ static class PurchaseTicket
         // get all times for selected date
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
+        CurrentTimetables.Clear();
+
         foreach (TimetableModel timetable in timetables)
         {
             if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
@@ -187,6 +232,7 @@ static class PurchaseTicket
 
                 if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
+                    CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
                         $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
                     );
@@ -200,40 +246,122 @@ static class PurchaseTicket
         decimal ticketTotal,
         List<OrderItemModel> orderedMenuItems,
         decimal menuTotal,
+        List<OrderItemModel> loungePreOrderItems,
+        decimal loungePreOrderTotal,
         decimal finalTotal)
     {
         Console.Clear();
 
-        Console.WriteLine($"Booking Summary");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Booking Summary
 
-        Console.WriteLine($"Ticket total: €{ticketTotal:0.00}");
-        Console.WriteLine($"");
+Ticket total: €{ticketTotal:0.00}
+");
 
         if (orderedMenuItems.Count > 0)
         {
-            Console.WriteLine($"Food and drink items:");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+Food and drink items:
+");
 
             foreach (OrderItemModel item in orderedMenuItems)
             {
-                Console.WriteLine($"Item name: {item.Name}");
-                Console.WriteLine($"Quantity: {item.Quantity}");
-                Console.WriteLine($"Price per item: €{item.PricePerItem:0.00}");
-                Console.WriteLine($"Subtotal: €{item.SubTotal:0.00}");
-                Console.WriteLine($"");
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
             }
         }
         else
         {
-            Console.WriteLine($"No food or drinks selected.");
-            Console.WriteLine($"");
+            Console.WriteLine($@"
+No food or drinks selected.
+");
         }
 
-        Console.WriteLine($"Food and drink total: €{menuTotal:0.00}");
-        Console.WriteLine($"Final total: €{finalTotal:0.00}");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Food and drink total: €{menuTotal:0.00}
+");
 
-        UiLib.HoldUser();
+        if (loungePreOrderItems.Count > 0)
+        {
+            Console.WriteLine($@"
+Lounge pre-order drinks:
+");
+
+            foreach (OrderItemModel item in loungePreOrderItems)
+            {
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
+            }
+        }
+        else
+        {
+            Console.WriteLine($@"
+No lounge drinks selected.
+");
+        }
+
+        Console.WriteLine($@"
+Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
+Final total: €{finalTotal:0.00}
+");
+
+        UiHelper.HoldUser();
+    }
+
+    public static string InValidMessage(bool[] isValidInput, string paymentMethod)
+    {
+        string message = "";
+        if(paymentMethod == "credit card")
+        {
+            for(int i = 0; i < isValidInput.Length; i++)
+            {
+                if(isValidInput[i] == false)
+                {
+                    if(CreditCardInput[i] == "Cardholder name")
+                    {
+                        message += "Invalid name, ";
+                    }
+                    else if(CreditCardInput[i] == "Card number (13-19 digits)")
+                    {
+                        message += "Invalid card number, ";
+                    }
+                    else if(CreditCardInput[i] == "Expiration date (MM/YY)")
+                    {
+                        message += "Invalid date, ";
+                    }
+                    else if(CreditCardInput[i] == "CVC/CVV code (3-4 digits)")
+                    {
+                        message += "Invalid CVC/CVV code, ";
+                    }
+                }
+            }
+        }
+        else if(paymentMethod == "iban")
+        {
+            for(int i = 0; i < isValidInput.Length; i++)
+            {
+                if(isValidInput[i] == false)
+                {
+                    if(CreditCardInput[i] == "Cardholder name")
+                    {
+                        message += "Invalid name, ";
+                    }
+                    else if(CreditCardInput[i] == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+                    {
+                        message += "Invalid IBAN number, ";
+                    }
+                }
+            }
+        }
+
+        return message;
     }
 }

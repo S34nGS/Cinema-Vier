@@ -1,6 +1,6 @@
-public static class UiLib
+public static class UiHelper
 {
-    public static int GetLongestString(List<string> strings)
+    public static int GetLongestString(IEnumerable<string> strings)
     {
         int longest = 0;
         foreach (string item in strings)
@@ -22,6 +22,7 @@ public static class UiLib
         }
     }
 
+    // TODO: Rewrite using boolean instead of int
     public static void ContinueOrBackMenu(int continueOrBack)
     {
         Console.WriteLine($"╔{new string('═', 22)}╗");
@@ -41,9 +42,10 @@ public static class UiLib
         Console.WriteLine($"╚{new string('═', 22)}╝");
     }
 
-    public static int SelectionMenu(List<string> menu, string? header = null, bool hasButtons = false)
+    public static int SelectionMenu(IEnumerable<string> menu, string? header = null, bool hasButtons = false)
     {
-        int longest = GetLongestString(menu);
+        string[] localMenu = menu.ToArray();
+        int longest = GetLongestString(localMenu);
         int selected = 0;
         int continueOrBack = 1;
 
@@ -53,15 +55,15 @@ public static class UiLib
             WriteHeader(header);
 
             Console.WriteLine($"╔{new string('═', longest + 6)}╗");
-            for (int index = 0; index < menu.Count; index++)
+            for (int index = 0; index < localMenu.Length; index++)
             {
                 if (index == selected)
                 {
-                    Console.WriteLine($"║ > {menu[index]} {new string(' ', longest - menu[index].Length)}< ║");
+                    Console.WriteLine($"║ > {localMenu[index]} {new string(' ', longest - localMenu[index].Length)}< ║");
                 }
                 else
                 {
-                    Console.WriteLine($"║   {menu[index]} {new string(' ', longest - menu[index].Length)}  ║");
+                    Console.WriteLine($"║   {localMenu[index]} {new string(' ', longest - localMenu[index].Length)}  ║");
                 }
             }
 
@@ -76,14 +78,14 @@ public static class UiLib
 
             if (!hasButtons)
             {
-                if (key == ConsoleKey.LeftArrow && continueOrBack > 0)
+                if (IsLeftKey(key) && continueOrBack > 0)
                 {
                     continueOrBack--;
                 }
-                else if (key == ConsoleKey.RightArrow && continueOrBack < 1)
+                else if (IsRightKey(key) && continueOrBack < 1)
                 {
                     continueOrBack++;
-                } 
+                }
             }
 
             if (key == ConsoleKey.Enter)
@@ -92,14 +94,15 @@ public static class UiLib
                 {
                     break;
                 }
+
                 return -1;
             }
 
-            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < menu.Count - 1)
+            if (IsDownKey(key) && selected < localMenu.Length - 1)
             {
                 selected++;
             }
-            else if ((key == ConsoleKey.UpArrow || key == ConsoleKey.K) && selected > 0)
+            else if (IsUpKey(key) && selected > 0)
             {
                 selected--;
             }
@@ -129,14 +132,14 @@ public static class UiLib
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-            if (keyInfo.Key == ConsoleKey.LeftArrow && continueOrBack > 0)
+            if (IsLeftKey(keyInfo.Key, false) && continueOrBack > 0)
             {
                 continueOrBack--;
             }
-            else if (keyInfo.Key == ConsoleKey.RightArrow && continueOrBack < 1)
+            else if (IsRightKey(keyInfo.Key, false) && continueOrBack < 1)
             {
                 continueOrBack++;
-            } 
+            }
 
             if (keyInfo.Key == ConsoleKey.Enter)
             {
@@ -179,15 +182,9 @@ public static class UiLib
         }
     }
 
-    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form",
+    public static Dictionary<string, string> InputForm(IEnumerable<string> titles, string formTitle = "Input Form",
         int maxLength = 32)
     {
-        int longest = Math.Max(
-            Math.Max(GetLongestString(titles), maxLength),
-            formTitle.Length
-        );
-        int selected = 0;
-
         Dictionary<string, string> inputs = new();
 
         foreach (string title in titles)
@@ -237,11 +234,11 @@ public static class UiLib
             {
                 break;
             }
-            else if (key.Key == ConsoleKey.DownArrow && selected < fields.Count - 1)
+            else if (IsDownKey(key.Key, false) && selected < fields.Count - 1)
             {
                 selected++;
             }
-            else if (key.Key == ConsoleKey.UpArrow && selected > 0)
+            else if (IsUpKey(key.Key, false) && selected > 0)
             {
                 selected--;
             }
@@ -260,5 +257,26 @@ public static class UiLib
         }
 
         return inputs;
+    }
+
+
+    public static bool IsLeftKey(ConsoleKey key, bool includeH = true)
+    {
+        return key == ConsoleKey.LeftArrow || (includeH && key == ConsoleKey.H);
+    }
+
+    public static bool IsRightKey(ConsoleKey key, bool includeL = true)
+    {
+        return key == ConsoleKey.RightArrow || (includeL && key == ConsoleKey.L);
+    }
+
+    public static bool IsUpKey(ConsoleKey key, bool includeK = true)
+    {
+        return key == ConsoleKey.UpArrow || (includeK && key == ConsoleKey.K);
+    }
+
+    public static bool IsDownKey(ConsoleKey key, bool includeJ = true)
+    {
+        return key == ConsoleKey.DownArrow || (includeJ && key == ConsoleKey.J);
     }
 }

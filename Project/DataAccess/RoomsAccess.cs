@@ -9,7 +9,9 @@ public class RoomsAccess : DefaultAccess
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             screenType TEXT NOT NULL,
-            soundTYPE TEXT NOT NULL
+            soundTYPE TEXT NOT NULL,
+            height INTEGER NOT NULL,
+            width INTEGER NOT NULL
         );";
         connection.Execute(sql);
     }
@@ -17,8 +19,8 @@ public class RoomsAccess : DefaultAccess
     public void Write(RoomModel room)
     {
         string sql = $@"INSERT INTO {Table}
-            (screenType, soundType)
-            VALUES (@ScreenType, @SoundType)";
+            (screenType, soundType, height, width)
+            VALUES (@ScreenType, @SoundType, @Height, @Width)";
         connection.Execute(sql, room);
     }
 
@@ -36,7 +38,7 @@ public class RoomsAccess : DefaultAccess
         connection.Execute(sql, new { Id = room.Id });
     }
 
-    public RoomModel GetById(int id)
+    public RoomModel GetById(Int64 id)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @Id";
         return connection.QueryFirstOrDefault<RoomModel>(sql, new {Id = id});
