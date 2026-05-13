@@ -44,7 +44,14 @@ static class Menu
                 while (true)
                 {
                     TicketModel? purchaseTicket = PurchaseTicket.Start(movie);
-                    if (purchaseTicket is null) break;
+                    if (purchaseTicket is null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        Start();
+                    }
                 }
             }
         }
