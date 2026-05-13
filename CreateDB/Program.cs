@@ -1,4 +1,3 @@
-public static class Program {
     public static void Main() {
         CreateMoviesTable();
         CreateAccountsTable();
