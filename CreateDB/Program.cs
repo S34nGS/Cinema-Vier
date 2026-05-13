@@ -53,9 +53,9 @@ public static class Program {
         rooms.CreateTable();
 
         List<RoomModel> roomsList = [
-            new RoomModel(1, "Standard", "7.1 Surround Sound"),
-            new RoomModel(2, "IMAX", "IMAX Sound System"),
-            new RoomModel(3, "Dolby Cinema", "Dolby Atmos"),
+            new RoomModel(1, "Standard", "7.1 Surround Sound", 14, 12),
+            new RoomModel(2, "IMAX", "IMAX Sound System", 20, 30),
+            new RoomModel(3, "Dolby Cinema", "Dolby Atmos", 19, 18),
         ];
 
         foreach (RoomModel room in roomsList)
@@ -129,6 +129,20 @@ public static class Program {
     {
         SeatAccess seats = new();
         seats.CreateTable();
+
+        int small_theatre_height = 14;
+        int small_theatre_width = 12;
+
+        for (int y_axis = 0; y_axis < small_theatre_height; y_axis++)
+        {
+            for (int x_axis = 0; x_axis < small_theatre_width; x_axis++)
+            {
+
+                // public SeatModel(Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority)
+                SeatModel seat = new(-1, 1, y_axis + 1, x_axis + 1, 1);
+                seats.Write(seat);
+            }
+        }
     }
 
     public static void CreateReservationTable()
@@ -137,10 +151,10 @@ public static class Program {
         reservation.CreateTable();
 
         List<ReservationModel> reservationList = [
-            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1),
-            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2),
-            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3),
-            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2, 2),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3, 3),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1, 4),
         ];
 
         foreach (ReservationModel item in reservationList)

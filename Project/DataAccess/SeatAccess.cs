@@ -17,4 +17,18 @@ public class SeatAccess : DefaultAccess
 		);";
 		connection.Execute(sql);
 	}
+
+	public void Write(SeatModel seat)
+	{
+        string sql = $@"INSERT INTO {Table} 
+            (roomId, row, seatNumber, seatPriority)
+            VALUES (@RoomId, @Row, @SeatNumber, @SeatPriority)";
+        connection.Execute(sql, seat);
+	}
+
+	public List<SeatModel> GetAllSeatsByRoomId(Int64 roomId)
+	{
+        string sql = $"SELECT * FROM {Table} WHERE roomId = @RoomId";
+        return connection.Query<SeatModel>(sql, new { RoomId = roomId }).AsList();
+	}
 }

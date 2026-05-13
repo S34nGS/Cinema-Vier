@@ -59,6 +59,11 @@ static class PurchaseTicket
         }
         
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
+        List<SeatModel> selectedSeats = [];
+        if(selectedTimetable.RoomId == 1)
+        {
+            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
+        }
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
@@ -172,7 +177,12 @@ static class PurchaseTicket
         }
 
         UiHelper.SelectionMenu([$"Payment successful."], "");
-        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id));
+        foreach(SeatModel seat in selectedSeats)
+        {
+
+    // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
+            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
+        }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 

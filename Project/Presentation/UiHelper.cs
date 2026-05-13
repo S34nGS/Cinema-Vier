@@ -78,11 +78,11 @@ public static class UiHelper
 
             if (!hasButtons)
             {
-                if (key == ConsoleKey.LeftArrow && continueOrBack > 0)
+                if (IsLeftKey(key) && continueOrBack > 0)
                 {
                     continueOrBack--;
                 }
-                else if (key == ConsoleKey.RightArrow && continueOrBack < 1)
+                else if (IsRightKey(key) && continueOrBack < 1)
                 {
                     continueOrBack++;
                 }
@@ -98,11 +98,11 @@ public static class UiHelper
                 return -1;
             }
 
-            if ((key == ConsoleKey.DownArrow || key == ConsoleKey.J) && selected < localMenu.Length - 1)
+            if (IsDownKey(key) && selected < localMenu.Length - 1)
             {
                 selected++;
             }
-            else if ((key == ConsoleKey.UpArrow || key == ConsoleKey.K) && selected > 0)
+            else if (IsUpKey(key) && selected > 0)
             {
                 selected--;
             }
@@ -132,11 +132,11 @@ public static class UiHelper
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-            if (keyInfo.Key == ConsoleKey.LeftArrow && continueOrBack > 0)
+            if (IsLeftKey(keyInfo.Key, false) && continueOrBack > 0)
             {
                 continueOrBack--;
             }
-            else if (keyInfo.Key == ConsoleKey.RightArrow && continueOrBack < 1)
+            else if (IsRightKey(keyInfo.Key, false) && continueOrBack < 1)
             {
                 continueOrBack++;
             }
@@ -234,11 +234,11 @@ public static class UiHelper
             {
                 break;
             }
-            else if (key.Key == ConsoleKey.DownArrow && selected < fields.Count - 1)
+            else if (IsDownKey(key.Key, false) && selected < fields.Count - 1)
             {
                 selected++;
             }
-            else if (key.Key == ConsoleKey.UpArrow && selected > 0)
+            else if (IsUpKey(key.Key, false) && selected > 0)
             {
                 selected--;
             }
@@ -257,5 +257,26 @@ public static class UiHelper
         }
 
         return inputs;
+    }
+
+
+    public static bool IsLeftKey(ConsoleKey key, bool includeH = true)
+    {
+        return key == ConsoleKey.LeftArrow || (includeH && key == ConsoleKey.H);
+    }
+
+    public static bool IsRightKey(ConsoleKey key, bool includeL = true)
+    {
+        return key == ConsoleKey.RightArrow || (includeL && key == ConsoleKey.L);
+    }
+
+    public static bool IsUpKey(ConsoleKey key, bool includeK = true)
+    {
+        return key == ConsoleKey.UpArrow || (includeK && key == ConsoleKey.K);
+    }
+
+    public static bool IsDownKey(ConsoleKey key, bool includeJ = true)
+    {
+        return key == ConsoleKey.DownArrow || (includeJ && key == ConsoleKey.J);
     }
 }
