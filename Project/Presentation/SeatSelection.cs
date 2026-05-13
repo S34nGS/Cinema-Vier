@@ -1,7 +1,7 @@
 public static class SeatSelection
 {
     private static SeatLogic _logic = new();
-    public static List<SeatModel> Start(int roomId = 1, List<SeatModel> unavailableSeats = null)
+    public static List<SeatModel> Start(Int64 roomId = 1, List<SeatModel> unavailableSeats = null)
     {
         List<SeatModel> seats = _logic.GetSeatsByRoomId(roomId);
         RoomModel room = RoomsLogic.GetRoomById(roomId);
