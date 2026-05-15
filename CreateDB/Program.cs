@@ -17,8 +17,10 @@ public static class Program {
         List<MovieModel> moviesList = [
             new MovieModel(1, "The Shawshank Redemption", 142, "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.", "Frank Darabont", 15, "Drama", 1994),
             new MovieModel(2, "The Godfather", 175, "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", "Francis Ford Coppola", 18, "Crime, Drama", 1972),
-            new MovieModel(3, "The Dark Knight", 152, "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.", "Christopher Nolan", 15, "Action, Crime, Drama", 2008)
-        ];
+            new MovieModel(3, "The Dark Knight", 152, "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.", "Christopher Nolan", 15, "Action, Crime, Drama", 2008),
+            new MovieModel(4, "Toy Story", 81, "A cowboy toy's world is turned upside down when a new space ranger toy arrives.", "John Lasseter", 6, "Animation", 1995),
+            new MovieModel(5, "Inception", 148, "A thief who steals secrets through dreams is given a chance to have his past erased.", "Christopher Nolan", 12, "Thriller", 2010),
+    ];
 
         MoviesAccess movies = new();
         movies.CreateTable();
@@ -95,6 +97,22 @@ public static class Program {
         DateTime date17 = baseDate.AddDays(13).AddHours(15);
         DateTime date18 = baseDate.AddDays(14).AddHours(15);
 
+        // Movie 4
+        DateTime date19 = baseDate.AddDays(2).AddHours(15);
+        DateTime date20 = baseDate.AddDays(4).AddHours(15);
+        DateTime date21 = baseDate.AddDays(6).AddHours(15);
+        DateTime date22 = baseDate.AddDays(11).AddHours(15);
+        DateTime date23 = baseDate.AddDays(12).AddHours(15);
+        DateTime date24 = baseDate.AddDays(13).AddHours(15);
+
+        // Movie 5
+        DateTime date25 = baseDate.AddDays(1).AddHours(15);
+        DateTime date26 = baseDate.AddDays(3).AddHours(15);
+        DateTime date27 = baseDate.AddDays(7).AddHours(15);
+        DateTime date28 = baseDate.AddDays(8).AddHours(15);
+        DateTime date29 = baseDate.AddDays(10).AddHours(15);
+        DateTime date30 = baseDate.AddDays(13).AddHours(15);
+
         List<TimetableModel> timetablesList = [
             // Movie 1
             new TimetableModel(1, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date1)),
@@ -119,6 +137,22 @@ public static class Program {
             new TimetableModel(16, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date16)),
             new TimetableModel(17, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date17)),
             new TimetableModel(18, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date18)),
+
+            // Movie 4
+            new TimetableModel(19, 4, 1, TimetablesLogic.ConvertDateToUnixTime(date19)),
+            new TimetableModel(20, 4, 1, TimetablesLogic.ConvertDateToUnixTime(date20)),
+            new TimetableModel(21, 4, 1, TimetablesLogic.ConvertDateToUnixTime(date21)),
+            new TimetableModel(22, 4, 1, TimetablesLogic.ConvertDateToUnixTime(date22)),
+            new TimetableModel(23, 4, 1, TimetablesLogic.ConvertDateToUnixTime(date23)),
+            new TimetableModel(24, 4, 1, TimetablesLogic.ConvertDateToUnixTime(date24)),
+
+            // Movie 5
+            new TimetableModel(25, 5, 2, TimetablesLogic.ConvertDateToUnixTime(date25)),
+            new TimetableModel(26, 5, 2, TimetablesLogic.ConvertDateToUnixTime(date26)),
+            new TimetableModel(27, 5, 2, TimetablesLogic.ConvertDateToUnixTime(date27)),
+            new TimetableModel(28, 5, 2, TimetablesLogic.ConvertDateToUnixTime(date28)),
+            new TimetableModel(29, 5, 2, TimetablesLogic.ConvertDateToUnixTime(date29)),
+            new TimetableModel(30, 5, 2, TimetablesLogic.ConvertDateToUnixTime(date30)),
         ];
 
         foreach (TimetableModel timetable in timetablesList)
