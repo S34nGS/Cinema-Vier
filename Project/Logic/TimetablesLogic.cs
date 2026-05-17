@@ -1,21 +1,14 @@
+using System.Globalization;
+
 public static class TimetablesLogic
 {
     private static TimetablesAccess _access = new();
 
+
+    // Conversion methods
     public static Int64 ConvertDateToUnixTime(DateTime dateTime)
     {
         return (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-        
-    }
-
-    public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
-    {
-        return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
-    }
-
-    public static DateTime ConvertStringToDateTime(string dateString)
-    {
-        return DateTime.Parse(dateString);
     }
 
     public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
@@ -23,14 +16,16 @@ public static class TimetablesLogic
         return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
     }
 
-    public static string GetDateString(DateTimeOffset dateTime)
+    public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
     {
-        return dateTime.ToString("dd-MM-yyyy");
+        return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
     }
 
-    public static string GetTimeString(DateTimeOffset dateTime)
+   public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
     {
-        return dateTime.ToString("HH:mm");
+        return DateTimeOffset
+            .FromUnixTimeSeconds(unixTimestamp)
+            .DateTime;
     }
 
     public static string ConvertUnixTimeToString(Int64 unixTimestamp)
@@ -38,6 +33,23 @@ public static class TimetablesLogic
         return ConvertDateTimeOffsetToString(ConvertUnixTimeToDateTime(unixTimestamp));
     }
 
+    public static Int64 ConvertTimeStringToUnixTime(string time)
+    {
+        int hour = int.Parse(time[..2]) * 3600;
+        int minute = int.Parse(time[3..]) * 60;
+        return hour + minute;
+    }
+
+    public static DateTime ConvertStringToDateTime(string dateString)
+    {
+        return DateTime.Parse(dateString);
+    }
+
+
+
+
+
+    // Getting methods
     public static List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
     {
         return _access.GetTimeTablesByMovieId(movieId);
@@ -46,13 +58,6 @@ public static class TimetablesLogic
     public static RoomModel GetRoomByTimetableId(Int64 timetableId)
     {
         return _access.GetRoomByTimetableId(timetableId);
-    }
-
-   public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
-    {
-        return DateTimeOffset
-            .FromUnixTimeSeconds(unixTimestamp)
-            .DateTime;
     }
 
     public static TimetableModel GetById(Int64 timetableId)
@@ -75,5 +80,142 @@ public static class TimetablesLogic
         Int64 endUnixTime = ConvertDateToUnixTime(endDate.Date);
         
         return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
+    }
+
+    public static string GetDateString(DateTimeOffset dateTime)
+    {
+        return dateTime.ToString("dd-MM-yyyy");
+    }
+
+    public static string GetTimeString(DateTimeOffset dateTime)
+    {
+        return dateTime.ToString("HH:mm");
+    }
+
+
+
+
+
+    // Validation methods
+    public static bool ValidateTitleString(string title)
+    {
+        if (MoviesLogic.GetMovieByTitle(title) == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static bool ValidateRoomNumberString(string roomNumber)
+    {
+        if (RoomsLogic.GetRoomById(int.Parse(roomNumber)) == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static bool ValidateDateString(string date)
+    {
+        DateTime today = DateTime.Today;
+        DateTime convertedDate = ConvertStringToDateTime(date);
+
+        if (!DateTime.TryParseExact(
+            date,
+            "dd-MM-yyyy", 
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out DateTime dateOutput))
+        {
+            return false;
+        }
+
+        if (convertedDate < today)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static bool ValidateTimeString(string time)
+    {
+        if (time.Length != 5 || time[2] != ':')
+            return false;
+
+        if (!int.TryParse(time[..2], out int hour) || !int.TryParse(time[3..], out int minute))
+            return false;
+
+        return hour > 0 && hour < 24 && minute >= 0 && minute < 60;
+    }
+
+    public static bool ValidateExistingTimetable(TimetableModel newTimetable)
+    {
+        DateTime today = DateTime.Today;
+        List<TimetableModel> timetables = GetTimetablesByDateRange(today, today.AddDays(14));
+        foreach (var timetable in timetables)
+        {
+            Int64 movie_plus_duration = timetable.StartTime + MoviesLogic.GetById(timetable.MovieId).Duration * 60;
+
+            if (
+                timetable.RoomId == newTimetable.RoomId
+                && newTimetable.StartTime >= timetable.StartTime
+                && newTimetable.StartTime < movie_plus_duration
+                )
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+    // Creation methods
+    public static void AddTimetable(TimetableModel timetable)
+    {
+        _access.Write(timetable);
+    }
+
+    public static int CreateTimeTableAsAdmin(string title, string roomNumber, string date, string time)
+    {
+        if (!ValidateTitleString(title))
+        {
+            return 1;
+        }
+        else if (!ValidateRoomNumberString(roomNumber))
+        {
+            return 2;
+        }
+        else if (!ValidateDateString(date))
+        {
+            return 3;
+        }
+        else if (!ValidateTimeString(time))
+        {
+            return 4;
+        }
+
+
+        Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
+        Int64 unixTime = ConvertTimeStringToUnixTime(time);
+        Int64 startTime = unixDate + unixTime;
+
+        TimetableModel timetable = new(
+            -1,
+            MoviesLogic.GetMovieByTitle(title).Id,
+            int.Parse(roomNumber),
+            startTime
+        );
+
+        if (!ValidateExistingTimetable(timetable))
+        {
+            return 5;
+        }
+
+        AddTimetable(timetable);
+
+        return 0;
     }
 }
