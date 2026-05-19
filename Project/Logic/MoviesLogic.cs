@@ -35,7 +35,7 @@ public static class MoviesLogic
     public static List<string> GetByPartOfTitle(string pattern)
     {
         List<string> Titles = _AvailableMovies
-            .Where(x => x.Title.ToLower().Contains(pattern))
+            .Where(x => x.Title.Contains(pattern, StringComparison.OrdinalIgnoreCase))
             .Select(x => x.Title)
             .ToList();
 

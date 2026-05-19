@@ -186,7 +186,7 @@ public static class UiHelper
         {
             return "";
         }
-        else if (title.ToLower().Contains("password"))
+        else if (title.Contains("password", StringComparison.OrdinalIgnoreCase))
         {
             return new string('*', input.Length);
         }
