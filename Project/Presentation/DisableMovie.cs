@@ -6,7 +6,10 @@ public static class DisableMovie
         int selectedMovie = UiHelper.SelectionMenu(movies);
         if (selectedMovie == -1) return;
 
-        MovieModel movie = MoviesLogic.GetMovieByTitle(movies[selectedMovie]);
+        MovieModel? movie = SelectMovie.Start();
+
+        if (movie == null) return;
+
         movie.IsActive = 0;
         MoviesLogic.DisableMovie(movie);
     }
