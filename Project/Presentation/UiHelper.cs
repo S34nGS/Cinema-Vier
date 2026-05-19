@@ -1,5 +1,18 @@
 public static class UiHelper
 {
+
+    public static Action GeneratePage(string content)
+    {
+        return () =>
+        {
+            Console.Clear();
+
+            Console.WriteLine(content);
+
+            HoldUser();
+        };
+    }
+
     public static int GetLongestString(IEnumerable<string> strings)
     {
         return strings.Max(x => x.Length);
