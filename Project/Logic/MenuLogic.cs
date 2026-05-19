@@ -12,16 +12,9 @@ public class MenuLogic
         return menuItemsAccess.GetMenuItemsByCategory("Drink");
     }
 
-    public static bool ValidateQuantity(Int64 quantity)
-    {
-        // check quantity
-        return quantity >= 1;
-    }
-
     public bool AddItemToOrder(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 quantity)
     {
-        // validate quantity
-        if (ValidateQuantity(quantity) == false)
+        if (quantity <= 0)
         {
             return false;
         }
@@ -39,28 +32,26 @@ public class MenuLogic
         {
             if (orderItem.MenuItemId == menuItemId)
             {
-                orderItem.Quantity = orderItem.Quantity + quantity;
+                orderItem.Quantity += quantity;
                 orderItem.SubTotal = orderItem.Quantity * orderItem.PricePerItem;
                 return true;
             }
         }
 
-        // add new item
-        OrderItemModel newOrderItem = new OrderItemModel(
+        OrderItemModel newOrderItem = new(
             selectedItem.Id,
             selectedItem.Name,
             selectedItem.Price,
             quantity
         );
-
         orderItems.Add(newOrderItem);
+
         return true;
     }
 
-    public static bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
+    public bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
     {
-        // validate new quantity
-        if (ValidateQuantity(newQuantity) == false)
+        if (newQuantity <= 0)
         {
             return false;
         }
@@ -78,7 +69,7 @@ public class MenuLogic
         return false;
     }
 
-    public static bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
+    public bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
     {
         for (int i = 0; i < orderItems.Count; i++)
         {
@@ -92,14 +83,14 @@ public class MenuLogic
         return false;
     }
 
-    public static decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
+    public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
     {
         // calculate total
         decimal total = 0;
 
         foreach (OrderItemModel orderItem in orderItems)
         {
-            total = total + orderItem.SubTotal;
+            total += orderItem.SubTotal;
         }
 
         return total;
