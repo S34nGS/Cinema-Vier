@@ -1,5 +1,3 @@
-using System.Linq;
-
 static class MoviesMenu
 {
     public static string header = "All available movies";
