@@ -94,6 +94,22 @@ public static class MoviesLogic
         RefreshMovies();
     }
 
+    public static void EditMovie(Int64 id, Dictionary<string, string> movieDict)
+    {
+        MovieModel movie = new(
+            id,
+            movieDict["Title"],
+            Convert.ToInt32(movieDict["Duration"]),
+            movieDict["Summary"],
+            movieDict["Director"],
+            Convert.ToInt32(movieDict["Age Rating"]),
+            movieDict["Genre"],
+            Convert.ToInt32(movieDict["Release Year"])
+        );
+
+        EditMovie(movie);
+    }
+
     public static void EditMovie(MovieModel movie)
     {
         _access.Update(movie);
