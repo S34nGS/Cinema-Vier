@@ -1,3 +1,4 @@
+// TODO: rewrite this entire file
 static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
