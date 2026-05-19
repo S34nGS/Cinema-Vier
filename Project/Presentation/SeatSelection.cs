@@ -108,7 +108,7 @@ public static class SeatSelection
         if (isCursor)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(isSelected ? "█" : "█");
+            Console.Write(isSelected ? "■" : "█");
             Console.ForegroundColor = ConsoleColor.White;
             return;
         }
