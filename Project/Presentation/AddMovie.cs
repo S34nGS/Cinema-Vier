@@ -15,7 +15,6 @@ public static class AddMovie
             "Add Movie"
         );
 
-
         MoviesLogic.AddMovie(movieInput);
 
         UiHelper.HoldUser("Movie added successfully.");
