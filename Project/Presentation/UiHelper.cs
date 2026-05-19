@@ -116,13 +116,13 @@ public static class UiHelper
 
     public static string Input(
         string? header = null,
-        int maxLength = 24,
+        int defaultLength = 24,
         bool grows = false
     )
     {
         string input = "";
         bool continueSelected = true;
-        int length = maxLength;
+        int length = defaultLength;
         while (true)
         {
             Console.Clear();
@@ -156,17 +156,17 @@ public static class UiHelper
             if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
             {
                 input = input[..^1];
-                if (length > maxLength)
+                if (length > defaultLength)
                 {
                     length--;
                 }
             }
 
             char character = keyInfo.KeyChar;
-            if (!char.IsControl(character) && (input.Length < maxLength || grows))
+            if (!char.IsControl(character) && (input.Length < defaultLength || grows))
             {
                 input += character;
-                if (input.Length > maxLength)
+                if (input.Length > defaultLength)
                 {
                     length++;
                 }
