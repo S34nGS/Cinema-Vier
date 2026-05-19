@@ -1,6 +1,5 @@
 using Dapper;
 
-
 public class TicketAccess : DefaultAccess
 {
     protected override string Table { get; } = "Ticket";
