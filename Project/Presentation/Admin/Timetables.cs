@@ -8,7 +8,7 @@ public static class Timetables
 
         if (selected == menu.IndexOf("Create Timetable"))
         {
-            Dictionary<string, string> movieInput = UiHelper.InputForm(
+            Dictionary<string, string> CreateTimetableInput = UiHelper.InputForm(
                 [
                     "Movie Title",
                     "Room Number",
@@ -18,11 +18,11 @@ public static class Timetables
                 "Add Timetable"
             );
 
-            int createdTimetable = TimetablesLogic.CreateTimeTableAsAdmin(
-                movieInput["Movie Title"],
-                movieInput["Room Number"],
-                movieInput["Date (dd-mm-yyyy)"],
-                movieInput["Start Time (hh:mm)"]
+            int createdTimetable = TimetablesLogic.CreateTimetableAsAdmin(
+                CreateTimetableInput["Movie Title"],
+                CreateTimetableInput["Room Number"],
+                CreateTimetableInput["Date (dd-mm-yyyy)"],
+                CreateTimetableInput["Start Time (hh:mm)"]
             );
 
             if (createdTimetable == 0)
@@ -53,7 +53,47 @@ public static class Timetables
 
         if (selected == menu.IndexOf("Edit Timetable"))
         {
-            
+            TimetableModel timetable = TimetablesLogic.ChooseTimeTableToEditAsAdmin("All timetables from today onward");
+
+            Dictionary<string, string> EditTimetableInput = UiHelper.InputForm(
+                [
+                    "Movie Title",
+                    "Room Number",
+                    "Date (dd-mm-yyyy)",
+                    "Start Time (hh:mm)",
+                ],
+                "Edit Timetable",
+                filledFields: TimetablesLogic.GetDetailsAsList(timetable)
+            );
+
+            int editedTimetable = TimetablesLogic.EditTimeTableAsAdmin(
+                timetable.Id,
+                EditTimetableInput["Movie Title"],
+                EditTimetableInput["Room Number"],
+                EditTimetableInput["Date (dd-mm-yyyy)"],
+                EditTimetableInput["Start Time (hh:mm)"]
+            );
+
+            if (editedTimetable == 0)
+            {
+                UiHelper.HoldUser("Timetable edited successfully.");
+            }
+            else if (editedTimetable == 1)
+            {
+                UiHelper.HoldUser("The given title doesn't belong to an available movie");
+            }
+            else if (editedTimetable == 2)
+            {
+                UiHelper.HoldUser("The room number doesn't exist");
+            }
+            else if (editedTimetable == 3)
+            {
+                UiHelper.HoldUser("The given date is invalid");
+            }
+            else if (editedTimetable == 4)
+            {
+                UiHelper.HoldUser("The given start time is invalid.");
+            }
         }
 
     }
