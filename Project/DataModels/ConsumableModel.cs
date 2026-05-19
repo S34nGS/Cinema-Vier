@@ -1,20 +1,20 @@
-public class MenuItemModel
+public class ConsumableModel
 {
     public Int64 Id { get; set; }
     public string Name { get; set; }
-    public string Category { get; set; }
     public decimal Price { get; set; }
+    public Int64 AgeRating { get; set; }
 
-    public MenuItemModel(
+    public ConsumableModel(
         Int64 id,
         string name,
-        string category,
-        decimal price
+        decimal price,
+        Int64 ageRating
     )
     {
         Id = id;
         Name = name;
-        Category = category;
         Price = price;
+        AgeRating = ageRating;
     }
 }

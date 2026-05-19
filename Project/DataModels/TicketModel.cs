@@ -5,9 +5,6 @@ public class TicketModel
     public DateTime SelectedDateTime { get; private set; }
     public string PaymentMethod { get; private set; }
 
-    // public int TimetableId { get; private set; }
-    // public int SeatId { get; private set;}
-
     public TicketModel(Int64 id, Int64 userId, DateTime selectedDateTime, string paymentMethod)
     {
         Id = id;

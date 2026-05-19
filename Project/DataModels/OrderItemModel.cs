@@ -1,3 +1,4 @@
+[Obsolete("this doesn't get saved to the database afaik")]
 public class OrderItemModel
 {
     public Int64 MenuItemId { get; set; }

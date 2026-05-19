@@ -12,7 +12,7 @@ public class AccountsAccess : DefaultAccess
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
-                fullname TEXT NOT NULL,
+                fullName TEXT NOT NULL,
                 firstName TEXT NOT NULL,
                 lastName TEXT NOT NULL,
                 dateOfBirth INTEGER NOT NULL,

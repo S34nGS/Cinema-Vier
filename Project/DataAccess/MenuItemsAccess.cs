@@ -9,10 +9,10 @@ public class MenuItemsAccess : DefaultAccess
         // create menu items table
         string sql = $@"
             CREATE TABLE IF NOT EXISTS {Table} (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Name TEXT NOT NULL,
-                Category TEXT NOT NULL,
-                Price REAL NOT NULL
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                category TEXT NOT NULL,
+                price REAL NOT NULL
             );";
 
         connection.Execute(sql);
