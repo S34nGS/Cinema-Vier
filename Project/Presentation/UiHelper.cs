@@ -2,16 +2,7 @@ public static class UiHelper
 {
     public static int GetLongestString(IEnumerable<string> strings)
     {
-        int longest = 0;
-        foreach (string item in strings)
-        {
-            if (item.Length > longest)
-            {
-                longest = item.Length;
-            }
-        }
-
-        return longest;
+        return strings.Max(x => x.Length);
     }
 
     private static void WriteHeader(string? header)
