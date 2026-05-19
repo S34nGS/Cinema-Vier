@@ -1,6 +1,8 @@
 public static class MoviesLogic
 {
     private static MoviesAccess _access = new();
+    private static List<string> _cachedRecommendations = null;
+
     public static List<string> GetMovieTitles()
     {
         List<string> Titles = [];
@@ -68,6 +70,8 @@ public static class MoviesLogic
 
     public static List<string> GetRecommendedMovies()
     {
+        if (_cachedRecommendations != null) return _cachedRecommendations;
+
         List<ReservationModel> pastReservations = ReservationsLogic.GetPastReservations(AccountsLogic.CurrentAccount.Id);
 
         if (pastReservations.Count == 0) return new List<string>();
@@ -116,6 +120,12 @@ public static class MoviesLogic
             }
         }
 
+        _cachedRecommendations = recommendedMovies;
         return recommendedMovies;
+    }
+
+    public static void ClearRecommendations()
+    {
+        _cachedRecommendations = null;
     }
 }
