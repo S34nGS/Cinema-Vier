@@ -20,25 +20,6 @@ public static class TimeLogic
         return dateTime.ToString(format);
     }
 
-    [Obsolete("ConvertDateTimeOffsetToString is deprecated, please use ConvertDateString instead.")]
-    public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
-    {
-        return ConvertDateString(dateTime);
-    }
-
-    [Obsolete("GetDateString is deprecated, please use ConvertDateString instead.")]
-    public static string GetDateString(DateTimeOffset dateTime)
-    {
-        return ConvertDateString(dateTime, "dd-MM-yyyy");
-    }
-
-    [Obsolete("GetTimeString is deprecated, please use ConvertDateString instead.")]
-    public static string GetTimeString(DateTimeOffset dateTime)
-    {
-        return ConvertDateString(dateTime, "HH:mm");
-    }
-
-
     public static string ConvertUnixTimeToString(Int64 unixTimestamp)
     {
         return ConvertDateString(ConvertUnixTimeToDateTime(unixTimestamp));

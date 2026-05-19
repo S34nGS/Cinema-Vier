@@ -1,6 +1,7 @@
 public static class TimetablesLogic
 {
     private static TimetablesAccess _access = new();
+    public static List<TimetableModel>? CurrentTimeTables { get; set; }
 
     public static List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
     {

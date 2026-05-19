@@ -205,8 +205,9 @@ static class PurchaseTicket
                 timetable.StartTime < TimeLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
                 )
             {
-                string date = TimeLogic.GetDateString(
-                    TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
+                string date = TimeLogic.ConvertDateString(
+                    TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime),
+                    "dd-MM-yyyy"
                 );
 
                 if (DateMenu.Contains(date) == false)
@@ -226,7 +227,7 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (dateString == TimeLogic.GetDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
+            if (dateString == TimeLogic.ConvertDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime), "dd-MM-yyyy"))
             {
                 DateTime now = DateTime.Now;
 
@@ -234,7 +235,7 @@ static class PurchaseTicket
                 {
                     CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
-                        $"{TimeLogic.GetTimeString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                        $"{TimeLogic.ConvertDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime), "HH:mm")} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
                     );
                 }
             }

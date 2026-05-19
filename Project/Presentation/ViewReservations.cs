@@ -60,8 +60,8 @@ public static class ViewReservations
 
                 Console.WriteLine($"Reservation Number: {reservation.Id}");
                 Console.WriteLine($"Movie: {movie.Title}");
-                Console.WriteLine($"Date: {TimeLogic.GetDateString(date)}");
-                Console.WriteLine($"Time: {TimeLogic.GetTimeString(movieTime)}");
+                Console.WriteLine($"Date: {TimeLogic.ConvertDateString(date, "dd-MM-yyyy")}");
+                Console.WriteLine($"Time: {TimeLogic.ConvertDateString(movieTime, "HH:mm")}");
                 Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
@@ -99,8 +99,8 @@ public static class ViewReservations
                 RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
 
                 Console.WriteLine($"Movie: {movie.Title}");
-                Console.WriteLine($"Date: {TimeLogic.GetDateString(date)}");
-                Console.WriteLine($"Time: {TimeLogic.GetTimeString(movieTime)}");
+                Console.WriteLine($"Date: {TimeLogic.ConvertDateString(date, "dd-MM-yyyy")}");
+                Console.WriteLine($"Time: {TimeLogic.ConvertDateString(movieTime, "HH:mm")}");
                 Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
