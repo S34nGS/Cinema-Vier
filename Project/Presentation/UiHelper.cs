@@ -1,6 +1,5 @@
 public static class UiHelper
 {
-
     public static Action GeneratePage(string content)
     {
         return () =>
@@ -42,7 +41,11 @@ public static class UiHelper
         Console.WriteLine($"╚{new string('═', 22)}╝");
     }
 
-    public static int SelectionMenu(IEnumerable<string> menu, string? header = null, bool hasButtons = false)
+    public static int SelectionMenu(
+        IEnumerable<string> menu,
+        string? header = null,
+        bool hasButtons = false
+    )
     {
         string[] localMenu = menu.ToArray();
         int longest = GetLongestString(localMenu);
@@ -113,7 +116,7 @@ public static class UiHelper
 
     public static string Input(string? header = null, int maxLength = 24)
     {
-        string name = "";
+        string input = "";
         bool continueSelected = true;
 
         while (true)
@@ -121,12 +124,11 @@ public static class UiHelper
             Console.Clear();
             WriteHeader(header);
 
-            int fieldWidth = 20;
-            string shown = name.Length > fieldWidth ? name[..fieldWidth] : name;
+            string shown = input + new string(' ', maxLength - input.Length);
 
-            Console.WriteLine($"╔{new string('═', 22)}╗");
-            Console.WriteLine($"║ {shown.PadRight(fieldWidth)} ║");
-            Console.WriteLine($"╚{new string('═', 22)}╝");
+            Console.WriteLine($"╔{new string('═', maxLength + 2)}╗");
+            Console.WriteLine($"║ {shown} ║");
+            Console.WriteLine($"╚{new string('═', maxLength + 2)}╝");
 
             ContinueOrBackMenu(continueSelected);
 
@@ -144,18 +146,18 @@ public static class UiHelper
             if (keyInfo.Key == ConsoleKey.Enter)
             {
                 if (!continueSelected) return "-1";
-                if (name.Length > 0) return name;
+                if (input.Length > 0) return input;
             }
 
-            if (keyInfo.Key == ConsoleKey.Backspace && name.Length > 0)
+            if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
             {
-                name = name[..^1];
+                input = input[..^1];
             }
 
             char character = keyInfo.KeyChar;
-            if (!char.IsControl(character) && name.Length < maxLength)
+            if (!char.IsControl(character) && input.Length < maxLength)
             {
-                name += character;
+                input += character;
             }
         }
     }
@@ -182,8 +184,11 @@ public static class UiHelper
         }
     }
 
-    public static Dictionary<string, string> InputForm(IEnumerable<string> titles, string formTitle = "Input Form",
-        int maxLength = 32)
+    public static Dictionary<string, string> InputForm(
+        IEnumerable<string> titles,
+        string formTitle = "Input Form",
+        int maxLength = 32
+    )
     {
         Dictionary<string, string> inputs = new();
 
@@ -195,8 +200,12 @@ public static class UiHelper
         return InputForm(inputs, formTitle, maxLength);
     }
 
-    public static Dictionary<string, string> InputForm(Dictionary<string, string> fields,
-        string formTitle = "Input Form", int maxLength = 32, string? header = null)
+    public static Dictionary<string, string> InputForm(
+        Dictionary<string, string> fields,
+        string formTitle = "Input Form",
+        int maxLength = 32,
+        string? header = null
+    )
     {
         int longest = Math.Max(
             Math.Max(GetLongestString(fields.Keys.ToList()), maxLength),
@@ -258,7 +267,6 @@ public static class UiHelper
 
         return inputs;
     }
-
 
     public static bool IsLeftKey(ConsoleKey key, bool includeH = true)
     {
