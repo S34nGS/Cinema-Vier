@@ -1,4 +1,4 @@
-public class ReservationModel : IModel
+public class ReservationModel : IModel, IHasUser, IHasSeat, IHasTimetable
 {
     public Int64 Id { get; set; }
     public Int64 UserId { get; set; }

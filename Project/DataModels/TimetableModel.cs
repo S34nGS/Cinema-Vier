@@ -1,4 +1,4 @@
-public class TimetableModel : IModel
+public class TimetableModel : IModel, IHasMovie, IHasRoom
 {
     public Int64 Id { get; set; }
     public Int64 MovieId { get; set; }

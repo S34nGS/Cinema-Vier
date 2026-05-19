@@ -2,9 +2,7 @@
 {
     public Int64 Id { get; set; }
     public string EmailAddress { get; set; }
-
     public string Password { get; set; }
-
     public string FullName { get; private set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

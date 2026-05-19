@@ -1,7 +1,7 @@
-public class TicketModel : IModel
+public class TicketModel : IModel, IHasUser
 {
     public Int64 Id { get; set; }
-    public Int64 UserId { get; private set; }
+    public Int64 UserId { get; set; }
     public DateTime SelectedDateTime { get; private set; }
     public string PaymentMethod { get; private set; }
 
