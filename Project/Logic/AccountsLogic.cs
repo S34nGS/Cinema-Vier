@@ -22,18 +22,20 @@ public class AccountsLogic
         {
             return null;
         }
-
-        if (ValidDataLogic.IsValidPassword(password) == false)
+        else if (ValidDataLogic.IsValidPassword(password) == false)
+        {
+            return null;
+        }
+        else if (ValidDataLogic.IsValidDateOfBirth(dateOfBirth) == false)
+        {
+            return null;
+        }
+        if (_access.GetByEmail(email) is not null)
         {
             return null;
         }
 
-        if (ValidDataLogic.IsValidDateOfBirth(dateOfBirth) == false)
-        {
-            return null;
-        }
 
-        // create account with first and last name
         AccountModel? account = new(0, email, HashPassword(password), firstName, lastName, TimeLogic.ConvertDateToUnixTime(dateOfBirth));
 
         _access.Write(account);
