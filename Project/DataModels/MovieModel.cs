@@ -35,10 +35,11 @@ public class MovieModel
 
     public override string ToString()
     {
-        return $"Title: {Title}{Environment.NewLine}" +
-            $"Description: {Summary}{Environment.NewLine}" +
-            $"Genre: {Genre}{Environment.NewLine}" +
-            $"Duration: {Duration}{Environment.NewLine}" +
-            $"Age Rating: {AgeRating}{Environment.NewLine}" +
+        return $@"Title: {Title}{Environment.NewLine}
+Description: {Summary}{Environment.NewLine}
+Genre: {Genre}{Environment.NewLine}
+Duration: {Duration}{Environment.NewLine}
+Age Rating: {AgeRating}{Environment.NewLine}
+";
     }
 }
