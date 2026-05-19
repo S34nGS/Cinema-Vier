@@ -14,7 +14,7 @@ public static class SelectMovie
         if (movie == null)
         {
             UiHelper.HoldUser("something went really wrong, press any key to try again");
-            Console.WriteLine("[DisableMovie.cs L13]");
+            Console.WriteLine("[DisableMovie.cs L17]");
 
             movie = Start();
         }
