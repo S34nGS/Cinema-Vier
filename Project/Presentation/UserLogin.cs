@@ -2,7 +2,6 @@ static class UserLogin
 {
     private static AccountsLogic _accountsLogic = new AccountsLogic();
 
-
     public static void Start()
     {
         List<string> fields = ["Email", "Password"];
@@ -18,7 +17,6 @@ static class UserLogin
             inputs = UiHelper.InputForm(inputs, "Please enter your login information", header: errorMessage);
             acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         }
-
 
         Console.WriteLine($"Welcome back {acc.FirstName} {acc.LastName}");
         UiHelper.HoldUser();
