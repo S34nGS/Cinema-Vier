@@ -9,7 +9,7 @@ static class UserRegistration
         DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dateOfBirth);
         AccountModel? acc = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"], dateOfBirth);
         string errorMessage;
-        while(acc == null)
+        while (acc == null)
         {
             errorMessage = "Account couldn't be created";
 
@@ -21,7 +21,7 @@ static class UserRegistration
 
         Console.WriteLine("Account created successfully");
         UiHelper.HoldUser();
-        
+
         Menu.Start();
     }
 }

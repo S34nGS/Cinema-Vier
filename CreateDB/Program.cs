@@ -1,5 +1,7 @@
-public static class Program {
-    public static void Main() {
+public static class Program
+{
+    public static void Main()
+    {
         CreateMoviesTable();
         CreateAccountsTable();
         CreateRoomsTable();
@@ -68,7 +70,7 @@ public static class Program {
     {
         TimetablesAccess timetables = new();
         timetables.CreateTable();
-        
+
         DateTime baseDate = DateTime.Today;
 
         // Movie 1

@@ -10,7 +10,7 @@ static class UserLogin
         AccountModel? acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         string? errorMessage;
 
-        while(acc == null)
+        while (acc == null)
         {
             // reset password field so it doesn't show the previous input
             inputs["Password"] = "";
