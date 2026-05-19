@@ -54,7 +54,7 @@ public static class CinemaInfo
         };
     }
 
-    public static Action ShowAboutUs = GeneratePage(@"
+    public readonly static Action ShowAboutUs = GeneratePage(@"
 === About Us ===
 
 Cinema Vier is a modern cinema located in Rotterdam.
@@ -62,7 +62,7 @@ We offer a comfortable and simple movie experience.
 Users can browse movies, make reservations and enjoy their visit.
 ");
 
-    public static Action ShowCinemaExperience = GeneratePage(@"
+    public readonly static Action ShowCinemaExperience = GeneratePage(@"
 === Cinema Experience ===
 
 Our cinema offers a comfortable viewing experience with modern screens and sound.
@@ -70,21 +70,21 @@ Before the movie, visitors can stay in the waiting lounge.
 In the lounge, customers can buy popcorn and a variety of hot and cold drinks.
     ");
 
-    public static Action ShowEvents = GeneratePage(@"
+    public readonly static Action ShowEvents = GeneratePage(@"
 === Events ===
 
 At the moment, we focus on providing a simple movie experience.
 In the future, special events or themed movie nights may be added.
     ");
 
-    public static Action ShowPrices = GeneratePage(@"
+    public readonly static Action ShowPrices = GeneratePage(@"
 === Prices ===
 
 Ticket prices may vary depending on the movie and time.
 Food and drinks such as popcorn and beverages are sold separately.
     ");
 
-    public static Action ShowPolicies = GeneratePage(@"
+    public readonly static Action ShowPolicies = GeneratePage(@"
 === Policies ===
 
 Users must provide correct information when making a reservation.
@@ -92,7 +92,7 @@ Payment must be completed before a reservation is confirmed.
 Customers should follow general cinema rules during their visit.
     ");
 
-    public static Action ShowGeneralInformation = GeneratePage(@"
+    public readonly static Action ShowGeneralInformation = GeneratePage(@"
 === General Information ===
 
 Opening Hours:
