@@ -1,37 +1,50 @@
 public static class MoviesLogic
 {
     private static MoviesAccess _access = new();
-    public static List<string> GetMovieTitles()
+    private static List<MovieModel> _AvailableMovies = [];
+
+    private static void RefreshMovies()
     {
-        List<string> Titles = [];
-        foreach (MovieModel Movie in _access.GetAllMovies())
+        _AvailableMovies = _access.GetAllMovies();
+    }
+
+    public static List<string> GetMovieTitles(bool activeOnly = true)
+    {
+        if (_AvailableMovies.Count == 0)
         {
-            if (Movie.IsActive == 1)
-            {
-                Titles.Add(Movie.Title);
-            }
+            RefreshMovies();
         }
+
+        List<string> Titles = [];
+        _AvailableMovies.ForEach(movie =>
+        {
+            if (!activeOnly || activeOnly && movie.IsActive == 1)
+            {
+                Titles.Add(movie.Title);
+            }
+        });
+
         return Titles;
     }
 
-    public static MovieModel? GetMovieData(int MovieIndex)
+    public static MovieModel GetMovieData(int MovieIndex)
     {
-        return _access.GetByTitle(GetMovieTitles()[MovieIndex]);
+        return _AvailableMovies[MovieIndex];
     }
 
     public static List<string> GetByPartOfTitle(string pattern)
     {
-        List<string> Titles = [];
-        foreach (MovieModel Movie in _access.GetByPartOfTitle(pattern))
-        {
-            Titles.Add(Movie.Title);
-        }
+        List<string> Titles = _AvailableMovies
+            .Where(x => x.Title.ToLower().Contains(pattern))
+            .Select(x => x.Title)
+            .ToList();
+
         return Titles;
     }
 
     public static MovieModel? GetById(Int64 movieId)
     {
-        return _access.GetById(movieId);
+        return _AvailableMovies.FirstOrDefault(x => x.Id == movieId);
     }
 
     public static bool IsOldEnough(MovieModel movie, AccountModel account)
@@ -39,6 +52,7 @@ public static class MoviesLogic
         int age = AccountsLogic.CalculateAge(TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth));
         return age >= movie.AgeRating;
     }
+
     public static MovieModel? Start()
     {
         int movieIndex = MoviesMenu.Start();
@@ -48,17 +62,17 @@ public static class MoviesLogic
 
     public static MovieModel? GetMovieByTitle(string title)
     {
-        return _access.GetByTitle(title);
+        return _AvailableMovies.FirstOrDefault(x => x.Title == title);
     }
 
     public static void DisableMovie(MovieModel movie)
     {
         _access.Update(movie);
+        RefreshMovies();
     }
 
     public static void AddMovie(Dictionary<string, string> movie)
     {
-
         MovieModel movieModel = new(
             -1,
             movie["Title"],
@@ -77,10 +91,12 @@ public static class MoviesLogic
     public static void AddMovie(MovieModel movie)
     {
         _access.Write(movie);
+        RefreshMovies();
     }
 
     public static void EditMovie(MovieModel movie)
     {
         _access.Update(movie);
+        RefreshMovies();
     }
 }
