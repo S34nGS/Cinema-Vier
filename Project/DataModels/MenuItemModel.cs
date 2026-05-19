@@ -1,4 +1,4 @@
-public class MenuItemModel
+public class MenuItemModel : IModel
 {
     public Int64 Id { get; set; }
     public string Name { get; set; }

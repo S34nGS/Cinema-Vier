@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
-
-public class TimetableModel
+public class TimetableModel : IModel
 {
     public Int64 Id { get; set; }
     public Int64 MovieId { get; set; }

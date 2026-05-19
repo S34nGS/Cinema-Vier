@@ -1,4 +1,4 @@
-public class TicketModel
+public class TicketModel : IModel
 {
     public Int64 Id { get; set; }
     public Int64 UserId { get; private set; }
