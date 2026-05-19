@@ -95,5 +95,6 @@ public class AccountsLogic
     public static void Logout()
     {
         CurrentAccount = null;
+        MoviesLogic.ClearRecommendations();
     }
 }
