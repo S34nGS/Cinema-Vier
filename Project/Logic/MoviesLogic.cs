@@ -36,7 +36,7 @@ public static class MoviesLogic
 
     public static bool IsOldEnough(MovieModel movie, AccountModel account)
     {
-        int age = AccountsLogic.CalculateAge(TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth));
+        int age = AccountsLogic.CalculateAge(TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth));
         return age >= movie.AgeRating;
     }
     public static MovieModel? Start()

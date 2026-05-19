@@ -188,7 +188,7 @@ static class PurchaseTicket
         {
 
     // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
-            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
+            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimeLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
         }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
@@ -201,12 +201,12 @@ static class PurchaseTicket
         foreach (TimetableModel timetable in timetables)
         {
             if (
-                timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now) &&
-                timetable.StartTime < TimetablesLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
+                timetable.StartTime > TimeLogic.ConvertDateToUnixTime(DateTime.Now) &&
+                timetable.StartTime < TimeLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
                 )
             {
-                string date = TimetablesLogic.GetDateString(
-                    TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
+                string date = TimeLogic.GetDateString(
+                    TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
                 );
 
                 if (DateMenu.Contains(date) == false)
@@ -226,15 +226,15 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
+            if (dateString == TimeLogic.GetDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
             {
                 DateTime now = DateTime.Now;
 
-                if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
+                if (TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
                     CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
-                        $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                        $"{TimeLogic.GetTimeString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
                     );
                 }
             }

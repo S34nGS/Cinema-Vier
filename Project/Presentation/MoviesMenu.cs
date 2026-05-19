@@ -51,7 +51,7 @@ static class MoviesMenu
                     List<string> dates = [];
                     for (int i = 0; i < 14; i++)
                     {
-                        dates.Add(TimetablesLogic.GetDateString(DateTime.Today.AddDays(i).AddHours(13)));
+                        dates.Add(TimeLogic.GetDateString(DateTime.Today.AddDays(i).AddHours(13)));
                     }
 
                     int pickedDate = UiHelper.SelectionMenu(dates, header);

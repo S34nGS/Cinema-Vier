@@ -66,7 +66,7 @@ public class AccountsLogic
         }
 
         // create account with first and last name
-        AccountModel account = new AccountModel(0, email, HashPassword(password), firstName, lastName, TimetablesLogic.ConvertDateToUnixTime(dateOfBirth));
+        AccountModel account = new AccountModel(0, email, HashPassword(password), firstName, lastName, TimeLogic.ConvertDateToUnixTime(dateOfBirth));
 
         _access.Write(account);
 

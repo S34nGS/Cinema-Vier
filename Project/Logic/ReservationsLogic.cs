@@ -10,7 +10,7 @@ public static class ReservationsLogic
 
         foreach (ReservationModel reservation in allReservations)
         {
-            DateTime reservationDate = TimetablesLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
+            DateTime reservationDate = TimeLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
 
             if (reservationDate.Date >= DateTime.Today)
             {
@@ -29,7 +29,7 @@ public static class ReservationsLogic
 
         foreach (ReservationModel reservation in allReservations)
         {
-            DateTime reservationDate = TimetablesLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
+            DateTime reservationDate = TimeLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
 
             if (reservationDate.Date < DateTime.Today)
             {

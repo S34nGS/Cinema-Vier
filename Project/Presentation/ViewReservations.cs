@@ -48,20 +48,20 @@ public static class ViewReservations
         {
             foreach (ReservationModel reservation in reservations)
             {
-                DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+                DateTimeOffset date = TimeLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
 
                 TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
 
                 MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
 
-                DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
+                DateTimeOffset movieTime = TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
                 RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
 
                 Console.WriteLine($"Reservation Number: {reservation.Id}");
                 Console.WriteLine($"Movie: {movie.Title}");
-                Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-                Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
+                Console.WriteLine($"Date: {TimeLogic.GetDateString(date)}");
+                Console.WriteLine($"Time: {TimeLogic.GetTimeString(movieTime)}");
                 Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
@@ -88,19 +88,19 @@ public static class ViewReservations
         {
             foreach (ReservationModel reservation in reservations)
             {
-                DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+                DateTimeOffset date = TimeLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
 
                 TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
 
                 MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
 
-                DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
+                DateTimeOffset movieTime = TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
                 RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
 
                 Console.WriteLine($"Movie: {movie.Title}");
-                Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-                Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
+                Console.WriteLine($"Date: {TimeLogic.GetDateString(date)}");
+                Console.WriteLine($"Time: {TimeLogic.GetTimeString(movieTime)}");
                 Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
                 Console.WriteLine($"Room: {room.ScreenType}");
                 Console.WriteLine("----------------------------");
