@@ -1,6 +1,6 @@
 public static class ReservationsLogic
 {
-    private static ReservationAccess _access = new();
+    private readonly static ReservationAccess _access = new();
     public static List<ReservationModel> GetFutureReservations(Int64 userId)
     {
         ReservationAccess access = new ReservationAccess();

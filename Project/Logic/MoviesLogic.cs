@@ -14,7 +14,7 @@ public static class MoviesLogic
         return Titles;
     }
 
-    public static MovieModel GetMovieData(int MovieIndex)
+    public static MovieModel? GetMovieData(int MovieIndex)
     {
         return _access.GetByTitle(GetMovieTitles()[MovieIndex]);
     }
@@ -29,7 +29,7 @@ public static class MoviesLogic
         return Titles;
     }
 
-    public static MovieModel GetById(Int64 movieId)
+    public static MovieModel? GetById(Int64 movieId)
     {
         return _access.GetById(movieId);
     }

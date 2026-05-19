@@ -1,14 +1,6 @@
 public class MenuLogic
 {
-    private MenuItemsAccess menuItemsAccess;
-
-    public MenuLogic()
-    {
-        menuItemsAccess = new MenuItemsAccess();
-
-        // make sure table exists
-        menuItemsAccess.CreateTable();
-    }
+    private readonly MenuItemsAccess menuItemsAccess = new();
 
     public List<MenuItemModel> GetSnacks()
     {
@@ -20,7 +12,7 @@ public class MenuLogic
         return menuItemsAccess.GetMenuItemsByCategory("Drink");
     }
 
-    public bool ValidateQuantity(Int64 quantity)
+    public static bool ValidateQuantity(Int64 quantity)
     {
         // check quantity
         return quantity >= 1;
@@ -65,7 +57,7 @@ public class MenuLogic
         return true;
     }
 
-    public bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
+    public static bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
     {
         // validate new quantity
         if (ValidateQuantity(newQuantity) == false)
@@ -86,7 +78,7 @@ public class MenuLogic
         return false;
     }
 
-    public bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
+    public static bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
     {
         for (int i = 0; i < orderItems.Count; i++)
         {
@@ -100,7 +92,7 @@ public class MenuLogic
         return false;
     }
 
-    public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
+    public static decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
     {
         // calculate total
         decimal total = 0;
