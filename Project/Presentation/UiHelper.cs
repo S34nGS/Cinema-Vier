@@ -26,21 +26,17 @@ public static class UiHelper
         }
     }
 
-    // TODO: Rewrite using boolean instead of int
-    public static void ContinueOrBackMenu(int continueOrBack)
+    public static void ContinueOrBackMenu(bool continueSelected = true)
     {
         Console.WriteLine($"╔{new string('═', 22)}╗");
 
-        for (int index = 0; index < 1; index++)
+        if (continueSelected)
         {
-            if (index == continueOrBack)
-            {
-                Console.WriteLine($"║ > Back <  Continue   ║");
-            }
-            else
-            {
-                Console.WriteLine($"║   Back  > Continue < ║");
-            }
+            Console.WriteLine($"║   Back  > Continue < ║");
+        }
+        else
+        {
+            Console.WriteLine($"║ > Back <  Continue   ║");
         }
 
         Console.WriteLine($"╚{new string('═', 22)}╝");
@@ -51,7 +47,7 @@ public static class UiHelper
         string[] localMenu = menu.ToArray();
         int longest = GetLongestString(localMenu);
         int selected = 0;
-        int continueOrBack = 1;
+        bool continueSelected = true;
 
         while (true)
         {
@@ -75,26 +71,26 @@ public static class UiHelper
 
             if (!hasButtons)
             {
-                ContinueOrBackMenu(continueOrBack);
+                ContinueOrBackMenu(continueSelected);
             }
 
             ConsoleKey key = Console.ReadKey().Key;
 
             if (!hasButtons)
             {
-                if (IsLeftKey(key) && continueOrBack > 0)
+                if (IsLeftKey(key) && continueSelected)
                 {
-                    continueOrBack--;
+                    continueSelected = false;
                 }
-                else if (IsRightKey(key) && continueOrBack < 1)
+                else if (IsRightKey(key) && !continueSelected)
                 {
-                    continueOrBack++;
+                    continueSelected = true;
                 }
             }
 
             if (key == ConsoleKey.Enter)
             {
-                if (continueOrBack == 1)
+                if (continueSelected)
                 {
                     break;
                 }
@@ -118,7 +114,7 @@ public static class UiHelper
     public static string Input(string? header = null, int maxLength = 24)
     {
         string name = "";
-        int continueOrBack = 1;
+        bool continueSelected = true;
 
         while (true)
         {
@@ -132,22 +128,22 @@ public static class UiHelper
             Console.WriteLine($"║ {shown.PadRight(fieldWidth)} ║");
             Console.WriteLine($"╚{new string('═', 22)}╝");
 
-            ContinueOrBackMenu(continueOrBack);
+            ContinueOrBackMenu(continueSelected);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-            if (IsLeftKey(keyInfo.Key, false) && continueOrBack > 0)
+            if (IsLeftKey(keyInfo.Key, false) && continueSelected)
             {
-                continueOrBack--;
+                continueSelected = false;
             }
-            else if (IsRightKey(keyInfo.Key, false) && continueOrBack < 1)
+            else if (IsRightKey(keyInfo.Key, false) && !continueSelected)
             {
-                continueOrBack++;
+                continueSelected = true;
             }
 
             if (keyInfo.Key == ConsoleKey.Enter)
             {
-                if (continueOrBack == 0) return "-1";
+                if (!continueSelected) return "-1";
                 if (name.Length > 0) return name;
             }
 
