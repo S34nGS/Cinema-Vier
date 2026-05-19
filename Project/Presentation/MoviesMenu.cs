@@ -17,7 +17,7 @@ static class MoviesMenu
             {
                 while (true)
                 {
-                    string input = UiHelper.Input("Fill in title");
+                    string input = UiHelper.Input("Fill in title", grows: true);
                     if (input == "-1")
                     {
                         break;

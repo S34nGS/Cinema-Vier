@@ -114,21 +114,25 @@ public static class UiHelper
         return selected;
     }
 
-    public static string Input(string? header = null, int maxLength = 24)
+    public static string Input(
+        string? header = null,
+        int maxLength = 24,
+        bool grows = false
+    )
     {
         string input = "";
         bool continueSelected = true;
-
+        int length = maxLength;
         while (true)
         {
             Console.Clear();
             WriteHeader(header);
 
-            string shown = input + new string(' ', maxLength - input.Length);
+            string shown = input + new string(' ', length - input.Length);
 
-            Console.WriteLine($"╔{new string('═', maxLength + 2)}╗");
+            Console.WriteLine($"╔{new string('═', length + 2)}╗");
             Console.WriteLine($"║ {shown} ║");
-            Console.WriteLine($"╚{new string('═', maxLength + 2)}╝");
+            Console.WriteLine($"╚{new string('═', length + 2)}╝");
 
             ContinueOrBackMenu(continueSelected);
 
@@ -152,12 +156,20 @@ public static class UiHelper
             if (keyInfo.Key == ConsoleKey.Backspace && input.Length > 0)
             {
                 input = input[..^1];
+                if (length > maxLength)
+                {
+                    length--;
+                }
             }
 
             char character = keyInfo.KeyChar;
-            if (!char.IsControl(character) && input.Length < maxLength)
+            if (!char.IsControl(character) && (input.Length < maxLength || grows))
             {
                 input += character;
+                if (input.Length > maxLength)
+                {
+                    length++;
+                }
             }
         }
     }
