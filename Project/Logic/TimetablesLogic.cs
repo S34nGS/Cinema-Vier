@@ -82,6 +82,13 @@ public static class TimetablesLogic
         return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
     }
 
+    public static List<TimetableModel> GetTimetablesFromToday()
+    {
+        Int64 today = ConvertDateToUnixTime(DateTime.Today);
+
+        return _access.GetTimetablesFromDate(today);
+    }
+
     public static string GetDateString(DateTimeOffset dateTime)
     {
         return dateTime.ToString("dd-MM-yyyy");
@@ -92,6 +99,19 @@ public static class TimetablesLogic
         return dateTime.ToString("HH:mm");
     }
 
+    public static List<string> GetDetailsAsList(TimetableModel timetable)
+    {
+        string movie = MoviesLogic.GetById(timetable.MovieId).Title;
+        string date = GetDateString(ConvertUnixTimeToDateTime(timetable.StartTime));
+        string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
+        return new List<string> 
+        {
+            movie,
+            timetable.RoomId.ToString(),
+            date,
+            time
+        };
+    }
 
 
 
@@ -172,13 +192,24 @@ public static class TimetablesLogic
 
 
 
-    // Creation methods
+
+
+    // CRUD methods
     public static void AddTimetable(TimetableModel timetable)
     {
         _access.Write(timetable);
     }
 
-    public static int CreateTimeTableAsAdmin(string title, string roomNumber, string date, string time)
+    public static void EditTimetable(TimetableModel timetable)
+    {
+        _access.Update(timetable);
+    }
+
+
+
+
+    // Admin methods
+    public static int CreateTimetableAsAdmin(string title, string roomNumber, string date, string time)
     {
         if (!ValidateTitleString(title))
         {
@@ -196,7 +227,6 @@ public static class TimetablesLogic
         {
             return 4;
         }
-
 
         Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
         Int64 unixTime = ConvertTimeStringToUnixTime(time);
@@ -217,5 +247,56 @@ public static class TimetablesLogic
         AddTimetable(timetable);
 
         return 0;
+    }
+
+    public static TimetableModel ChooseTimeTableToEditAsAdmin(string header)
+    {
+        List<TimetableModel> timetables = GetTimetablesFromToday();
+        List<string> timetableIds = [];
+        foreach (TimetableModel timetable in timetables)
+        {
+            string id = timetable.Id.ToString();
+            string movie = MoviesLogic.GetById(timetable.MovieId).Title;
+            timetableIds.Add($"Timetable ID: {id}, Movie: {movie}");
+        }
+        int selected = UiHelper.SelectionMenu(timetableIds, header);
+
+        return timetables[selected];
+    }
+
+    public static int EditTimeTableAsAdmin(Int64 id, string title, string roomNumber, string date, string time)
+    {
+        if (!ValidateTitleString(title))
+        {
+            return 1;
+        }
+        else if (!ValidateRoomNumberString(roomNumber))
+        {
+            return 2;
+        }
+        else if (!ValidateDateString(date))
+        {
+            return 3;
+        }
+        else if (!ValidateTimeString(time))
+        {
+            return 4;
+        }
+
+        Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
+        Int64 unixTime = ConvertTimeStringToUnixTime(time);
+        Int64 startTime = unixDate + unixTime;
+
+        TimetableModel timetable = new(
+            id,
+            MoviesLogic.GetMovieByTitle(title).Id,
+            int.Parse(roomNumber),
+            startTime
+        );
+
+        EditTimetable(timetable);
+
+        return 0;
+        //TODO When entering wrong info don't exit the inputmenu but let me fix the info
     }
 }
