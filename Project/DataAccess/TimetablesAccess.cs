@@ -21,7 +21,7 @@ public class TimetablesAccess : DefaultAccess
     public void Write(TimetableModel timetable)
     {
         string sql = $@"INSERT INTO {Table}
-            (movieId, roomId, startTime) 
+            (movieId, roomId, startTime)
             VALUES (@MovieId, @RoomId, @StartTime)";
         connection.Execute(sql, timetable);
     }
@@ -43,16 +43,16 @@ public class TimetablesAccess : DefaultAccess
     public List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
     {
         string sql = $"SELECT * FROM {Table} WHERE movieId = @MovieId";
-        return connection.Query<TimetableModel>(sql, new { MovieId = movieId}).AsList();
+        return connection.Query<TimetableModel>(sql, new { MovieId = movieId }).AsList();
     }
 
-    public RoomModel GetRoomByTimetableId(Int64 timetableId)
+    public RoomModel? GetRoomByTimetableId(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
-        return connection.QueryFirstOrDefault<RoomModel>(sql, new {TimetableId = timetableId});
+        return connection.QueryFirstOrDefault<RoomModel>(sql, new { TimetableId = timetableId });
     }
 
-    public TimetableModel GetById(Int64 timetableId)
+    public TimetableModel? GetById(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
         return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });

@@ -13,15 +13,13 @@ public class MenuItemsAccess : DefaultAccess
                 Name TEXT NOT NULL,
                 Category TEXT NOT NULL,
                 Price REAL NOT NULL
-            );
-        ";
+            );";
 
         connection.Execute(sql);
     }
 
     public void Write(MenuItemModel item)
     {
-        // added write menu item from CreateDB
         string sql = $@"
             INSERT INTO {Table} (Name, Category, Price)
             VALUES (@Name, @Category, @Price)
@@ -32,22 +30,22 @@ public class MenuItemsAccess : DefaultAccess
 
     public List<MenuItemModel> GetAllMenuItems()
     {
-        // get all menu items
-        string sql = $"SELECT Id, Name, Category, Price FROM {Table}";
+        string sql = $"SELECT * FROM {Table}";
         return connection.Query<MenuItemModel>(sql).ToList();
     }
 
     public List<MenuItemModel> GetMenuItemsByCategory(string category)
     {
-        // get items by category
-        string sql = $"SELECT Id, Name, Category, Price FROM {Table} WHERE Category = @Category";
+        string sql = $@"
+        SELECT *
+        FROM {Table}
+        WHERE Category = @Category";
         return connection.Query<MenuItemModel>(sql, new { Category = category }).ToList();
     }
 
     public MenuItemModel? GetMenuItemById(Int64 id)
     {
-        // get one item by id
-        string sql = $"SELECT Id, Name, Category, Price FROM {Table} WHERE Id = @Id";
+        string sql = $"SELECT * FROM {Table} WHERE Id = @Id";
         return connection.QueryFirstOrDefault<MenuItemModel>(sql, new { Id = id });
     }
 }

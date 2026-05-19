@@ -23,7 +23,8 @@ public class ReservationAccess : DefaultAccess
     }
     public void Write(ReservationModel reservation)
     {
-        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId, seatId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId, @SeatId)";
+        string sql = $@"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId, seatId)
+        VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId, @SeatId)";
         connection.Execute(sql, reservation);
     }
     public List<ReservationModel> GetReservationsByUserId(long userId)
@@ -32,7 +33,7 @@ public class ReservationAccess : DefaultAccess
         return connection.Query<ReservationModel>(sql, new { UserId = userId }).AsList();
     }
 
-    public TimetableModel GetById(Int64 timetableId)
+    public TimetableModel? GetById(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
         return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
