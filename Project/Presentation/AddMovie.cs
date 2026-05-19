@@ -15,19 +15,8 @@ public static class AddMovie
             "Add Movie"
         );
 
-        MovieModel movie = new(
-            0,
-            movieInput["Title"],
-            Convert.ToInt32(movieInput["Duration"]),
-            movieInput["Summary"],
-            movieInput["Director"],
-            Convert.ToInt32(movieInput["Age Rating"]),
-            movieInput["Genre"],
-            Convert.ToInt32(movieInput["Release Year"]),
-            1
-        );
 
-        MoviesLogic.AddMovie(movie);
+        MoviesLogic.AddMovie(movieInput);
 
         UiHelper.HoldUser("Movie added successfully.");
     }

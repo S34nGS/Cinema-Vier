@@ -56,6 +56,24 @@ public static class MoviesLogic
         _access.Update(movie);
     }
 
+    public static void AddMovie(Dictionary<string, string> movie)
+    {
+
+        MovieModel movieModel = new(
+            -1,
+            movie["Title"],
+            Convert.ToInt32(movie["Duration"]),
+            movie["Summary"],
+            movie["Director"],
+            Convert.ToInt32(movie["Age Rating"]),
+            movie["Genre"],
+            Convert.ToInt32(movie["Release Year"]),
+            1
+        );
+
+        AddMovie(movieModel);
+    }
+
     public static void AddMovie(MovieModel movie)
     {
         _access.Write(movie);
