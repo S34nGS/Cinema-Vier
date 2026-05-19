@@ -1,4 +1,4 @@
 interface IHasMovie
 {
-    Int64 MovieId { get; set}
+    Int64 MovieId { get; set; }
 }
