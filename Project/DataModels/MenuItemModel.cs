@@ -5,14 +5,6 @@ public class MenuItemModel
     public string Category { get; set; }
     public decimal Price { get; set; }
 
-    // empty constructor for dapper
-    public MenuItemModel()
-    {
-        Name = "";
-        Category = "";
-    }
-
-    // full constructor
     public MenuItemModel(Int64 id, string name, string category, decimal price)
     {
         Id = id;

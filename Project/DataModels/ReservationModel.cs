@@ -7,10 +7,6 @@ public class ReservationModel
     public Int64 TimeTableId { get; set; }
     public Int64 SeatId { get; set; }
 
-    public ReservationModel()
-    {
-        
-    }
     public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
     {
         Id = id;
