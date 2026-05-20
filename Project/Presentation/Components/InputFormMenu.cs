@@ -60,11 +60,11 @@ public class InputFormMenu : BaseComponent
             {
                 break;
             }
-            else if (IsDownKey(key.Key, false) && selected < fields.Count - 1)
+            else if (UiHelper.IsDownKey(key.Key, false) && selected < fields.Count - 1)
             {
                 selected++;
             }
-            else if (IsUpKey(key.Key, false) && selected > 0)
+            else if (UiHelper.IsUpKey(key.Key, false) && selected > 0)
             {
                 selected--;
             }
