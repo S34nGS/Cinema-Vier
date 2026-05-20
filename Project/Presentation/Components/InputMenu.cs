@@ -21,7 +21,7 @@ public class InputMenu : BaseComponent
             Console.WriteLine($"║ {shown} ║");
             Console.WriteLine($"╚{new string('═', length + 2)}╝");
 
-            ContinueAndBackMenu.WriteMenu(continueSelected);
+            continueAndBackMenu.WriteMenu(continueSelected);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 

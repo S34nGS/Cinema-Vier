@@ -20,7 +20,7 @@ public class SelectionMenu : BaseComponent
 
             if (!hasButtons)
             {
-                ContinueAndBackMenu.WriteMenu(continueSelected);
+                continueAndBackMenu.WriteMenu(continueSelected);
             }
 
             ConsoleKey key = Console.ReadKey().Key;
