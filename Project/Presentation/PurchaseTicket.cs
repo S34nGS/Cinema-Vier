@@ -7,16 +7,14 @@ static class PurchaseTicket
     private static List<TimetableModel> CurrentTimetables = [];
 
     private static SeatSelection seatSelection = new();
-    public static List<string> CreditCardInput =
-    [
+    public static List<string> CreditCardInput = [
         "Cardholder name",
         "Card number (13-19 digits)",
         "Expiration date (MM/YY)",
         "CVC/CVV code (3-4 digits)"
     ];
 
-    public static List<string> IBANInput =
-    [
+    public static List<string> IBANInput = [
         "Cardholder name",
         "IBAN number (for example: NL12 ABNA 1234 5678 90)"
     ];
@@ -77,8 +75,7 @@ static class PurchaseTicket
         List<OrderItemModel> orderedMenuItems = [];
 
         // ask if user wants food or drinks
-        List<string> orderMenuChoices =
-        [
+        List<string> orderMenuChoices = [
             "Continue without food and drinks",
             "Add food and drinks"
         ];
@@ -93,8 +90,7 @@ static class PurchaseTicket
         List<OrderItemModel> loungePreOrderItems = [];
 
         // ask if user wants lounge pre-order drinks
-        List<string> loungePreOrderChoices =
-        [
+        List<string> loungePreOrderChoices = [
             "Continue without lounge drink pre-order",
             "Add lounge drink pre-order"
         ];
@@ -205,7 +201,7 @@ static class PurchaseTicket
             if (
                 timetable.StartTime > TimeLogic.ConvertDateToUnixTime(DateTime.Now) &&
                 timetable.StartTime < TimeLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
-                )
+            )
             {
                 string date = TimeLogic.ConvertDateString(
                     TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime),
@@ -251,7 +247,8 @@ static class PurchaseTicket
         decimal menuTotal,
         List<OrderItemModel> loungePreOrderItems,
         decimal loungePreOrderTotal,
-        decimal finalTotal)
+        decimal finalTotal
+    )
     {
         Console.Clear();
 
@@ -357,7 +354,7 @@ Final total: €{finalTotal:0.00}
                     {
                         message += "Invalid name, ";
                     }
-                    else if (CreditCardInput[i] == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+                    else if (CreditCardInput[i].Contains("IBAN number"))
                     {
                         message += "Invalid IBAN number, ";
                     }
