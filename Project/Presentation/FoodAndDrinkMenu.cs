@@ -3,18 +3,17 @@ public class FoodAndDrinkMenu
     public static List<OrderItemModel> ShowFoodAndDrinkMenu()
     {
         // create logic object
-        MenuLogic menuLogic = new MenuLogic();
-        List<OrderItemModel> orderItems = new List<OrderItemModel>();
+        MenuLogic menuLogic = new();
+        List<OrderItemModel> orderItems = [];
 
         while (true)
         {
             // main category menu
-            List<string> categoryMenu = new List<string>
-            {
+            List<string> categoryMenu = [
                 "Snacks",
                 "Drinks",
                 "Finish order"
-            };
+            ];
 
             int categoryChoice = UiHelper.SelectionMenu(categoryMenu, "Choose a category");
 
@@ -38,7 +37,7 @@ public class FoodAndDrinkMenu
     public static List<OrderItemModel> ShowOnlyDrinksMenu(MenuLogic menuLogic)
     {
         // list for selected lounge drinks
-        List<OrderItemModel> orderItems = new List<OrderItemModel>();
+        List<OrderItemModel> orderItems = [];
 
         // show only drinks
         ShowCategoryItems(menuLogic.GetDrinks(), menuLogic, orderItems);
@@ -58,9 +57,8 @@ public class FoodAndDrinkMenu
             }
 
             string? itemChoiceText = Console.ReadLine();
-            Int64 itemChoice;
 
-            if (Int64.TryParse(itemChoiceText, out itemChoice) == false)
+            if (Int64.TryParse(itemChoiceText, out Int64 itemChoice) == false)
             {
                 Console.WriteLine($"Invalid number. Please enter a number from the list."); // wrong input
                 continue;
