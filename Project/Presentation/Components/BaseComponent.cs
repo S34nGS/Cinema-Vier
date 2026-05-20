@@ -1,13 +1,13 @@
 public abstract class BaseComponent
 {
-    public readonly ContinueAndBackMenu continueAndBackMenu = new();
+    protected readonly ContinueAndBackMenu continueAndBackMenu = new();
 
-    public static int GetLongestString(IEnumerable<string> strings)
+    protected static int GetLongestString(IEnumerable<string> strings)
     {
         return strings.Max(x => x.Length);
     }
 
-    private static void WriteHeader(string? header)
+    protected static void WriteHeader(string? header)
     {
         if (!string.IsNullOrEmpty(header))
         {
@@ -15,7 +15,7 @@ public abstract class BaseComponent
         }
     }
 
-    public static string ShowInput(string input, string title)
+    protected static string ShowInput(string input, string title)
     {
         if (string.IsNullOrEmpty(input))
         {
