@@ -50,7 +50,7 @@ public class PurchaseLogic
     }
 
     // calculate total with ticket, normal menu and lounge pre-order
-    public static decimal CalculateFullTotal(decimal ticketTotal, decimal menuTotal, decimal loungePreOrderTotal)
+    public static double CalculateFullTotal(double ticketTotal, double menuTotal, double loungePreOrderTotal)
     {
         return ticketTotal + menuTotal + loungePreOrderTotal;
     }

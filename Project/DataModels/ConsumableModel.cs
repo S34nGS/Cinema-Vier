@@ -2,13 +2,13 @@ public class ConsumableModel : IModel
 {
     public Int64 Id { get; set; }
     public string Name { get; set; }
-    public decimal Price { get; set; }
+    public double Price { get; set; }
     public Int64 AgeRating { get; set; }
 
     public ConsumableModel(
         Int64 id,
         string name,
-        decimal price,
+        double price,
         Int64 ageRating
     )
     {

@@ -83,10 +83,10 @@ public class MenuLogic
         return false;
     }
 
-    public decimal CalculateMenuTotal(List<OrderItemModel> orderItems)
+    public double CalculateMenuTotal(List<OrderItemModel> orderItems)
     {
         // calculate total
-        decimal total = 0;
+        double total = 0;
 
         foreach (OrderItemModel orderItem in orderItems)
         {

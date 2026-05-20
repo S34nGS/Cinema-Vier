@@ -43,7 +43,7 @@ public sealed class MenuTests
         l.AddItemToOrder(order, 2, 1);
 
         // act
-        decimal total = l.CalculateMenuTotal(order);
+        double total = l.CalculateMenuTotal(order);
 
         // assert
         Assert.IsTrue(total > 0);
