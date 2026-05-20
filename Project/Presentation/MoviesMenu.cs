@@ -6,7 +6,7 @@ static class MoviesMenu
     {
         while (true)
         {
-            int preMovieListMenu = UiHelper.SelectionMenu(["Search by name", "Search by date", "View available movies"]);
+            int preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(["Search by name", "Search by date", "View available movies"]);
 
             if (preMovieListMenu == -1)
             {
@@ -17,7 +17,7 @@ static class MoviesMenu
             {
                 while (true)
                 {
-                    string input = UiHelper.Input("Fill in title", grows: true);
+                    string input = UiHelper.InputMenu.WriteMenu("Fill in title", grows: true);
                     if (input == "-1")
                     {
                         break;
@@ -25,14 +25,14 @@ static class MoviesMenu
                     List<string> searchedMovieList = MoviesLogic.GetByPartOfTitle(input);
                     if (searchedMovieList.Count == 0)
                     {
-                        UiHelper.SelectionMenu(
+                        UiHelper.SelectionMenu.WriteMenu(
                             ["No movies found."],
                             "Results",
                             true
                         );
                         continue;
                     }
-                    int movieListMenuSearch = UiHelper.SelectionMenu(searchedMovieList, header);
+                    int movieListMenuSearch = UiHelper.SelectionMenu.WriteMenu(searchedMovieList, header);
                     if (movieListMenuSearch == -1)
                     {
                         continue;
@@ -52,7 +52,7 @@ static class MoviesMenu
                         dates.Add(TimeLogic.ConvertDateString(DateTime.Today.AddDays(i).AddHours(13), "dd-MM-yyyy"));
                     }
 
-                    int pickedDate = UiHelper.SelectionMenu(dates, header);
+                    int pickedDate = UiHelper.SelectionMenu.WriteMenu(dates, header);
 
                     if (pickedDate == -1)
                     {
@@ -69,14 +69,14 @@ static class MoviesMenu
 
                     if (searchedDateMovieList.Count == 0)
                     {
-                        UiHelper.SelectionMenu(
+                        UiHelper.SelectionMenu.WriteMenu(
                             ["No movies found."],
                             "Results",
                             true
                         );
                         continue;
                     }
-                    int movieListMenuSearch = UiHelper.SelectionMenu(searchedDateMovieList, header);
+                    int movieListMenuSearch = UiHelper.SelectionMenu.WriteMenu(searchedDateMovieList, header);
                     if (movieListMenuSearch == -1)
                     {
                         continue;
@@ -90,7 +90,7 @@ static class MoviesMenu
             {
                 while (true)
                 {
-                    int movieListMenu = UiHelper.SelectionMenu(MoviesLogic.GetMovieTitles(), header);
+                    int movieListMenu = UiHelper.SelectionMenu.WriteMenu(MoviesLogic.GetMovieTitles(), header);
                     if (movieListMenu == -1)
                     {
                         return -1;

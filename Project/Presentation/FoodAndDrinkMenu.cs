@@ -15,7 +15,7 @@ public class FoodAndDrinkMenu
                 "Finish order"
             ];
 
-            int categoryChoice = UiHelper.SelectionMenu(categoryMenu, "Choose a category");
+            int categoryChoice = UiHelper.SelectionMenu.WriteMenu(categoryMenu, "Choose a category");
 
             if (categoryChoice == 0)
             {

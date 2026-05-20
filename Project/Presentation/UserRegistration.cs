@@ -5,7 +5,7 @@ static class UserRegistration
     public static void Start()
     {
         string[] fields = ["First Name", "Last Name", "Email", "Password (8-32 characters)", "Date of birth (dd/mm/yyyy)"];
-        Dictionary<string, string> inputs = UiHelper.InputForm(fields, "Please enter your registration information");
+        Dictionary<string, string> inputs = UiHelper.InputFormMenu.WriteMenu(fields, "Please enter your registration information");
 
         DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dateOfBirth);
 
@@ -17,7 +17,7 @@ static class UserRegistration
         {
             errorMessage = "Account couldn't be created";
 
-            inputs = UiHelper.InputForm(inputs, "Please enter your registration information", header: errorMessage);
+            inputs = UiHelper.InputFormMenu.WriteMenu(inputs, "Please enter your registration information", header: errorMessage);
 
             DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dateofBirth);
 

@@ -28,7 +28,7 @@ static class PurchaseTicket
 
         if (DateMenu.Count == 0)
         {
-            int dates = UiHelper.SelectionMenu(
+            int dates = UiHelper.SelectionMenu.WriteMenu(
                 ["No available dates."],
                 "Pick a date",
                 true
@@ -40,7 +40,7 @@ static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiHelper.SelectionMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, "Pick a date");
         if (selectedDate == -1)
         {
             return null;
@@ -52,7 +52,7 @@ static class PurchaseTicket
         TimeMenu.Clear();
         SetUpTimeMenu(movie, selectedDateString);
 
-        int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
+        int selectedTime = UiHelper.SelectionMenu.WriteMenu(TimeMenu, "Pick a time");
 
         if (selectedTime == -1)
         {
@@ -73,7 +73,7 @@ static class PurchaseTicket
         decimal ticketTotal = 12.00m;
 
         // selected menu items
-        List<OrderItemModel> orderedMenuItems = new List<OrderItemModel>();
+        List<OrderItemModel> orderedMenuItems = [];
 
         // ask if user wants food or drinks
         List<string> orderMenuChoices =
@@ -82,14 +82,14 @@ static class PurchaseTicket
             "Add food and drinks"
         ];
 
-        int selectedOrderChoice = UiHelper.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
+        int selectedOrderChoice = UiHelper.SelectionMenu.WriteMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
         // selected lounge pre-order drinks
-        List<OrderItemModel> loungePreOrderItems = new List<OrderItemModel>();
+        List<OrderItemModel> loungePreOrderItems = [];
 
         // ask if user wants lounge pre-order drinks
         List<string> loungePreOrderChoices =
@@ -98,7 +98,7 @@ static class PurchaseTicket
             "Add lounge drink pre-order"
         ];
 
-        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu(
+        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu.WriteMenu(
             loungePreOrderChoices,
             "Do you want to pre-order drinks from the lounge/bar?"
         );
@@ -106,12 +106,12 @@ static class PurchaseTicket
         if (selectedLoungePreOrderChoice == 1)
         {
             // show only drinks for lounge pre-order
-            MenuLogic loungeMenuLogic = new MenuLogic();
+            MenuLogic loungeMenuLogic = new();
             loungePreOrderItems = FoodAndDrinkMenu.ShowOnlyDrinksMenu(loungeMenuLogic);
         }
 
         // calculate totals
-        MenuLogic menuLogic = new MenuLogic();
+        MenuLogic menuLogic = new();
         decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
 
         // calculate lounge pre-order total
@@ -135,7 +135,7 @@ static class PurchaseTicket
             UserLogin.Start();
         }
 
-        int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
+        int selectedPaymentMethod = UiHelper.SelectionMenu.WriteMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
             return null;
@@ -154,7 +154,7 @@ static class PurchaseTicket
 
             do
             {
-                paymentInfo = UiHelper.InputForm(
+                paymentInfo = UiHelper.InputFormMenu.WriteMenu(
                     paymentInfo,
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
@@ -172,7 +172,7 @@ static class PurchaseTicket
 
             do
             {
-                paymentInfo = UiHelper.InputForm(
+                paymentInfo = UiHelper.InputFormMenu.WriteMenu(
                     paymentInfo,
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
@@ -184,7 +184,7 @@ static class PurchaseTicket
             } while (invalidInputs != "");
         }
 
-        UiHelper.SelectionMenu([$"Payment successful."], "");
+        UiHelper.SelectionMenu.WriteMenu([$"Payment successful."], "");
         foreach (SeatModel seat in selectedSeats)
         {
 

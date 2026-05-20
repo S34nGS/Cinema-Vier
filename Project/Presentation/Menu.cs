@@ -8,7 +8,7 @@ static class Menu
 
         string[] menu = BuildMenu();
 
-        int selected = UiHelper.SelectionMenu(menu, header, true);
+        int selected = UiHelper.SelectionMenu.WriteMenu(menu, header, true);
 
         ActMenuOption(menu, selected);
     }

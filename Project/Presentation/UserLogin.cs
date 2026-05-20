@@ -5,7 +5,7 @@ static class UserLogin
     public static void Start()
     {
         List<string> fields = ["Email", "Password"];
-        Dictionary<string, string> inputs = UiHelper.InputForm(fields, "Please enter your login information");
+        Dictionary<string, string> inputs = UiHelper.InputFormMenu.WriteMenu(fields, "Please enter your login information");
         AccountModel? acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         string? errorMessage;
 
@@ -14,7 +14,7 @@ static class UserLogin
             // reset password field so it doesn't show the previous input
             inputs["Password"] = "";
             errorMessage = "No account found with that email and password";
-            inputs = UiHelper.InputForm(inputs, "Please enter your login information", header: errorMessage);
+            inputs = UiHelper.InputFormMenu.WriteMenu(inputs, "Please enter your login information", header: errorMessage);
             acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
         }
 

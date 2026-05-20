@@ -6,7 +6,7 @@ public static class EditMovie
 
         if (movie is null) return;
 
-        Dictionary<string, string> movieInput = UiHelper.InputForm(
+        Dictionary<string, string> movieInput = UiHelper.InputFormMenu.WriteMenu(
             [
                 "Title",
                 "Duration",

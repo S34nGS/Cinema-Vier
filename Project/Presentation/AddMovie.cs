@@ -2,7 +2,7 @@ public static class AddMovie
 {
     public static void Start()
     {
-        Dictionary<string, string> movieInput = UiHelper.InputForm(
+        Dictionary<string, string> movieInput = UiHelper.InputFormMenu.WriteMenu(
             [
                 "Title",
                 "Duration",

@@ -6,7 +6,7 @@ public static class SelectMovie
     {
 
         List<string> movies = MoviesLogic.GetMovieTitles();
-        int selectedMovie = UiHelper.SelectionMenu(movies);
+        int selectedMovie = UiHelper.SelectionMenu.WriteMenu(movies);
         if (selectedMovie == -1) return null;
 
         MovieModel? movie = MoviesLogic.GetMovieByTitle(movies[selectedMovie]);

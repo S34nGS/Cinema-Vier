@@ -8,7 +8,7 @@ public static class CinemaInfo
 
             List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies", "General Information"];
 
-            int selected = UiHelper.SelectionMenu(menu, "About Cinema Vier");
+            int selected = UiHelper.SelectionMenu.WriteMenu(menu, "About Cinema Vier");
 
             if (selected == menu.IndexOf("About Us"))
             {

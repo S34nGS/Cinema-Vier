@@ -5,7 +5,7 @@ public static class ViewReservations
         while (true)
         {
             List<string> menu = ["Upcoming Orders", "Previous Orders"];
-            int selected = UiHelper.SelectionMenu(menu, "Reservations");
+            int selected = UiHelper.SelectionMenu.WriteMenu(menu, "Reservations");
 
             if (selected == menu.IndexOf("Upcoming Orders"))
             {
