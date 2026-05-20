@@ -51,6 +51,11 @@ public static class Timetables
             }
         }
 
+        // TODO rework menu
+        // Show "Manage timetables"
+        // Show list of movies
+        // Click on one
+        // Get asked to add, edit or delete
         if (selected == menu.IndexOf("Edit Timetable"))
         {
             TimetableModel timetable = TimetablesLogic.ChooseTimeTableToEditAsAdmin("All timetables from today onward");
@@ -66,13 +71,20 @@ public static class Timetables
                 filledFields: TimetablesLogic.GetDetailsAsList(timetable)
             );
 
-            int editedTimetable = TimetablesLogic.EditTimeTableAsAdmin(
-                timetable.Id,
-                EditTimetableInput["Movie Title"],
-                EditTimetableInput["Room Number"],
-                EditTimetableInput["Date (dd-mm-yyyy)"],
-                EditTimetableInput["Start Time (hh:mm)"]
-            );
+            int editedTimetable;
+
+            while (true)
+            { 
+                editedTimetable = TimetablesLogic.EditTimeTableAsAdmin(
+                    timetable.Id,
+                    EditTimetableInput["Movie Title"],
+                    EditTimetableInput["Room Number"],
+                    EditTimetableInput["Date (dd-mm-yyyy)"],
+                    EditTimetableInput["Start Time (hh:mm)"]
+                );
+                if (editedTimetable == 0) break;
+                else continue;
+            }
 
             if (editedTimetable == 0)
             {
