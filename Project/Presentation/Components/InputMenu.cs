@@ -1,7 +1,7 @@
 // TODO: split input & output
 public class InputMenu : BaseComponent
 {
-    public static string WriteMenu(
+    public string WriteMenu(
         string? header = null,
         int defaultLength = 24,
         bool grows = false

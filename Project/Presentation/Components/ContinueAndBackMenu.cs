@@ -1,11 +1,11 @@
 public class ContinueAndBackMenu : BaseComponent
 {
-    public static void WriteMenu(bool continueSelected = true)
+    public void WriteMenu(bool continueSelected = true)
     {
         Console.WriteLine(GetMenu(continueSelected));
     }
 
-    public static string GetMenu(bool continueSelected)
+    public string GetMenu(bool continueSelected)
     {
         string output = $"╔{new string('═', 22)}╗" + Environment.NewLine;
         if (continueSelected)

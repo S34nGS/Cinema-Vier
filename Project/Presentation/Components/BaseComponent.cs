@@ -7,7 +7,7 @@ public abstract class BaseComponent
         return strings.Max(x => x.Length);
     }
 
-    protected static void WriteHeader(string? header)
+    protected void WriteHeader(string? header)
     {
         if (!string.IsNullOrEmpty(header))
         {
@@ -15,7 +15,7 @@ public abstract class BaseComponent
         }
     }
 
-    protected static string ShowInput(string input, string title)
+    protected string ShowInput(string input, string title)
     {
         if (string.IsNullOrEmpty(input))
         {

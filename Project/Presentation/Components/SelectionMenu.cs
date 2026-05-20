@@ -1,6 +1,6 @@
 public class SelectionMenu : BaseComponent
 {
-    public static int WriteMenu(
+    public int WriteMenu(
         IEnumerable<string> menu,
         string? header = null,
         bool hasButtons = false
@@ -60,7 +60,7 @@ public class SelectionMenu : BaseComponent
         return selected;
     }
 
-    public static string GetMenu(string[] menu, int selected)
+    public string GetMenu(string[] menu, int selected)
     {
         int longest = GetLongestString(menu);
 

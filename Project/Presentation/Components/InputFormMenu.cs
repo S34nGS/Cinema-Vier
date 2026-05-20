@@ -1,7 +1,7 @@
 // TODO: Seperate input & output
 public class InputFormMenu : BaseComponent
 {
-    public static Dictionary<string, string> WriteMenu(
+    public Dictionary<string, string> WriteMenu(
         IEnumerable<string> titles,
         string formTitle = "Input Form",
         int maxLength = 32
@@ -17,7 +17,7 @@ public class InputFormMenu : BaseComponent
         return WriteMenu(inputs, formTitle, maxLength);
     }
 
-    public static Dictionary<string, string> WriteMenu(
+    public Dictionary<string, string> WriteMenu(
         Dictionary<string, string> fields,
         string formTitle = "Input Form",
         int maxLength = 32,
