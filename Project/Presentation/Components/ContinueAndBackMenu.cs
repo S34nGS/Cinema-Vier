@@ -1,4 +1,4 @@
-public class ContinueAndBackMenu : BaseComponent
+public class ContinueAndBackMenu
 {
     public void WriteMenu(bool continueSelected = true)
     {

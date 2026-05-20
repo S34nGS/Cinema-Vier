@@ -1,7 +1,7 @@
-public static class SeatSelection
+public class SeatSelection : BaseComponent
 {
-    private static SeatLogic _logic = new();
-    public static List<SeatModel> Start(Int64 roomId = 1, List<SeatModel> unavailableSeats = null)
+    private SeatLogic _logic = new();
+    public List<SeatModel> Start(Int64 roomId = 1, List<SeatModel> unavailableSeats = null)
     {
         List<SeatModel> seats = _logic.GetSeatsByRoomId(roomId);
         RoomModel room = RoomsLogic.GetRoomById(roomId);
@@ -25,19 +25,19 @@ public static class SeatSelection
 
             ConsoleKey keyPressed = Console.ReadKey(true).Key;
 
-            if (UiHelper.IsLeftKey(keyPressed) && Coordinates["x"] > 1)
+            if (IsLeftKey(keyPressed) && Coordinates["x"] > 1)
             {
                 Coordinates["x"]--;
             }
-            else if (UiHelper.IsRightKey(keyPressed) && Coordinates["x"] < room.Width)
+            else if (IsRightKey(keyPressed) && Coordinates["x"] < room.Width)
             {
                 Coordinates["x"]++;
             }
-            else if (UiHelper.IsDownKey(keyPressed) && Coordinates["y"] < room.Height)
+            else if (IsDownKey(keyPressed) && Coordinates["y"] < room.Height)
             {
                 Coordinates["y"]++;
             }
-            else if (UiHelper.IsUpKey(keyPressed) && Coordinates["y"] > 1)
+            else if (IsUpKey(keyPressed) && Coordinates["y"] > 1)
             {
                 Coordinates["y"]--;
             }

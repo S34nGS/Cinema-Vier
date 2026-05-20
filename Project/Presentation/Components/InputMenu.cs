@@ -25,11 +25,11 @@ public class InputMenu : BaseComponent
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
 
-            if (UiHelper.IsLeftKey(keyInfo.Key, false) && continueSelected)
+            if (IsLeftKey(keyInfo.Key, false) && continueSelected)
             {
                 continueSelected = false;
             }
-            else if (UiHelper.IsRightKey(keyInfo.Key, false) && !continueSelected)
+            else if (IsRightKey(keyInfo.Key, false) && !continueSelected)
             {
                 continueSelected = true;
             }

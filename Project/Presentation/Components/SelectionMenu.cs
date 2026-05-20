@@ -27,11 +27,11 @@ public class SelectionMenu : BaseComponent
 
             if (!hasButtons)
             {
-                if (UiHelper.IsLeftKey(key) && continueSelected)
+                if (IsLeftKey(key) && continueSelected)
                 {
                     continueSelected = false;
                 }
-                else if (UiHelper.IsRightKey(key) && !continueSelected)
+                else if (IsRightKey(key) && !continueSelected)
                 {
                     continueSelected = true;
                 }
@@ -47,11 +47,11 @@ public class SelectionMenu : BaseComponent
                 return -1;
             }
 
-            if (UiHelper.IsDownKey(key) && selected < localMenu.Length - 1)
+            if (IsDownKey(key) && selected < localMenu.Length - 1)
             {
                 selected++;
             }
-            else if (UiHelper.IsUpKey(key) && selected > 0)
+            else if (IsUpKey(key) && selected > 0)
             {
                 selected--;
             }
@@ -64,7 +64,7 @@ public class SelectionMenu : BaseComponent
     {
         int longest = GetLongestString(menu);
 
-        string output = $"╔{new string('═', longest + 6)}╗";
+        string output = $"╔{new string('═', longest + 6)}╗" + Environment.NewLine;
 
         for (int index = 0; index < menu.Length; index++)
         {

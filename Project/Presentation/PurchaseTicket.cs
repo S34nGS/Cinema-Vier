@@ -6,6 +6,7 @@ static class PurchaseTicket
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
     private static List<TimetableModel> CurrentTimetables = [];
 
+    private static SeatSelection seatSelection = new();
     public static List<string> CreditCardInput =
     [
         "Cardholder name",
@@ -63,7 +64,7 @@ static class PurchaseTicket
         List<SeatModel> selectedSeats = [];
         if (selectedTimetable.RoomId == 1)
         {
-            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
+            selectedSeats = seatSelection.Start(selectedTimetable.RoomId);
         }
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";

@@ -30,4 +30,24 @@ public abstract class BaseComponent
             return input;
         }
     }
+
+    public bool IsLeftKey(ConsoleKey key, bool includeH = true)
+    {
+        return key == ConsoleKey.LeftArrow || (includeH && key == ConsoleKey.H);
+    }
+
+    public bool IsRightKey(ConsoleKey key, bool includeL = true)
+    {
+        return key == ConsoleKey.RightArrow || (includeL && key == ConsoleKey.L);
+    }
+
+    public bool IsUpKey(ConsoleKey key, bool includeK = true)
+    {
+        return key == ConsoleKey.UpArrow || (includeK && key == ConsoleKey.K);
+    }
+
+    public bool IsDownKey(ConsoleKey key, bool includeJ = true)
+    {
+        return key == ConsoleKey.DownArrow || (includeJ && key == ConsoleKey.J);
+    }
 }
