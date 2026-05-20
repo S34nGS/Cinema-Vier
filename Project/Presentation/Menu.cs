@@ -23,16 +23,17 @@ static class Menu
         {
             UserRegistration.Start();
         }
+
         // TODO: Rework this to be its own seperate Book Movie functionality
         else if (selected == Array.IndexOf(menu, "Book Movie"))
         {
             while (true)
             {
                 MovieModel? movie = MoviesLogic.Start();
-                if (movie is null)
-                {
-                    Start();
-                }
+                // if (movie is null)
+                // {
+                //     Start();
+                // }
 
                 if (AccountsLogic.CurrentAccount != null)
                 {
