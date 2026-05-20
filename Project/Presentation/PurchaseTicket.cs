@@ -69,7 +69,7 @@ static class PurchaseTicket
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
 
         // ticket price for summary
-        decimal ticketTotal = 12.00m;
+        double ticketTotal = 12.00;
 
         // selected menu items
         List<OrderItemModel> orderedMenuItems = [];
@@ -109,16 +109,16 @@ static class PurchaseTicket
 
         // calculate totals
         MenuLogic menuLogic = new();
-        decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
+        double menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
 
         // calculate lounge pre-order total
-        decimal loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
+        double loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
 
         // calculate final total with lounge pre-order
-        decimal finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
+        double finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
 
         // show summary before payment
-        ShowBookingSummary(
+        BookingSummary.Start(
             ticketTotal,
             orderedMenuItems,
             menuTotal,
@@ -238,82 +238,6 @@ static class PurchaseTicket
                 }
             }
         }
-    }
-
-    // show booking summary before payment
-    static void ShowBookingSummary(
-        decimal ticketTotal,
-        List<OrderItemModel> orderedMenuItems,
-        decimal menuTotal,
-        List<OrderItemModel> loungePreOrderItems,
-        decimal loungePreOrderTotal,
-        decimal finalTotal
-    )
-    {
-        Console.Clear();
-
-        Console.WriteLine($@"
-Booking Summary
-
-Ticket total: €{ticketTotal:0.00}
-");
-
-        if (orderedMenuItems.Count > 0)
-        {
-            Console.WriteLine($@"
-Food and drink items:
-");
-
-            foreach (OrderItemModel item in orderedMenuItems)
-            {
-                Console.WriteLine($@"
-Item name: {item.Name}
-Quantity: {item.Quantity}
-Price per item: €{item.PricePerItem:0.00}
-Subtotal: €{item.SubTotal:0.00}
-");
-            }
-        }
-        else
-        {
-            Console.WriteLine($@"
-No food or drinks selected.
-");
-        }
-
-        Console.WriteLine($@"
-Food and drink total: €{menuTotal:0.00}
-");
-
-        if (loungePreOrderItems.Count > 0)
-        {
-            Console.WriteLine($@"
-Lounge pre-order drinks:
-");
-
-            foreach (OrderItemModel item in loungePreOrderItems)
-            {
-                Console.WriteLine($@"
-Item name: {item.Name}
-Quantity: {item.Quantity}
-Price per item: €{item.PricePerItem:0.00}
-Subtotal: €{item.SubTotal:0.00}
-");
-            }
-        }
-        else
-        {
-            Console.WriteLine($@"
-No lounge drinks selected.
-");
-        }
-
-        Console.WriteLine($@"
-Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
-Final total: €{finalTotal:0.00}
-");
-
-        UiHelper.HoldUser();
     }
 
     public static string InValidMessage(bool[] isValidInput, string paymentMethod)
