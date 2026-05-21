@@ -2,12 +2,6 @@ public static class Timetables
 {
     public static void Start()
     {
-        // TODO rework menu
-        // Show "Manage timetables"
-        // Show list of movies
-        // Click on one
-        // Get asked to add, edit or delete
-
         List<string> menu = ["Create Timetable", "Edit Timetable", "Delete Timetable"];   
 
         string movieMenuHeader =  "Pick a movie to manage the timetables for";
