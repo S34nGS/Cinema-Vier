@@ -1,3 +1,5 @@
+using System.Globalization;
+
 public static class TimeLogic
 {
     public static Int64 ConvertDateToUnixTime(DateTime dateTime)
@@ -10,9 +12,10 @@ public static class TimeLogic
         return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
     }
 
-    public static DateTime ConvertStringToDateTime(string dateString)
+    public static DateTime ConvertStringToDateTime(string dateString, string format = "dd-MM-yyyy")
     {
-        return DateTime.Parse(dateString);
+        // return DateTime.Parse(dateString);
+        return DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
     }
 
     public static string ConvertDateString(DateTimeOffset dateTime, string format = "dd/MM/yyyy HH:mm:ss")
