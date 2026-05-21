@@ -82,11 +82,18 @@ public static class TimetablesLogic
         return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
     }
 
-    public static List<TimetableModel> GetTimetablesFromToday()
+    public static List<TimetableModel> GetAllTimetablesFromToday()
     {
         Int64 today = ConvertDateToUnixTime(DateTime.Today);
 
-        return _access.GetTimetablesFromDate(today);
+        return _access.GetAllTimetablesFromDate(today);
+    }
+
+    public static List<TimetableModel> GetSpecificTimetablesFromToday(Int64 movieId)
+    {
+        Int64 today = ConvertDateToUnixTime(DateTime.Today);
+
+        return _access.GetSpecificTimetablesFromDate(today, movieId);
     }
 
     public static string GetDateString(DateTimeOffset dateTime)
@@ -106,7 +113,6 @@ public static class TimetablesLogic
         string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
         return new List<string> 
         {
-            movie,
             timetable.RoomId.ToString(),
             date,
             time
@@ -209,23 +215,30 @@ public static class TimetablesLogic
 
 
     // Admin methods
-    public static int CreateTimetableAsAdmin(string title, string roomNumber, string date, string time)
+    public static (int, MovieModel) ManageTimetables(string movieMenuHeader, List<string> menu)
     {
-        if (!ValidateTitleString(title))
+        MovieModel movie = MoviesLogic.PickMovieToManage(movieMenuHeader);
+        int selected = UiHelper.SelectionMenu(menu, movie.Title);
+
+        if (selected >= 0 && selected < menu.Count)
+            return (selected, movie);
+
+        return (-1, movie);
+    }
+
+    public static int CreateTimetableAsAdmin(MovieModel movie, string roomNumber, string date, string time)
+    {
+        if (!ValidateRoomNumberString(roomNumber))
         {
             return 1;
         }
-        else if (!ValidateRoomNumberString(roomNumber))
+        else if (!ValidateDateString(date))
         {
             return 2;
         }
-        else if (!ValidateDateString(date))
-        {
-            return 3;
-        }
         else if (!ValidateTimeString(time))
         {
-            return 4;
+            return 3;
         }
 
         Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
@@ -234,14 +247,14 @@ public static class TimetablesLogic
 
         TimetableModel timetable = new(
             -1,
-            MoviesLogic.GetMovieByTitle(title).Id,
+            movie.Id,
             int.Parse(roomNumber),
             startTime
         );
 
         if (!ValidateExistingTimetable(timetable))
         {
-            return 5;
+            return 4;
         }
 
         AddTimetable(timetable);
@@ -249,38 +262,35 @@ public static class TimetablesLogic
         return 0;
     }
 
-    public static TimetableModel ChooseTimeTableToEditAsAdmin(string header)
+    public static TimetableModel ChooseTimeTableToEditAsAdmin(string header, MovieModel movie)
     {
-        List<TimetableModel> timetables = GetTimetablesFromToday();
+        List<TimetableModel> timetables = GetSpecificTimetablesFromToday(movie.Id);
         List<string> timetableIds = [];
         foreach (TimetableModel timetable in timetables)
         {
             string id = timetable.Id.ToString();
-            string movie = MoviesLogic.GetById(timetable.MovieId).Title;
-            timetableIds.Add($"Timetable ID: {id}, Movie: {movie}");
+            string date = GetDateString(ConvertUnixTimeToDateTime(timetable.StartTime));
+            string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
+            timetableIds.Add($"Timetable ID: {id}, Date: {date}, Time: {time}");
         }
         int selected = UiHelper.SelectionMenu(timetableIds, header);
 
         return timetables[selected];
     }
 
-    public static int EditTimeTableAsAdmin(Int64 id, string title, string roomNumber, string date, string time)
+    public static int EditTimeTableAsAdmin(Int64 id, MovieModel movie, string roomNumber, string date, string time)
     {
-        if (!ValidateTitleString(title))
+        if (!ValidateRoomNumberString(roomNumber))
         {
             return 1;
         }
-        else if (!ValidateRoomNumberString(roomNumber))
+        else if (!ValidateDateString(date))
         {
             return 2;
         }
-        else if (!ValidateDateString(date))
-        {
-            return 3;
-        }
         else if (!ValidateTimeString(time))
         {
-            return 4;
+            return 3;
         }
 
         Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
@@ -289,7 +299,7 @@ public static class TimetablesLogic
 
         TimetableModel timetable = new(
             id,
-            MoviesLogic.GetMovieByTitle(title).Id,
+            movie.Id,
             int.Parse(roomNumber),
             startTime
         );
