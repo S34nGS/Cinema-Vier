@@ -96,4 +96,28 @@ public class AccountsLogic
     {
         CurrentAccount = null;
     }
+
+    public static bool IsBirthday(AccountModel account)
+    {
+        // convert saved date of birth number back to a date
+        DateTime dateOfBirth = TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
+
+        return dateOfBirth.Day == DateTime.Today.Day &&
+               dateOfBirth.Month == DateTime.Today.Month;
+    }
+
+    public static bool CanUseFreePopcornGift(AccountModel account)
+    {
+        // check if today is birthday and gift is not used this year
+        return IsBirthday(account) &&
+               account.FreePopcornGiftUsedYear != DateTime.Today.Year;
+    }
+
+    public void UseFreePopcornGift(AccountModel account)
+    {
+        account.FreePopcornGiftUsedYear = DateTime.Today.Year;
+
+        // update only the gift usage year
+        _access.UpdateFreePopcornGiftUsedYear(account);
+    }
 }
