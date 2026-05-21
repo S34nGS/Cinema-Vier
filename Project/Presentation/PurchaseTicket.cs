@@ -66,7 +66,7 @@ static class PurchaseTicket
         }
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
-        DateTime convertedDateTime = DateTime.Parse(dateTimeString);
+        DateTime convertedDateTime = TimeLogic.ConvertStringToDateTime(dateTimeString, "dd-MM-yyyy HH:mm");
 
         // ticket price for summary
         double ticketTotal = 12.00;
