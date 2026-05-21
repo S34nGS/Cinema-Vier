@@ -51,6 +51,14 @@ public static class MoviesLogic
         return _access.GetByTitle(title);
     }
 
+    public static MovieModel PickMovieToManage(string header = null)
+    {
+        List<string> menu = MoviesLogic.GetMovieTitles();
+        int selected = UiHelper.SelectionMenu(menu, header);
+
+        return MoviesLogic.GetMovieByTitle(menu[selected]);
+    }
+
     public static void DisableMovie(MovieModel movie)
     {
         _access.Update(movie);
