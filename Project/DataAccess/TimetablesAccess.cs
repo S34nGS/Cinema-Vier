@@ -58,10 +58,16 @@ public class TimetablesAccess : DefaultAccess
         return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
     }
 
-    public List<TimetableModel> GetTimetablesFromDate(Int64 startTime)
+    public List<TimetableModel> GetAllTimetablesFromDate(Int64 startTime)
     {
         string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime ORDER BY id";
         return connection.Query<TimetableModel>(sql, new {StartTime = startTime}).AsList();
+    }
+
+    public List<TimetableModel> GetSpecificTimetablesFromDate(Int64 startTime, Int64 movieId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime AND movieId = @MovieId ORDER BY id";
+        return connection.Query<TimetableModel>(sql, new {StartTime = startTime, MovieId = movieId}).AsList();
     }
     
     public List<TimetableModel> GetTimetablesByDateRange(Int64 startTime, Int64 endTime)
