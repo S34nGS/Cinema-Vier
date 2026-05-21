@@ -3,6 +3,14 @@ public static class MoviesLogic
     private static MoviesAccess _access = new();
     private static List<MovieModel> _AvailableMovies = [];
 
+    private static void InitializeMovies()
+    {
+        if (_AvailableMovies.Count == 0)
+        {
+            RefreshMovies();
+        }
+    }
+
     private static void RefreshMovies()
     {
         _AvailableMovies = _access.GetAllMovies();
@@ -10,10 +18,7 @@ public static class MoviesLogic
 
     public static List<string> GetMovieTitles(bool activeOnly = true)
     {
-        if (_AvailableMovies.Count == 0)
-        {
-            RefreshMovies();
-        }
+        InitializeMovies();
 
         List<string> Titles = [];
         _AvailableMovies.ForEach(movie =>
@@ -29,11 +34,13 @@ public static class MoviesLogic
 
     public static MovieModel GetMovieData(int MovieIndex)
     {
+        InitializeMovies();
         return _AvailableMovies[MovieIndex];
     }
 
     public static List<string> GetByPartOfTitle(string pattern)
     {
+        InitializeMovies();
         List<string> Titles = _AvailableMovies
             .Where(x => x.Title.Contains(pattern, StringComparison.OrdinalIgnoreCase))
             .Select(x => x.Title)
@@ -44,17 +51,20 @@ public static class MoviesLogic
 
     public static MovieModel? GetById(Int64 movieId)
     {
+        InitializeMovies();
         return _AvailableMovies.FirstOrDefault(x => x.Id == movieId);
     }
 
     public static bool IsOldEnough(MovieModel movie, AccountModel account)
     {
+        InitializeMovies();
         int age = AccountsLogic.CalculateAge(TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth));
         return age >= movie.AgeRating;
     }
 
     public static MovieModel? Start()
     {
+        InitializeMovies();
         int movieIndex = MoviesMenu.Start();
         if (movieIndex < 0) return null;
         return GetMovieData(movieIndex);
@@ -62,6 +72,7 @@ public static class MoviesLogic
 
     public static MovieModel? GetMovieByTitle(string title)
     {
+        InitializeMovies();
         return _AvailableMovies.FirstOrDefault(x => x.Title == title);
     }
 
