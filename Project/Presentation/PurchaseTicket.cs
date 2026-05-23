@@ -187,8 +187,15 @@ static class PurchaseTicket
         if (selectedSeats.Count > 0)
         {
         // create only one reservation for this payment.
-        // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
-            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats[0].Id));
+            long reservationId = ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id));
+
+            // save all selected seats for this reservation
+            ReservationSeatAccess reservationSeatAccess = new();
+
+            foreach(SeatModel seat in selectedSeats)
+            {
+                reservationSeatAccess.Write(new ReservationSeatModel(reservationId, seat.Id));
+            }
         }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }

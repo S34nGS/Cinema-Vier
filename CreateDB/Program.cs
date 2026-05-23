@@ -1,4 +1,4 @@
-public static class Program {
+﻿public static class Program {
     public static void Main() {
         CreateMoviesTable();
         CreateAccountsTable();
@@ -10,6 +10,7 @@ public static class Program {
         CreateConsumableTable();
         CreateConsumableOrderTable();
         CreateMenuItemTable();
+        CreateReservationSeatTable();
     }
 
     public static void CreateMoviesTable()
@@ -153,10 +154,10 @@ public static class Program {
         reservation.CreateTable();
 
         List<ReservationModel> reservationList = [
-            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1, 1),
-            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2, 2),
-            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3, 3),
-            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1, 4),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 29)), 10.5, 1),
+            new ReservationModel(0, 1, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 10)), 15.0, 2),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 30)), 20.0, 3),
+            new ReservationModel(0, 2, TimetablesLogic.ConvertDateToUnixTime(new DateTime(2026, 4, 11)), 12.5, 1),
         ];
 
         foreach (ReservationModel item in reservationList)
@@ -202,5 +203,11 @@ public static class Program {
         {
             menuItem.Write(item);
         }
+    }
+
+    public static void CreateReservationSeatTable()
+    {
+        ReservationSeatAccess reservationSeat = new();
+        reservationSeat.CreateTable();
     }
 }

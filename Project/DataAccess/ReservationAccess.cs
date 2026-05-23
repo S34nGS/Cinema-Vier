@@ -13,18 +13,16 @@ public class ReservationAccess : DefaultAccess
                 reservationDate INTEGER NOT NULL,
                 totalPrice REAL NOT NULL,
                 timeTableId INTEGER NOT NULL,
-                seatId INTEGER NOT NULL,
 
                 FOREIGN KEY (userId) REFERENCES Account(id),
-                FOREIGN KEY (timeTableId) REFERENCES TimeTable(id),
-                FOREIGN KEY (seatId) REFERENCES Seat(id)
+                FOREIGN KEY (timeTableId) REFERENCES TimeTable(id)
             )";
         connection.Execute(sql);
     }
-    public void Write(ReservationModel reservation)
+    public long Write(ReservationModel reservation)
     {
-        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId, seatId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId, @SeatId)";
-        connection.Execute(sql, reservation);
+        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId); SELECT last_insert_rowid();";
+        return connection.ExecuteScalar<long>(sql, reservation);
     }
     public List<ReservationModel> GetReservationsByUserId(long userId)
     {
