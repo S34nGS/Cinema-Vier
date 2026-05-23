@@ -33,79 +33,75 @@ public static class ViewReservations
     }
     static void ShowFutureReservations()
     {
-        Console.Clear();
-        Console.WriteLine("=== Upcoming Orders ===");
-        Console.WriteLine();
-
         long userId = AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetFutureReservations(userId);
 
-        if (reservations.Count == 0)
-        {
-            Console.WriteLine("No upcoming orders found.");
-        }
-        else
-        {
-            foreach (ReservationModel reservation in reservations)
-            {
-                DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
-
-                TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
-
-                MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
-
-                DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
-
-                RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
-
-                Console.WriteLine($"Reservation Number: {reservation.Id}");
-                Console.WriteLine($"Movie: {movie.Title}");
-                Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-                Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
-                Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
-                Console.WriteLine($"Room: {room.ScreenType}");
-                Console.WriteLine("----------------------------");
-            }
-        }
-
-        UiHelper.HoldUser();
+        // sort reservations from old date to new date
+        reservations = reservations.OrderBy(reservation => reservation.ReservationDate).ToList();
+        ShowReservationList(reservations, "Upcoming Orders");
     }
 
     static void ShowPastReservations()
     {
-        Console.Clear();
-        Console.WriteLine("=== Previous Orders ===");
-        Console.WriteLine();
-
         long userId = AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetPastReservations(userId);
 
+        // sort reservations from old date to new date
+        reservations = reservations.OrderBy(reservation => reservation.ReservationDate).ToList();
+        ShowReservationList(reservations, "Previous Orders");
+    }
+
+    static void ShowReservationList(List<ReservationModel> reservations, string title)
+    {
+        Console.Clear();
+
         if (reservations.Count == 0)
         {
-            Console.WriteLine("No previous orders found.");
+            Console.WriteLine($"No {title.ToLower()} found.");
+            UiHelper.HoldUser();
+            return;
         }
-        else
+
+        List<string> reservationMenu = [];
+        foreach (ReservationModel reservation in reservations)
         {
-            foreach (ReservationModel reservation in reservations)
-            {
-                DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+            DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+            TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
+            MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
 
-                TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
-
-                MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
-
-                DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
-
-                RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
-
-                Console.WriteLine($"Movie: {movie.Title}");
-                Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-                Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
-                Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
-                Console.WriteLine($"Room: {room.ScreenType}");
-                Console.WriteLine("----------------------------");
-            }
+            // show short information first
+            reservationMenu.Add($"{TimetablesLogic.GetDateString(date)} - {movie.Title}");
         }
+
+        int selected = UiHelper.SelectionMenu(reservationMenu, title);
+
+        if (selected == -1)
+        {
+            return;
+        }
+
+        ShowReservationDetails(reservations[selected]);
+    }
+
+    static void ShowReservationDetails(ReservationModel reservation)
+    {
+        Console.Clear();
+
+        // get all information for this reservation
+        DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+        TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
+        MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
+        DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
+        RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
+
+        Console.WriteLine("=== Reservation Details ===");
+        Console.WriteLine();
+        Console.WriteLine($"Reservation Number: {reservation.Id}");
+        Console.WriteLine($"Movie: {movie.Title}");
+        Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
+        Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
+        Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
+        Console.WriteLine($"Room: {room.ScreenType}");
 
         UiHelper.HoldUser();
     }
