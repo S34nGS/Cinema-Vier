@@ -6,4 +6,10 @@ public class SeatLogic
     {
         return _access.GetAllSeatsByRoomId(room);
     }
+
+    public static SeatModel GetById(long seatId)
+    {
+        SeatAccess access = new SeatAccess();
+        return access.GetById(seatId);
+    }
 }

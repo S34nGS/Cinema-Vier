@@ -31,4 +31,9 @@ public class SeatAccess : DefaultAccess
         string sql = $"SELECT * FROM {Table} WHERE roomId = @RoomId";
         return connection.Query<SeatModel>(sql, new { RoomId = roomId }).AsList();
 	}
+	public SeatModel GetById(long seatId)
+	{
+    	string sql = $"SELECT * FROM {Table} WHERE id = @SeatId";
+    	return connection.QueryFirstOrDefault<SeatModel>(sql, new { SeatId = seatId });
+	}
 }

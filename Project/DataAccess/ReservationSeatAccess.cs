@@ -28,4 +28,13 @@ public class ReservationSeatAccess : DefaultAccess
 
         connection.Execute(sql, reservationSeat);
     }
+
+    public List<ReservationSeatModel> GetByReservationId(long reservationId)
+    {
+        string sql = $@"
+        SELECT * FROM {Table}
+        WHERE reservationId = @ReservationId";
+
+        return connection.Query<ReservationSeatModel>(sql, new { ReservationId = reservationId }).AsList();
+    }
 }
