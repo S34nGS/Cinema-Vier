@@ -50,7 +50,7 @@ public static class Timetables
 
         if (selected == menu.IndexOf("Edit Timetable"))
         {
-            TimetableModel timetable = TimetablesLogic.ChooseTimeTableToEditAsAdmin("All timetables from today onward", movie);
+            TimetableModel timetable = TimetablesLogic.ChooseTimeTableAsAdmin("All timetables from today onward", movie);
 
             Dictionary<string, string> EditTimetableInput = UiHelper.InputForm(
                 [
@@ -85,6 +85,25 @@ public static class Timetables
             else if (editedTimetable == 3)
             {
                 UiHelper.HoldUser("The given start time is invalid.");
+            }
+        }
+
+        if (selected == menu.IndexOf("Delete Timetable"))
+        {
+            TimetableModel timetable = TimetablesLogic.ChooseTimeTableAsAdmin("All timetables from today onward", movie);
+
+            List<string> deletionMenuOptions = ["Yes", "No"];
+            string deletionMenuHeader = "Are you sure you want to delete this timetable?";
+
+            int deletedTimetable = TimetablesLogic.DeleteTimetableAsAdmin(timetable, deletionMenuOptions, deletionMenuHeader);
+
+            if (deletedTimetable == 0)
+            {
+                UiHelper.HoldUser($"The timetable with ID: {timetable.Id} has been deleted.");
+            }
+            else if(deletedTimetable == 1)
+            {
+                UiHelper.HoldUser("The timetable hasn't been deleted.");
             }
         }
     }

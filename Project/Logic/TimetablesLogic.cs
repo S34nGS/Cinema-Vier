@@ -262,16 +262,19 @@ public static class TimetablesLogic
         return 0;
     }
 
-    public static TimetableModel ChooseTimeTableToEditAsAdmin(string header, MovieModel movie)
+    public static TimetableModel ChooseTimeTableAsAdmin(string header, MovieModel movie)
     {
         List<TimetableModel> timetables = GetSpecificTimetablesFromToday(movie.Id);
         List<string> timetableIds = [];
         foreach (TimetableModel timetable in timetables)
         {
-            string id = timetable.Id.ToString();
-            string date = GetDateString(ConvertUnixTimeToDateTime(timetable.StartTime));
-            string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
-            timetableIds.Add($"Timetable ID: {id}, Date: {date}, Time: {time}");
+            if (timetable.IsActive)
+            {
+                string id = timetable.Id.ToString();
+                string date = GetDateString(ConvertUnixTimeToDateTime(timetable.StartTime));
+                string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
+                timetableIds.Add($"Timetable ID: {id}, Date: {date}, Time: {time}");
+            }
         }
         int selected = UiHelper.SelectionMenu(timetableIds, header);
 
@@ -308,5 +311,19 @@ public static class TimetablesLogic
 
         return 0;
         //TODO When entering wrong info don't exit the inputmenu but let me fix the info
+    }
+
+    public static int DeleteTimetableAsAdmin(TimetableModel timetable, List<string> deletionMenuOptions, string deletionMenuHeader)
+    {
+        int selected = UiHelper.SelectionMenu(deletionMenuOptions, deletionMenuHeader);
+
+        if (selected == 0)
+        {
+            timetable.IsActive = false;
+            _access.Update(timetable);
+            return selected;
+        }
+
+        return 1;
     }
 }
