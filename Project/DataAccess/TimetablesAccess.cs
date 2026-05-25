@@ -11,6 +11,7 @@ public class TimetablesAccess : DefaultAccess
             movieId INTEGER NOT NULL,
             roomId INTEGER NOT NULL,
             startTime INTEGER NOT NULL,
+            isActive INTEGER NOT NULL,
 
             FOREIGN KEY (movieId) REFERENCES Movie(id),
             FOREIGN KEY (roomId) REFERENCES Room(id)
@@ -21,15 +22,15 @@ public class TimetablesAccess : DefaultAccess
     public void Write(TimetableModel timetable)
     {
         string sql = $@"INSERT INTO {Table}
-            (movieId, roomId, startTime) 
-            VALUES (@MovieId, @RoomId, @StartTime)";
+            (movieId, roomId, startTime, isActive) 
+            VALUES (@MovieId, @RoomId, @StartTime, @IsActive)";
         connection.Execute(sql, timetable);
     }
 
     public void Update(TimetableModel timetable)
     {
         string sql = $@"UPDATE {Table}
-            SET movieId = @MovieId, roomId = @RoomId, startTime = @StartTime
+            SET movieId = @MovieId, roomId = @RoomId, startTime = @StartTime, isActive = @IsActive
             WHERE id = @Id";
         connection.Execute(sql, timetable);
     }
