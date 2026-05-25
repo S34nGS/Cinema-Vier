@@ -16,7 +16,7 @@ static class Menu
         }
         else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
         {
-            menu = ["Add Movie", "Edit Movie", "Disable Movie", "Timetables", "Logout"];
+            menu = ["Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
         }
         else
         {
@@ -88,7 +88,7 @@ static class Menu
             DisableMovie.Start();
             Start();
         }
-        else if (selected == menu.IndexOf("Timetables"))
+        else if (selected == menu.IndexOf("Manage Timetables"))
         {
             Timetables.Start();
             Start();
