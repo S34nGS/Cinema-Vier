@@ -134,6 +134,15 @@ static class PurchaseTicket
             UserLogin.Start();
         }
 
+        // user must accept terms before payment
+        bool termsAccepted = AcceptTermsAndConditions();
+
+        if (termsAccepted == false)
+        {
+            UiHelper.HoldUser("Purchase cancelled. You must accept the terms and conditions before payment.");
+            return null;
+        }
+
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
@@ -188,7 +197,7 @@ static class PurchaseTicket
         {
 
     // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
-            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
+            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id, true));
         }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
@@ -363,5 +372,23 @@ Final total: €{finalTotal:0.00}
         }
 
         return message;
+    }
+
+    static bool AcceptTermsAndConditions()
+    {
+        // show terms before payment
+            Console.Clear();
+            Console.WriteLine("=== Terms and Conditions ===");
+            Console.WriteLine();
+            Console.WriteLine("By continuing, you agree to the cinema rules and payment conditions.");
+            Console.WriteLine("Tickets are only valid for the selected movie, date and time.");
+            Console.WriteLine("The user is responsible for entering correct information.");
+            Console.WriteLine();
+
+            List<string> menu = ["Accept terms and continue", "Cancel purchase"];
+
+            int selected = UiHelper.SelectionMenu(menu, "Do you accept the terms and conditions?");
+
+            return selected == menu.IndexOf("Accept terms and continue");
     }
 }
