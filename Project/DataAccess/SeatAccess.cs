@@ -34,6 +34,11 @@ public class SeatAccess : DefaultAccess, IAccess
 
 	public List<SeatModel> GetTakenSeatsByTimetableId(Int64 timetableId)
 	{
+		string sql = $@"
+			SELECT s.* FROM {Table} s
+				JOIN SeatReservation sr ON s.id = sr.seatId
+				WHERE sr.timetableId = @TimetableId";
 
+		return connection.Query<SeatModel>(sql, new { TimetableId = timetableId }).AsList();
 	}
 }
