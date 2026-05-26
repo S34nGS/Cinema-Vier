@@ -12,16 +12,18 @@ public class SeatReservationAccess : DefaultAccess
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 seatId INTEGER NOT NULL,
                 reservationId INTEGER NOT NULL,
+                timetableId INTEGER NOT NULL,
                 
                 FOREIGN KEY (reservationId) REFERENCES Reservation(id),
                 FOREIGN KEY (seatId) REFERENCES Seat(id)
+                FOREIGN KEY (timetableId) REFERENCES TimeTable(id)
             );";
         connection.Execute(sql);
     }
 
-    public void Write(Int64 seatId, Int64 reservationId)
+    public void Write(Int64 seatId, Int64 reservationId, Int64 timetableId)
     {
-        string sql = $"INSERT INTO {Table} (seatId, reservationId) VALUES (@SeatId, @ReservationId)";
-        connection.Execute(sql, new { SeatId = seatId, ReservationId = reservationId });
+        string sql = $"INSERT INTO {Table} (seatId, reservationId, timetableId) VALUES (@SeatId, @ReservationId, @TimetableId)";
+        connection.Execute(sql, new { SeatId = seatId, ReservationId = reservationId, TimetableId = timetableId });
     }
 }
