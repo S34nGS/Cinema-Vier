@@ -1,198 +1,95 @@
-// public static class SeatSelection
-// {
-//     private static SeatLogic _logic = new();
-//     public static List<SeatModel> Start(TimetableModel timetable)
-//     {
-//         List<SeatModel> seats = _logic.GetSeatsByRoomId(timetable.RoomId);
-//         // RoomModel room = RoomsLogic.GetRoomById(roomId);
-
-
-//         Dictionary<string, int> Coordinates = new();
-//         Coordinates["x"] = 1;
-//         Coordinates["y"] = 1;
-
-//         List<SeatModel> selectedSeats = new();
-//         bool hasActiveInput = true;
-
-//         while (hasActiveInput)
-//         {
-//             Console.Clear();
-//             WriteScreen(seats, selectedSeats, unavailableSeatKeys, Coordinates, room);
-
-//             ConsoleKey keyPressed = Console.ReadKey(true).Key;
-
-//             if (UiHelper.IsLeftKey(keyPressed) && Coordinates["x"] > 1)
-//             {
-//                 Coordinates["x"]--;
-//             }
-//             else if (UiHelper.IsRightKey(keyPressed) && Coordinates["x"] < room.Width)
-//             {
-//                 Coordinates["x"]++;
-//             }
-//             else if (UiHelper.IsDownKey(keyPressed) && Coordinates["y"] < room.Height)
-//             {
-//                 Coordinates["y"]++;
-//             }
-//             else if (UiHelper.IsUpKey(keyPressed) && Coordinates["y"] > 1)
-//             {
-//                 Coordinates["y"]--;
-//             }
-//             else if (keyPressed == ConsoleKey.Spacebar)
-//             {
-//                 ToggleSeat(seats, selectedSeats, unavailableSeatKeys, Coordinates["y"], Coordinates["x"]);
-//             }
-//             else if (keyPressed == ConsoleKey.Enter)
-//             {
-//                 return selectedSeats;
-//             }
-//         }
-
-//         return new List<SeatModel>();
-//     }
-
-//     public static void WriteScreen(
-//         List<SeatModel> seats,
-//         List<SeatModel> selectedSeats,
-//         List<(Int64 Row, Int64 Seat)> unavailableSeatKeys,
-//         Dictionary<string, int> Coordinates,
-//         RoomModel room)
-//     {
-//         Console.WriteLine("Seat Selection");
-//         Console.WriteLine($"Room {room.Id} | {room.ScreenType} | {room.SoundType}");
-//         Console.WriteLine("Arrows/HJKL: move  Space: toggle Enter: confirm");
-//         Console.WriteLine($"Selected: {selectedSeats.Count}");
-//         Console.WriteLine();
-
-//         Int64 currentRow = 0;
-
-//         foreach (SeatModel seat in seats)
-//         {
-//             if (seat.Row != currentRow)
-//             {
-//                 if (currentRow != 0)
-//                 {
-//                     Console.WriteLine();
-//                     Console.WriteLine();
-//                 }
-
-//                 currentRow = seat.Row;
-//                 Console.Write(currentRow < 10 ? $" {currentRow}" : currentRow.ToString());
-//                 Console.Write("  ");
-//             }
-
-//             bool isCursor = seat.Row == Coordinates["y"] && seat.SeatNumber == Coordinates["x"];
-//             bool isSelected = IsSeatSelected(selectedSeats, seat.Row, seat.SeatNumber);
-//             bool isUnavailable = unavailableSeatKeys.Contains((seat.Row, seat.SeatNumber));
-//             WriteSeatCell(isSelected, isCursor, isUnavailable);
-//             Console.Write(" ");
-//         }
-
-//         Console.WriteLine();
-//         Console.WriteLine();
-//     }
-
-//     private static void WriteSeatCell(bool isSelected, bool isCursor, bool isUnavailable)
-//     {
-//         if (isUnavailable)
-//         {
-//             Console.ForegroundColor = ConsoleColor.Red;
-//             Console.Write("■");
-//             Console.ForegroundColor = ConsoleColor.White;
-//             return;
-//         }
-
-//         if (isCursor)
-//         {
-//             Console.ForegroundColor = ConsoleColor.Green;
-//             Console.Write(isSelected ? "█" : "█");
-//             Console.ForegroundColor = ConsoleColor.White;
-//             return;
-//         }
-
-//         if (isSelected)
-//         {
-//             Console.ForegroundColor = ConsoleColor.Yellow;
-//             Console.Write("■");
-//             Console.ForegroundColor = ConsoleColor.White;
-//             return;
-//         }
-
-//         Console.Write("░");
-//     }
-
-//     private static void ToggleSeat(
-//         List<SeatModel> seats,
-//         List<SeatModel> selectedSeats,
-//         List<(Int64 Row, Int64 Seat)> unavailableSeatKeys,
-//         Int64 row,
-//         Int64 seat)
-//     {
-//         if (unavailableSeatKeys.Contains((row, seat)))
-//         {
-//             return;
-//         }
-
-//         int existingIndex = selectedSeats.FindIndex(s => s.Row == row && s.SeatNumber == seat);
-//         if (existingIndex >= 0)
-//         {
-//             selectedSeats.RemoveAt(existingIndex);
-//             return;
-//         }
-
-//         SeatModel? match = seats.FirstOrDefault(s => s.Row == row && s.SeatNumber == seat);
-//         if (match != null)
-//         {
-//             selectedSeats.Add(match);
-//         }
-//     }
-
-//     private static bool IsSeatSelected(List<SeatModel> selectedSeats, Int64 row, Int64 seat)
-//     {
-//         return selectedSeats.Any(s => s.Row == row && s.SeatNumber == seat);
-//     }
-
-// }
-
 using System.Security.Cryptography.X509Certificates;
 
-public static class SeatSelection
+public class SeatSelection
 {
-    private static SeatLogic _logic = new();
-    public static List<SeatModel> Start(TimetableModel timetable)
-    {
-        List<SeatModel> selectedSeats = [];
-        SeatModel[,] seats = _logic.GetSeatsInLayoutArray(timetable.RoomId);
-        if (seats.Length < 300)
-        {
-            WriteSmallRoom(seats);
-        }
-        else if (seats.Length < 500)
-        {
-            WriteMediumRoom(seats);
-        }
-        else
-        {
-            WriteBigRoom(seats);
-        }
+    private SeatLogic _logic = new();
+    private List<SeatModel> selectedSeats = [];
+    private List<SeatModel> unavailableSeats = [];
+    private Dictionary<string, Int64> Location = [];
+    private SeatModel[,] Seats = new SeatModel[0,0];
 
-        UiHelper.HoldUser();
+    public List<SeatModel> Start(TimetableModel timetable)
+    {
+        Seats = _logic.GetSeatsInLayoutArray(timetable.RoomId);
+        unavailableSeats = _logic.GetUnavailableSeatsByTimetableId(timetable.Id);
+
+        SeatModel first_seat = Seats.Cast<SeatModel>().First(x => x != null);
+
+        Location = new()
+        {
+            { "row", first_seat.Row },
+            { "col", first_seat.SeatNumber }
+        };
+
+        ConsoleKey input = default;
+
+        do
+        {
+            Console.Clear();
+            if (Seats.Length < 300)
+            {
+                WriteSmallRoom();
+            }
+            else if (Seats.Length < 500)
+            {
+                WriteMediumRoom();
+            }
+            else
+            {
+                WriteBigRoom();
+            }
+
+            input = Console.ReadKey().Key;
+
+            if (UiHelper.IsDownKey(input) && Location["row"] < Seats.GetLength(0))
+            {
+                Location["row"]++;
+            }
+
+            else if (UiHelper.IsUpKey(input) && Location["row"] > 1 )
+            {
+                Location["row"]--;
+            }
+
+            else if (UiHelper.IsRightKey(input) && Location["col"] < Seats.GetLength(1))
+            {
+                Location["col"]++;
+            }
+
+            else if (UiHelper.IsLeftKey(input) && Location["col"] > 1)
+            {
+                Location["col"]--;
+            }
+
+            else if (input == ConsoleKey.Spacebar && unavailableSeats.FirstOrDefault(x => x.Row == Location["row"] && x.SeatNumber == Location["col"]) == null)
+            {
+                ToggleSeat(Location["row"], Location["col"]);   
+            }
+        } while(input != ConsoleKey.Enter);
+
         return selectedSeats;
     }
 
-    public static void WriteSmallRoom(SeatModel[,] seats)
+    public void WriteSmallRoom()
     {
-        for (int row = 0; row < seats.GetLength(0); row++)
+        for (int row = 0; row < Seats.GetLength(0); row++)
         {
-            for (int col = 0; col < seats.GetLength(1); col++)
+            Console.Write($"{(Seats.GetLength(0) - row).ToString("D2")}  ");
+            for (int col = 0; col < Seats.GetLength(1); col++)
             {
-                SeatModel? seat = seats[row, col];
+                SeatModel? seat = Seats[row, col];
                 if (seat == null)
                 {
                     Console.Write(" ");
                 }
                 else
                 {
-                    PrintSeat(seat);
+                    PrintSeat(
+                        seat,
+                        unavailableSeats.FirstOrDefault(x => x.Id == seat.Id) == null,
+                        selectedSeats.FirstOrDefault(x => x.Id == seat.Id) != null,
+                        seat.Row == Location["row"] && seat.SeatNumber == Location["col"]
+                    );
                 }
                 Console.Write(" ");
             }
@@ -200,20 +97,30 @@ public static class SeatSelection
         }
     }
 
-    public static void WriteMediumRoom(SeatModel[,] seats)
+    public void WriteMediumRoom()
     {
-        for (int row = 0; row < seats.GetLength(0); row++)
+        for (int row = 0; row < Seats.GetLength(0); row++)
         {
-            for (int col = 0; col < seats.GetLength(1); col++)
+            Console.Write($"{(Seats.GetLength(0) - row).ToString("D2")}  ");
+            for (int col = 0; col < Seats.GetLength(1); col++)
             {
-                SeatModel? seat = seats[row, col];
+                SeatModel? seat = Seats[row, col];
                 if (seat == null)
                 {
                     Console.Write(" ");
                 }
                 else
                 {
-                    PrintSeat(seat);
+                    PrintSeat(
+                        seat,
+                        unavailableSeats.FirstOrDefault(x => x.Id == seat.Id) == null,
+                        selectedSeats.FirstOrDefault(x => x.Id == seat.Id) != null,
+                        seat.Row == Location["row"] && seat.SeatNumber == Location["col"]
+                    );
+                    if(seat.SeatNumber == 6 || seat.SeatNumber == 12)
+                    {
+                        Console.Write(" ");
+                    }
                 }
                 Console.Write(" ");
             }
@@ -221,20 +128,34 @@ public static class SeatSelection
         }
     }
 
-    public static void WriteBigRoom(SeatModel[,] seats)
+    public void WriteBigRoom()
     {
-        for (int row = 0; row < seats.GetLength(0); row++)
+        for (int row = 0; row < Seats.GetLength(0); row++)
         {
-            for (int col = 0; col < seats.GetLength(1); col++)
+            if(row == 6 || row == 11)
             {
-                SeatModel? seat = seats[row, col];
+                Console.WriteLine();
+            }
+            Console.Write($"{(Seats.GetLength(0) - row).ToString("D2")}  ");
+            for (int col = 0; col < Seats.GetLength(1); col++)
+            {
+                SeatModel? seat = Seats[row, col];
                 if (seat == null)
                 {
                     Console.Write(" ");
                 }
                 else
                 {
-                    PrintSeat(seat);
+                    PrintSeat(
+                        seat,
+                        unavailableSeats.FirstOrDefault(x => x.Id == seat.Id) == null,
+                        selectedSeats.FirstOrDefault(x => x.Id == seat.Id) != null,
+                        seat.Row == Location["row"] && seat.SeatNumber == Location["col"]
+                    );
+                    if(seat.SeatNumber == 11 || seat.SeatNumber == 19)
+                    {
+                        Console.Write(" ");
+                    }
                 }
                 Console.Write(" ");
             }
@@ -260,7 +181,7 @@ public static class SeatSelection
 
         if(hovering)
         {
-            Console.BackgroundColor = ConsoleColor.Gray;
+            Console.BackgroundColor = ConsoleColor.DarkGray;
         }
 
         if(available)
@@ -277,5 +198,17 @@ public static class SeatSelection
         }
 
         Console.ResetColor();
+    }
+
+    public void ToggleSeat(Int64 row, Int64 col)
+    {
+        if(selectedSeats.FirstOrDefault(x => x.Row == row && x.SeatNumber == col) == null)
+        {
+            selectedSeats.Add(Seats.Cast<SeatModel>().First(x => x.Row == row && x.SeatNumber == col));
+        }
+        else
+        {
+            selectedSeats = selectedSeats.Where(x => x.Row != row && x.SeatNumber != col).ToList();
+        }
     }
 }
