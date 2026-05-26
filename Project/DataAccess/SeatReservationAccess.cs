@@ -19,5 +19,9 @@ public class SeatReservationAccess : DefaultAccess
         connection.Execute(sql);
     }
 
-
+    public void Write(Int64 seatId, Int64 reservationId)
+    {
+        string sql = $"INSERT INTO {Table} (seatId, reservationId) VALUES (@SeatId, @ReservationId)";
+        connection.Execute(sql, new { SeatId = seatId, ReservationId = reservationId });
+    }
 }
