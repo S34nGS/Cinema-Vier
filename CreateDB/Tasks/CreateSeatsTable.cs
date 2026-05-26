@@ -52,8 +52,7 @@ public static class CreateSeatsTable
                 {
                     continue;
                 }
-                // public SeatModel(Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority)
-                SeatModel seat = new(-1, 1, y_axis + 1, x_axis + 1, layout[y_axis, x_axis]);
+                SeatModel seat = new(-1, 2, y_axis + 1, x_axis + 1, layout[y_axis, x_axis]);
                 seats.Write(seat);
             }
         }
@@ -88,7 +87,6 @@ public static class CreateSeatsTable
                 {
                     continue;
                 }
-                // public SeatModel(Int64 id, Int64 roomId, Int64 row, Int64 seatNumber, Int64 seatPriority)
                 SeatModel seat = new(-1, 1, y_axis + 1, x_axis + 1, layout[y_axis, x_axis]);
                 seats.Write(seat);
             }
