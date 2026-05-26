@@ -1,9 +1,9 @@
 using Dapper;
 
 
-public class SeatReservationAccess : DefaultAccess
+public class SeatReservationAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "SeatReservation";
+    public static string Table { get; } = "SeatReservation";
 
     public override void CreateTable()
     {

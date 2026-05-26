@@ -1,8 +1,8 @@
 using Dapper;
 
-public class RoomsAccess : DefaultAccess
+public class RoomsAccess : DefaultAccess, IAccess
 {
-    protected override string Table {get;} = "Room";
+    public static string Table { get; } = "Room";
 
     public override void CreateTable()
     {

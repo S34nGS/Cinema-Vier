@@ -1,8 +1,8 @@
 using Dapper;
 
-public class SeatAccess : DefaultAccess
+public class SeatAccess : DefaultAccess, IAccess
 {
-	protected override string Table { get; } = "Seat";
+	public static string Table { get; } = "Seat";
 
 	public override void CreateTable()
 	{
@@ -20,15 +20,20 @@ public class SeatAccess : DefaultAccess
 
 	public void Write(SeatModel seat)
 	{
-        string sql = $@"INSERT INTO {Table} 
+		string sql = $@"INSERT INTO {Table} 
             (roomId, row, seatNumber, seatPriority)
             VALUES (@RoomId, @Row, @SeatNumber, @SeatPriority)";
-        connection.Execute(sql, seat);
+		connection.Execute(sql, seat);
 	}
 
 	public List<SeatModel> GetAllSeatsByRoomId(Int64 roomId)
 	{
-        string sql = $"SELECT * FROM {Table} WHERE roomId = @RoomId";
-        return connection.Query<SeatModel>(sql, new { RoomId = roomId }).AsList();
+		string sql = $"SELECT * FROM {Table} WHERE roomId = @RoomId";
+		return connection.Query<SeatModel>(sql, new { RoomId = roomId }).AsList();
+	}
+
+	public List<SeatModel> GetTakenSeatsByTimetableId(Int64 timetableId)
+	{
+
 	}
 }
