@@ -37,7 +37,8 @@ public class SeatAccess : DefaultAccess, IAccess
 		string sql = $@"
 			SELECT s.* FROM {Table} s
 				JOIN SeatReservation sr ON s.id = sr.seatId
-				WHERE sr.timetableId = @TimetableId";
+				WHERE sr.timetableId = @TimetableId
+		";
 
 		return connection.Query<SeatModel>(sql, new { TimetableId = timetableId }).AsList();
 	}
