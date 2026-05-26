@@ -1,5 +1,7 @@
-public static class Program {
-    public static void Main() {
+public static class Program
+{
+    public static void Main()
+    {
         CreateMoviesTable();
         CreateAccountsTable();
         CreateRoomsTable();
@@ -10,9 +12,10 @@ public static class Program {
         CreateConsumableTable();
         CreateConsumableOrderTable();
         CreateMenuItemTable();
+        CreateSeatReservationTable();
     }
 
-    public static void CreateMoviesTable()
+    public static Task CreateMoviesTable()
     {
         List<MovieModel> moviesList = [
             new MovieModel(1, "The Shawshank Redemption", 142, "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.", "Frank Darabont", 15, "Drama", 1994),
@@ -27,9 +30,11 @@ public static class Program {
         {
             movies.Write(movie);
         }
+
+        return Task.CompletedTask;
     }
 
-    public static void CreateAccountsTable()
+    public static Task CreateAccountsTable()
     {
         AccountsAccess accounts = new();
         accounts.CreateTable();
@@ -45,9 +50,11 @@ public static class Program {
             account.Password = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(account.Password));
             accounts.Write(account);
         }
+
+        return Task.CompletedTask;
     }
 
-    public static void CreateRoomsTable()
+    public static Task CreateRoomsTable()
     {
         RoomsAccess rooms = new();
         rooms.CreateTable();
@@ -62,13 +69,14 @@ public static class Program {
         {
             rooms.Write(room);
         }
+        return Task.CompletedTask;
     }
 
-    public static void CreateTimetablesTable()
+    public static Task CreateTimetablesTable()
     {
         TimetablesAccess timetables = new();
         timetables.CreateTable();
-        
+
         DateTime baseDate = DateTime.Today;
 
         // Movie 1
@@ -125,9 +133,10 @@ public static class Program {
         {
             timetables.Write(timetable);
         }
+        return Task.CompletedTask;
     }
 
-    public static void CreateSeatsTable()
+    public static Task CreateSeatsTable()
     {
         SeatAccess seats = new();
         seats.CreateTable();
@@ -145,9 +154,10 @@ public static class Program {
                 seats.Write(seat);
             }
         }
+        return Task.CompletedTask;
     }
 
-    public static void CreateReservationTable()
+    public static Task CreateReservationTable()
     {
         ReservationAccess reservation = new();
         reservation.CreateTable();
@@ -163,27 +173,35 @@ public static class Program {
         {
             reservation.Write(item);
         }
+
+        return Task.CompletedTask;
     }
 
-    public static void CreateTicketTable()
+    public static Task CreateTicketTable()
     {
         TicketAccess ticket = new();
         ticket.CreateTable();
+
+        return Task.CompletedTask;
     }
 
-    public static void CreateConsumableTable()
+    public static Task CreateConsumableTable()
     {
         ConsumableAccess consumable = new();
         consumable.CreateTable();
+
+        return Task.CompletedTask;
     }
 
-    public static void CreateConsumableOrderTable()
+    public static Task CreateConsumableOrderTable()
     {
         ConsumableOrderAccess consumable = new();
         consumable.CreateTable();
+
+        return Task.CompletedTask;
     }
 
-    public static void CreateMenuItemTable()
+    public static Task CreateMenuItemTable()
     {
         MenuItemsAccess menuItem = new();
         menuItem.CreateTable();
@@ -202,5 +220,14 @@ public static class Program {
         {
             menuItem.Write(item);
         }
+
+        return Task.CompletedTask;
+    }
+
+    public static Task CreateSeatReservationTable()
+    {
+        SeatReservationAccess seatReservation = new();
+        seatReservation.CreateTable();
+        return Task.CompletedTask;
     }
 }
