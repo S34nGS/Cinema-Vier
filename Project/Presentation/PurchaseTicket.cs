@@ -58,8 +58,10 @@ static class PurchaseTicket
             return null;
         }
 
+        SeatSelection seatSelection = new();
+
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
-        List<SeatModel> selectedSeats = SeatSelection.Start(selectedTimetable);
+        List<SeatModel> selectedSeats = seatSelection.Start(selectedTimetable);
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
