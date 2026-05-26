@@ -49,6 +49,7 @@ Confirm: Enter
 
             input = Console.ReadKey().Key;
 
+            // TODO: make sure the user cant get out of the map
             if (UiHelper.IsDownKey(input) && Location["row"] < Seats.GetLength(0))
             {
                 Location["row"]++;
@@ -208,6 +209,7 @@ Confirm: Enter
         Console.ResetColor();
     }
 
+    // TODO: fix this
     public void ToggleSeat(Int64 row, Int64 col)
     {
         if(selectedSeats.FirstOrDefault(x => x.Row == row && x.SeatNumber == col) == null)
