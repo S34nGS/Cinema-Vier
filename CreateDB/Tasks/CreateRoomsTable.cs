@@ -6,9 +6,9 @@ public static class CreateRoomsTable
         rooms.CreateTable();
 
         List<RoomModel> roomsList = [
-            new RoomModel(1, "Standard", "7.1 Surround Sound", 14, 12),
-            new RoomModel(2, "IMAX", "IMAX Sound System", 20, 30),
-            new RoomModel(3, "Dolby Cinema", "Dolby Atmos", 19, 18),
+            new RoomModel(1, "Standard", "7.1 Surround Sound"),
+            new RoomModel(2, "Dolby Cinema", "Dolby Atmos"),
+            new RoomModel(3, "IMAX", "IMAX Sound System"),
         ];
 
         foreach (RoomModel room in roomsList)
