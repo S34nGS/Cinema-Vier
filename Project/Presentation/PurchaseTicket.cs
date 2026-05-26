@@ -59,11 +59,7 @@ static class PurchaseTicket
         }
 
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
-        List<SeatModel> selectedSeats = [];
-        if (selectedTimetable.RoomId == 1)
-        {
-            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
-        }
+        List<SeatModel> selectedSeats = SeatSelection.Start(selectedTimetable);
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
