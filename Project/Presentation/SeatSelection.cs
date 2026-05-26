@@ -181,53 +181,6 @@ public static class SeatSelection
 
     public static void WriteSmallRoom(SeatModel[,] seats)
     {
-        string output = "";
-        for (int row = 0; row < seats.GetLength(0); row++)
-        {
-            for (int col = 0; col < seats.GetLength(1); col++)
-            {
-                if (seats[row, col] == null)
-                {
-                    output += " ";
-                }
-                else
-                {
-                    output += "░";
-                }
-                output += " ";
-            }
-            output += Environment.NewLine + Environment.NewLine;
-        }
-
-        Console.WriteLine(output);
-    }
-
-    public static void WriteMediumRoom(SeatModel[,] seats)
-    {
-        string output = "";
-        for (int row = 0; row < seats.GetLength(0); row++)
-        {
-            for (int col = 0; col < seats.GetLength(1); col++)
-            {
-                if (seats[row, col] == null)
-                {
-                    output += " ";
-                }
-                else
-                {
-                    output += "░";
-                }
-                output += " ";
-            }
-            output += Environment.NewLine + Environment.NewLine;
-        }
-
-        Console.WriteLine(output);
-    }
-
-    public static void WriteBigRoom(SeatModel[,] seats)
-    {
-        string output = "";
         for (int row = 0; row < seats.GetLength(0); row++)
         {
             for (int col = 0; col < seats.GetLength(1); col++)
@@ -235,42 +188,94 @@ public static class SeatSelection
                 SeatModel? seat = seats[row, col];
                 if (seat == null)
                 {
-                    output += " ";
+                    Console.Write(" ");
                 }
                 else
                 {
-                    if (seat.SeatPriority == 3)
-                    {
-                        output += "░".Colorize("red");
-                    }
-                    else if (seat.SeatPriority == 2)
-                    {
-                        output += "░".Colorize("yellow");
-                    }
-                    else if (seat.SeatPriority == 1)
-                    {
-                        output += "░".Colorize("blue");
-                    }
-                    // output += "░";
-                    Console.ResetColor();
+                    PrintSeat(seat);
                 }
-                output += " ";
+                Console.Write(" ");
             }
-            output += Environment.NewLine + Environment.NewLine;
+            Console.WriteLine();
         }
-
-        Console.WriteLine(output);
     }
 
-    public static string Colorize(this string str, string color)
+    public static void WriteMediumRoom(SeatModel[,] seats)
     {
-        return color.ToLower() switch
+        for (int row = 0; row < seats.GetLength(0); row++)
         {
-            "red" => $@"\e[0;31m${str}",
-            "orange" => $@"\e[0;33m{str}",
-            "yellow" => $@"\e[0;33m{str}",
-            "blue" => $@"\e[0;94m{str}",
-            _ => str
-        };
+            for (int col = 0; col < seats.GetLength(1); col++)
+            {
+                SeatModel? seat = seats[row, col];
+                if (seat == null)
+                {
+                    Console.Write(" ");
+                }
+                else
+                {
+                    PrintSeat(seat);
+                }
+                Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public static void WriteBigRoom(SeatModel[,] seats)
+    {
+        for (int row = 0; row < seats.GetLength(0); row++)
+        {
+            for (int col = 0; col < seats.GetLength(1); col++)
+            {
+                SeatModel? seat = seats[row, col];
+                if (seat == null)
+                {
+                    Console.Write(" ");
+                }
+                else
+                {
+                    PrintSeat(seat);
+                }
+                Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+    }
+
+    public static void PrintSeat(SeatModel seat, bool available = true, bool selected = false, bool hovering = false)
+    {
+
+        if (seat.SeatPriority == 3)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+        }
+        else if (seat.SeatPriority == 2)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+        }
+        else if (seat.SeatPriority == 1)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+        }
+
+        if(hovering)
+        {
+            Console.BackgroundColor = ConsoleColor.Gray;
+        }
+
+        if(available)
+        {
+            Console.Write("☐");
+        }
+        else if (selected)
+        {
+            Console.Write("■");
+        }
+        else
+        {
+            Console.Write("☒");
+        }
+
+        Console.ResetColor();
     }
 }
