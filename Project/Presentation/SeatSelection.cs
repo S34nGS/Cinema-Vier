@@ -26,6 +26,14 @@ public class SeatSelection
         do
         {
             Console.Clear();
+
+            Console.WriteLine(@$"
+Selected seats = {selectedSeats.Count}
+Select: Space
+Move: Arrows
+Confirm: Enter
+            ");
+
             if (Seats.Length < 300)
             {
                 WriteSmallRoom();
