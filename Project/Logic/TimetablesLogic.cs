@@ -46,9 +46,6 @@ public static class TimetablesLogic
     }
 
 
-
-
-
     // Getting methods
     public static List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
     {
@@ -120,8 +117,6 @@ public static class TimetablesLogic
     }
 
 
-
-
     // Validation methods
     public static bool ValidateTitleString(string title)
     {
@@ -189,9 +184,6 @@ public static class TimetablesLogic
     }
 
 
-
-
-
     // CRUD methods
     public static void AddTimetable(TimetableModel timetable)
     {
@@ -202,8 +194,6 @@ public static class TimetablesLogic
     {
         _access.Update(timetable);
     }
-
-
 
 
     // Admin methods
