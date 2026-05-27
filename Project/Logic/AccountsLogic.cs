@@ -87,6 +87,24 @@ public class AccountsLogic
         return null;
     }
 
+    public List<AccountModel> GetAllCustomerAccounts()
+    {
+        return _access.GetAllCustomerAccounts();
+    }
+
+    public AccountModel GetCustomerAsAdmin(string header)
+    {
+        List<AccountModel> rawAccounts = GetAllCustomerAccounts();
+        List<string> accounts = [];
+        foreach(AccountModel account in rawAccounts)
+        {
+            accounts.Add(account.FullName);
+        }
+
+        int selected = UiHelper.SelectionMenu(accounts, header);
+        return rawAccounts[selected];
+    }
+
     public void Login(AccountModel account)
     {
         CurrentAccount = account;
@@ -95,5 +113,30 @@ public class AccountsLogic
     public static void Logout()
     {
         CurrentAccount = null;
+        MoviesLogic.ClearRecommendations();
+    }
+
+    public static bool IsBirthday(AccountModel account)
+    {
+        // convert saved date of birth number back to a date
+        DateTime dateOfBirth = TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
+
+        return dateOfBirth.Day == DateTime.Today.Day &&
+               dateOfBirth.Month == DateTime.Today.Month;
+    }
+
+    public static bool CanUseFreePopcornGift(AccountModel account)
+    {
+        // check if today is birthday and gift is not used this year
+        return IsBirthday(account) &&
+               account.FreePopcornGiftUsedYear != DateTime.Today.Year;
+    }
+
+    public void UseFreePopcornGift(AccountModel account)
+    {
+        account.FreePopcornGiftUsedYear = DateTime.Today.Year;
+
+        // update only the gift usage year
+        _access.UpdateFreePopcornGiftUsedYear(account);
     }
 }

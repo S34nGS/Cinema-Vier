@@ -8,6 +8,14 @@ static class Menu
         string header = (AccountsLogic.CurrentAccount != null)
             ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
             : "Welcome to Cinema Vier! Please select an option:";
+
+        // check if logged in user has a birthday gift available
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        {
+            // show birthday gift message in the main menu
+            header += "\nHappy birthday! You have a free popcorn gift available today.";
+        }
+
         List<string> menu = [];
 
         if (AccountsLogic.CurrentAccount is null)
@@ -16,7 +24,7 @@ static class Menu
         }
         else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
         {
-            menu = ["Add Movie", "Edit Movie", "Disable Movie", "Logout"];
+            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
         }
         else
         {
@@ -86,6 +94,16 @@ static class Menu
         else if (selected == menu.IndexOf("Disable Movie"))
         {
             DisableMovie.Start();
+            Start();
+        }
+        else if (selected == menu.IndexOf("Manage Timetables"))
+        {
+            Timetables.Start();
+            Start();
+        }
+        else if (selected == menu.IndexOf("Book Movie For Customer"))
+        {
+            AdminBookMovie.Start();
             Start();
         }
         else if (selected == menu.IndexOf("Logout"))

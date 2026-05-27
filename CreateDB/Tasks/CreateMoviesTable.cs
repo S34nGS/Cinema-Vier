@@ -1,0 +1,24 @@
+public static class CreateMoviesTable
+{
+    public static Task Execute()
+    {
+
+        List<MovieModel> moviesList = [
+            new MovieModel(1, "The Shawshank Redemption", 142, "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.", "Frank Darabont", 15, "Drama", 1994),
+            new MovieModel(2, "The Godfather", 175, "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", "Francis Ford Coppola", 18, "Crime, Drama", 1972),
+            new MovieModel(3, "The Dark Knight", 152, "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.", "Christopher Nolan", 15, "Action, Crime, Drama", 2008),
+            new MovieModel(4, "Toy Story", 81, "A cowboy toy's world is turned upside down when a new space ranger toy arrives.", "John Lasseter", 6, "Animation", 1995),
+            new MovieModel(5, "Inception", 148, "A thief who steals secrets through dreams is given a chance to have his past erased.", "Christopher Nolan", 12, "Thriller", 2010),
+        ];
+
+        MoviesAccess movies = new();
+        movies.CreateTable();
+
+        foreach (MovieModel movie in moviesList)
+        {
+            movies.Write(movie);
+        }
+
+        return Task.CompletedTask;
+    }
+}
