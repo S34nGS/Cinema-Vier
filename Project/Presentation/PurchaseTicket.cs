@@ -377,18 +377,22 @@ Final total: €{finalTotal:0.00}
     static bool AcceptTermsAndConditions()
     {
         // show terms before payment
-            Console.Clear();
-            Console.WriteLine("=== Terms and Conditions ===");
-            Console.WriteLine();
-            Console.WriteLine("By continuing, you agree to the cinema rules and payment conditions.");
-            Console.WriteLine("Tickets are only valid for the selected movie, date and time.");
-            Console.WriteLine("The user is responsible for entering correct information.");
-            Console.WriteLine();
+    List<string> menu =
+    [
+        "Accept terms and continue",
+        "Cancel purchase"
+    ];
 
-            List<string> menu = ["Accept terms and continue", "Cancel purchase"];
+    string header = @"
+=== Terms and Conditions ===
 
-            int selected = UiHelper.SelectionMenu(menu, "Do you accept the terms and conditions?");
+By continuing, you agree to the cinema rules and payment conditions.
 
-            return selected == menu.IndexOf("Accept terms and continue");
+Tickets are only valid for the selected movie, date and time.
+The user is responsible for entering correct information.
+Food and drinks cannot be refunded after purchase.
+";
+    int selected = UiHelper.SelectionMenu(menu, header);
+    return selected == 0;
     }
 }
