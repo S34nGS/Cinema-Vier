@@ -1,8 +1,8 @@
 using Dapper;
 
-public class ReservationAccess : DefaultAccess
+public class ReservationAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Reservation";
+    public static string Table { get; } = "Reservation";
 
     public override void CreateTable()
     {
@@ -19,10 +19,19 @@ public class ReservationAccess : DefaultAccess
             )";
         connection.Execute(sql);
     }
-    public long Write(ReservationModel reservation)
+    public ReservationModel Write(ReservationModel reservation)
     {
-        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId); SELECT last_insert_rowid();";
-        return connection.ExecuteScalar<long>(sql, reservation);
+        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId)";
+        connection.Execute(sql, reservation);
+        reservation.Id = connection.QuerySingle<int>("SELECT last_insert_rowid()");
+
+        foreach (SeatModel seat in reservation.Seats)
+        {
+            SeatReservationAccess seatReservationAccess = new();
+            seatReservationAccess.Write(seat.Id, reservation.Id, reservation.TimeTableId);
+        }
+
+        return reservation;
     }
     public List<ReservationModel> GetReservationsByUserId(long userId)
     {
