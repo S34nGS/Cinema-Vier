@@ -36,4 +36,9 @@ public class SeatAccess : DefaultAccess
     	string sql = $"SELECT * FROM {Table} WHERE id = @SeatId";
     	return connection.QueryFirstOrDefault<SeatModel>(sql, new { SeatId = seatId });
 	}
+
+	public List<SeatModel> GetTakenSeatsByTimetableId(Int64 timetableId)
+	{
+		return [];
+	}
 }
