@@ -1,9 +1,9 @@
 using Dapper;
 
 
-public class AccountsAccess : DefaultAccess
+public class AccountsAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Account";
+    public static string Table { get; } = "Account";
 
     public override void CreateTable()
     {
@@ -31,6 +31,12 @@ public class AccountsAccess : DefaultAccess
     {
         string sql = $"SELECT * FROM {Table} WHERE email = @Email";
         return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email });
+    }
+
+    public List<AccountModel> GetAllCustomerAccounts()
+    {
+        string sql = $"SELECT * FROM {Table} WHERE IsAdmin = 0";
+        return connection.Query<AccountModel>(sql).AsList();
     }
 
     public void Update(AccountModel account)
