@@ -37,7 +37,6 @@ public static class CinemaInfo
             else
             {
                 // Back handled by UiHelper
-                Menu.Start();
                 return;
             }
         }
