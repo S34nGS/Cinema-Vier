@@ -12,4 +12,26 @@ public class SeatLogic
         SeatAccess access = new SeatAccess();
         return access.GetById(seatId);
     }
+
+    public SeatModel[,] GetSeatsInLayoutArray(Int64 room)
+    {
+        List<SeatModel> localSeats = GetSeatsByRoomId(room);
+
+        Int64 maxRow = localSeats.Max(x => x.Row);
+        Int64 maxSeatNr = localSeats.Max(x => x.SeatNumber);
+
+        SeatModel[,] seats = new SeatModel[maxRow, maxSeatNr];
+
+        foreach (SeatModel seat in localSeats)
+        {
+            seats[seat.Row - 1, seat.SeatNumber - 1] = seat;
+        }
+
+        return seats;
+    }
+
+    public List<SeatModel> GetUnavailableSeatsByTimetableId(Int64 timetableId)
+    {
+        return _access.GetTakenSeatsByTimetableId(timetableId);
+    }
 }

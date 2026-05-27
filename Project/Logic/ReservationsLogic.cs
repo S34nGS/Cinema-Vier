@@ -40,7 +40,7 @@ public static class ReservationsLogic
         return pastReservations;
     }
 
-    public static long CreateReservation(ReservationModel reservation)
+    public static ReservationModel CreateReservation(ReservationModel reservation)
     {
         return _access.Write(reservation);
     }

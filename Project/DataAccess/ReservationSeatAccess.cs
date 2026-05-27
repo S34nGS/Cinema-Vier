@@ -2,7 +2,7 @@ using Dapper;
 
 public class ReservationSeatAccess : DefaultAccess
 {
-    protected override string Table { get; } = "ReservationSeat";
+    private static string Table { get; } = "ReservationSeat";
 
     public override void CreateTable()
     {
