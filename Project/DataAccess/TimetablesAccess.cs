@@ -1,8 +1,8 @@
 using Dapper;
 
-public class TimetablesAccess : DefaultAccess
+public class TimetablesAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Timetable";
+    public static string Table { get; } = "Timetable";
 
     public override void CreateTable()
     {

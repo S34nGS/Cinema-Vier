@@ -1,9 +1,9 @@
 using Dapper;
 
 
-public class AccountsAccess : DefaultAccess
+public class AccountsAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Account";
+    public static string Table { get; } = "Account";
 
     public override void CreateTable()
     {
