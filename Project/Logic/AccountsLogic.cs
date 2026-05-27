@@ -96,7 +96,7 @@ public class AccountsLogic
     {
         List<AccountModel> rawAccounts = GetAllCustomerAccounts();
         List<string> accounts = [];
-        foreach(var account in rawAccounts)
+        foreach(AccountModel account in rawAccounts)
         {
             accounts.Add(account.FullName);
         }
