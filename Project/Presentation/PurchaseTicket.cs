@@ -91,7 +91,7 @@ static class PurchaseTicket
         if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
         {
             // add free popcorn as birthday gift
-            OrderItemModel freePopcornGift = new OrderItemModel(
+            OrderItemModel freePopcornGift = new(
                 0,
                 "🎁 Birthday gift: Free popcorn",
                 0.00m,
@@ -100,7 +100,7 @@ static class PurchaseTicket
 
             orderedMenuItems.Add(freePopcornGift);
 
-            AccountsLogic accountsLogic = new AccountsLogic();
+            AccountsLogic accountsLogic = new();
             accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount);
 
             UiHelper.HoldUser("Happy birthday! A free popcorn gift has been added to your order.");
