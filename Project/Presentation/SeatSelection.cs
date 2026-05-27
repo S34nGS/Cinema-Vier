@@ -1,5 +1,3 @@
-using System.Security.Cryptography.X509Certificates;
-
 public class SeatSelection
 {
     private SeatLogic _logic = new();
@@ -209,16 +207,16 @@ Confirm: Enter
         Console.ResetColor();
     }
 
-    // TODO: fix this
     public void ToggleSeat(Int64 row, Int64 col)
     {
+        SeatModel l_seat = Seats.Cast<SeatModel>().First(x => x != null && x.Row == row && x.SeatNumber == col);
         if(selectedSeats.FirstOrDefault(x => x.Row == row && x.SeatNumber == col) == null)
         {
-            selectedSeats.Add(Seats.Cast<SeatModel>().First(x => x.Row == row && x.SeatNumber == col));
+            selectedSeats.Add(l_seat);
         }
         else
         {
-            selectedSeats = selectedSeats.Where(x => x.Row != row && x.SeatNumber != col).ToList();
+            selectedSeats = selectedSeats.Where(x => x != null && x.Id != l_seat.Id).ToList();
         }
     }
 }
