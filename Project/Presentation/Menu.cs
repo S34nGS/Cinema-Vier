@@ -8,6 +8,14 @@ static class Menu
         string header = (AccountsLogic.CurrentAccount != null)
             ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
             : "Welcome to Cinema Vier! Please select an option:";
+
+        // check if logged in user has a birthday gift available
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        {
+            // show birthday gift message in the main menu
+            header += "\nHappy birthday! You have a free popcorn gift available today.";
+        }
+
         List<string> menu = [];
 
         if (AccountsLogic.CurrentAccount is null)
@@ -43,16 +51,12 @@ static class Menu
                     Start();
                 }
 
-                if (AccountsLogic.CurrentAccount != null)
+                PurchaseTicket.SetUpDateMenu(movie);
+                UiHelper.HoldUser(movie.ToString());
+                if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                 {
-                    PurchaseTicket.SetUpDateMenu(movie);
-                    UiHelper.HoldUser(movie.ToString());
-
-                    if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
-                    {
                         UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
                         Start();
-                    }
                 }
 
                 while (true)
