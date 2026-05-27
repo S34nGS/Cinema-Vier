@@ -191,7 +191,7 @@ Confirm: Enter
             Console.BackgroundColor = ConsoleColor.DarkGray;
         }
 
-        if(available)
+        if(available && !selected)
         {
             Console.Write("☐");
         }
