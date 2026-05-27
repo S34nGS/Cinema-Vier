@@ -46,9 +46,9 @@ Confirm: Enter
             }
 
             Console.WriteLine(@$"
-=={new String('=', Seats.GetLength(1) * 2)}==
-|{new String(' ', Seats.GetLength(1) - 2)}Screen{new String(' ', Seats.GetLength(1) - 2)}|
-=={new String('=', Seats.GetLength(1) * 2)}==");
+╔{new String('═', Seats.GetLength(1) * 2 + 2)}╗
+║{new String(' ', Seats.GetLength(1) - 2)}Screen{new String(' ', Seats.GetLength(1) - 2)}║
+╚{new String('═', Seats.GetLength(1) * 2 + 2)}╝");
 
 
             input = Console.ReadKey().Key;
