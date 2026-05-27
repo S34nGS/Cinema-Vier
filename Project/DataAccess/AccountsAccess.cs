@@ -33,6 +33,12 @@ public class AccountsAccess : DefaultAccess, IAccess
         return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email });
     }
 
+    public List<AccountModel> GetAllCustomerAccounts()
+    {
+        string sql = $"SELECT * FROM {Table} WHERE IsAdmin = 0";
+        return connection.Query<AccountModel>(sql).AsList();
+    }
+
     public void Update(AccountModel account)
     {
         string sql =

@@ -11,6 +11,7 @@ public class TimetablesAccess : DefaultAccess, IAccess
             movieId INTEGER NOT NULL,
             roomId INTEGER NOT NULL,
             startTime INTEGER NOT NULL,
+            isActive INTEGER NOT NULL,
 
             FOREIGN KEY (movieId) REFERENCES Movie(id),
             FOREIGN KEY (roomId) REFERENCES Room(id)
@@ -21,15 +22,15 @@ public class TimetablesAccess : DefaultAccess, IAccess
     public void Write(TimetableModel timetable)
     {
         string sql = $@"INSERT INTO {Table}
-            (movieId, roomId, startTime) 
-            VALUES (@MovieId, @RoomId, @StartTime)";
+            (movieId, roomId, startTime, isActive) 
+            VALUES (@MovieId, @RoomId, @StartTime, @IsActive)";
         connection.Execute(sql, timetable);
     }
 
     public void Update(TimetableModel timetable)
     {
         string sql = $@"UPDATE {Table}
-            SET movieId = @MovieId, roomId = @RoomId, startTime = @StartTime
+            SET movieId = @MovieId, roomId = @RoomId, startTime = @StartTime, isActive = @IsActive
             WHERE id = @Id";
         connection.Execute(sql, timetable);
     }
@@ -58,6 +59,18 @@ public class TimetablesAccess : DefaultAccess, IAccess
         return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
     }
 
+    public List<TimetableModel> GetAllTimetablesFromDate(Int64 startTime)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime ORDER BY id";
+        return connection.Query<TimetableModel>(sql, new {StartTime = startTime}).AsList();
+    }
+
+    public List<TimetableModel> GetSpecificTimetablesFromDate(Int64 startTime, Int64 movieId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime AND movieId = @MovieId ORDER BY id";
+        return connection.Query<TimetableModel>(sql, new {StartTime = startTime, MovieId = movieId}).AsList();
+    }
+    
     public List<TimetableModel> GetTimetablesByDateRange(Int64 startTime, Int64 endTime)
     {
         string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime AND startTime <= @EndTime";

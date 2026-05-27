@@ -19,7 +19,7 @@ static class PurchaseTicket
         "IBAN number (for example: NL12 ABNA 1234 5678 90)"
     ];
 
-    public static TicketModel? Start(MovieModel movie)
+    public static TicketModel? Start(MovieModel movie, AccountModel customer = null)
     {
         // reset date menu
         DateMenu.Clear();
@@ -127,7 +127,7 @@ static class PurchaseTicket
             finalTotal
         );
 
-        if (AccountsLogic.CurrentAccount == null)
+        if (AccountsLogic.CurrentAccount == null && customer == null)
         {
             UserLogin.Start();
         }
@@ -182,7 +182,7 @@ static class PurchaseTicket
         }
 
         UiHelper.SelectionMenu([$"Payment successful."], "");
-        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, (customer != null) ? customer.Id : AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
