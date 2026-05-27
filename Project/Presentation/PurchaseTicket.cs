@@ -57,13 +57,11 @@ static class PurchaseTicket
         {
             return null;
         }
-        
+
+        SeatSelection seatSelection = new();
+
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
-        List<SeatModel> selectedSeats = [];
-        if(selectedTimetable.RoomId == 1)
-        {
-            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
-        }
+        List<SeatModel> selectedSeats = seatSelection.Start(selectedTimetable);
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.Parse(dateTimeString);
@@ -157,9 +155,9 @@ static class PurchaseTicket
                     paymentInfo,
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
-         
-             bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
-             invalidInputs = InValidMessage(isValidInput, "credit card");
+
+                bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
+                invalidInputs = InValidMessage(isValidInput, "credit card");
             } while (invalidInputs != "");
         }
         else if (selectedPaymentMethodString == "IBAN")
@@ -176,27 +174,16 @@ static class PurchaseTicket
                     invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
                 );
 
-             bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
-             invalidInputs = InValidMessage(isValidInput, "iban");
+                bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
+                invalidInputs = InValidMessage(isValidInput, "iban");
 
 
             } while (invalidInputs != "");
         }
 
         UiHelper.SelectionMenu([$"Payment successful."], "");
-        if (selectedSeats.Count > 0)
-        {
-        // create only one reservation for this payment.
-            long reservationId = ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id));
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
-            // save all selected seats for this reservation
-            ReservationSeatAccess reservationSeatAccess = new();
-
-            foreach(SeatModel seat in selectedSeats)
-            {
-                reservationSeatAccess.Write(new ReservationSeatModel(reservationId, seat.Id));
-            }
-        }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 
@@ -326,42 +313,42 @@ Final total: €{finalTotal:0.00}
     public static string InValidMessage(bool[] isValidInput, string paymentMethod)
     {
         string message = "";
-        if(paymentMethod == "credit card")
+        if (paymentMethod == "credit card")
         {
-            for(int i = 0; i < isValidInput.Length; i++)
+            for (int i = 0; i < isValidInput.Length; i++)
             {
-                if(isValidInput[i] == false)
+                if (isValidInput[i] == false)
                 {
-                    if(CreditCardInput[i] == "Cardholder name")
+                    if (CreditCardInput[i] == "Cardholder name")
                     {
                         message += "Invalid name, ";
                     }
-                    else if(CreditCardInput[i] == "Card number (13-19 digits)")
+                    else if (CreditCardInput[i] == "Card number (13-19 digits)")
                     {
                         message += "Invalid card number, ";
                     }
-                    else if(CreditCardInput[i] == "Expiration date (MM/YY)")
+                    else if (CreditCardInput[i] == "Expiration date (MM/YY)")
                     {
                         message += "Invalid date, ";
                     }
-                    else if(CreditCardInput[i] == "CVC/CVV code (3-4 digits)")
+                    else if (CreditCardInput[i] == "CVC/CVV code (3-4 digits)")
                     {
                         message += "Invalid CVC/CVV code, ";
                     }
                 }
             }
         }
-        else if(paymentMethod == "iban")
+        else if (paymentMethod == "iban")
         {
-            for(int i = 0; i < isValidInput.Length; i++)
+            for (int i = 0; i < isValidInput.Length; i++)
             {
-                if(isValidInput[i] == false)
+                if (isValidInput[i] == false)
                 {
-                    if(CreditCardInput[i] == "Cardholder name")
+                    if (CreditCardInput[i] == "Cardholder name")
                     {
                         message += "Invalid name, ";
                     }
-                    else if(CreditCardInput[i] == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+                    else if (CreditCardInput[i] == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
                     {
                         message += "Invalid IBAN number, ";
                     }
