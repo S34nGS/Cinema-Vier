@@ -143,25 +143,17 @@ public static class TimetablesLogic
 
     public static bool ValidateDateString(string date)
     {
-        DateTime today = DateTime.Today;
-        DateTime convertedDate = ConvertStringToDateTime(date);
-
         if (!DateTime.TryParseExact(
             date,
-            "dd-MM-yyyy", 
+            "dd-MM-yyyy",
             CultureInfo.InvariantCulture,
             DateTimeStyles.None,
-            out DateTime dateOutput))
+            out DateTime parsedDate))
         {
             return false;
-        }
+    }
 
-        if (convertedDate < today)
-        {
-            return false;
-        }
-
-        return true;
+    return parsedDate.Date >= DateTime.Today;
     }
 
     public static bool ValidateTimeString(string time)
