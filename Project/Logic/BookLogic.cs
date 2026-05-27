@@ -13,7 +13,7 @@ public static class BookLogic
             UiHelper.HoldUser(movie.ToString());
             if (!MoviesLogic.IsOldEnough(movie, account))
             {
-                    UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
+                    UiHelper.HoldUser($"The customer must be {movie.AgeRating}+ to watch this movie.");
                     BookAsAdmin(header);
             }
 
