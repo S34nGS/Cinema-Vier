@@ -1,8 +1,8 @@
 using Dapper;
 
-public class MoviesAccess : DefaultAccess
+public class MoviesAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Movie";
+    public static string Table { get; } = "Movie";
 
     public override void CreateTable()
     {

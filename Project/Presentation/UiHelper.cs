@@ -182,14 +182,14 @@ public static class UiHelper
         }
     }
 
-    public static Dictionary<string, string> InputForm(IEnumerable<string> titles, string formTitle = "Input Form",
-        int maxLength = 32)
+    public static Dictionary<string, string> InputForm(List<string> titles, string formTitle = "Input Form",
+        int maxLength = 32, List<string> filledFields = null)
     {
         Dictionary<string, string> inputs = new();
 
-        foreach (string title in titles)
+        for (int i = 0; i < titles.Count(); i++)
         {
-            inputs[title] = "";
+            inputs[titles[i]] = filledFields != null ? filledFields[i] : "";
         }
 
         return InputForm(inputs, formTitle, maxLength);

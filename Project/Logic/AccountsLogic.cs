@@ -87,6 +87,24 @@ public class AccountsLogic
         return null;
     }
 
+    public List<AccountModel> GetAllCustomerAccounts()
+    {
+        return _access.GetAllCustomerAccounts();
+    }
+
+    public AccountModel GetCustomerAsAdmin(string header)
+    {
+        List<AccountModel> rawAccounts = GetAllCustomerAccounts();
+        List<string> accounts = [];
+        foreach(AccountModel account in rawAccounts)
+        {
+            accounts.Add(account.FullName);
+        }
+
+        int selected = UiHelper.SelectionMenu(accounts, header);
+        return rawAccounts[selected];
+    }
+
     public void Login(AccountModel account)
     {
         CurrentAccount = account;
@@ -95,6 +113,7 @@ public class AccountsLogic
     public static void Logout()
     {
         CurrentAccount = null;
+        MoviesLogic.ClearRecommendations();
     }
 
     public static bool IsBirthday(AccountModel account)

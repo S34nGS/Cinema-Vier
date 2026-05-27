@@ -19,7 +19,7 @@ static class PurchaseTicket
         "IBAN number (for example: NL12 ABNA 1234 5678 90)"
     ];
 
-    public static TicketModel? Start(MovieModel movie)
+    public static TicketModel? Start(MovieModel movie, AccountModel customer = null)
     {
         // reset date menu
         DateMenu.Clear();
@@ -58,12 +58,10 @@ static class PurchaseTicket
             return null;
         }
 
+        SeatSelection seatSelection = new();
+
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
-        List<SeatModel> selectedSeats = [];
-        if (selectedTimetable.RoomId == 1)
-        {
-            selectedSeats = SeatSelection.Start(selectedTimetable.RoomId);
-        }
+        List<SeatModel> selectedSeats = seatSelection.Start(selectedTimetable);
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", null);
@@ -148,7 +146,7 @@ static class PurchaseTicket
             finalTotal
         );
 
-        if (AccountsLogic.CurrentAccount == null)
+        if (AccountsLogic.CurrentAccount == null && customer == null)
         {
             UserLogin.Start();
         }
@@ -203,12 +201,8 @@ static class PurchaseTicket
         }
 
         UiHelper.SelectionMenu([$"Payment successful."], "");
-        foreach (SeatModel seat in selectedSeats)
-        {
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, (customer != null) ? customer.Id : AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
-            // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
-            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
-        }
         return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
     }
 

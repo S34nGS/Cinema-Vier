@@ -1,6 +1,8 @@
 public static class MoviesLogic
 {
     private static MoviesAccess _access = new();
+    private static List<string> _cachedRecommendations = null;
+
     public static List<string> GetMovieTitles()
     {
         List<string> Titles = [];
@@ -51,6 +53,14 @@ public static class MoviesLogic
         return _access.GetByTitle(title);
     }
 
+    public static MovieModel PickMovieToManage(string header = null)
+    {
+        List<string> menu = MoviesLogic.GetMovieTitles();
+        int selected = UiHelper.SelectionMenu(menu, header);
+
+        return MoviesLogic.GetMovieByTitle(menu[selected]);
+    }
+
     public static void DisableMovie(MovieModel movie)
     {
         _access.Update(movie);
@@ -64,5 +74,66 @@ public static class MoviesLogic
     public static void EditMovie(MovieModel movie)
     {
         _access.Update(movie);
+    }
+
+    public static List<string> GetRecommendedMovies()
+    {
+        if (_cachedRecommendations != null) return _cachedRecommendations;
+
+        List<ReservationModel> pastReservations = ReservationsLogic.GetPastReservations(AccountsLogic.CurrentAccount.Id);
+
+        if (pastReservations.Count == 0) return new List<string>();
+
+        List<string> userGenres = new List<string>();
+        List<Int64> watchedMovieIds = new List<Int64>();
+
+        foreach (ReservationModel reservation in pastReservations)
+        {
+            TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
+            MovieModel movie = GetById(timetable.MovieId);
+            watchedMovieIds.Add(movie.Id);
+
+            string[] genres = movie.Genre.Split(',');
+            foreach (string genre in genres)
+            {
+                string trimmedGenre = genre.Trim();
+                if (!userGenres.Contains(trimmedGenre))
+                {
+                    userGenres.Add(trimmedGenre);
+                }
+            }
+        }
+
+        List<MovieModel> allMovies = _access.GetAllMovies();
+        List<string> recommendedMovies = new List<string>();
+
+        foreach (MovieModel movie in allMovies)
+        {
+            if (movie.IsActive != 1 || watchedMovieIds.Contains(movie.Id)) continue;
+
+            string[] movieGenres = movie.Genre.Split(',');
+            bool foundMatch = false;
+            foreach (string movieGenre in movieGenres)
+            {
+                if (userGenres.Contains(movieGenre.Trim()))
+                {
+                    foundMatch = true;
+                    break;
+                }
+            }
+
+            if (foundMatch && !recommendedMovies.Contains(movie.Title))
+            {
+                recommendedMovies.Add(movie.Title);
+            }
+        }
+
+        _cachedRecommendations = recommendedMovies;
+        return recommendedMovies;
+    }
+
+    public static void ClearRecommendations()
+    {
+        _cachedRecommendations = null;
     }
 }
