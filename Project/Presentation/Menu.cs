@@ -28,7 +28,7 @@ static class Menu
         }
         else
         {
-            menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
+            menu = ["Book Movie", "View Reservations", "Top up Movie Pass", "Cinema Info", "Logout", "Exit"];
         }
 
         int selected = UiHelper.SelectionMenu(menu, header, true);
