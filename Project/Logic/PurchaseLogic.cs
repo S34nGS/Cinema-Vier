@@ -52,6 +52,30 @@ public class PurchaseLogic
         return isValidInput;
     }
 
+    public static bool MoviePassCheck()
+    {
+        if (AccountsLogic.CurrentAccount.PassPoints > 0)
+        {
+            AccountsLogic.CurrentAccount.PassPoints --;
+            return true;
+        }
+        return false;
+    }
+
+    public static void TopUpMoviePass(int amount) => AccountsLogic.CurrentAccount.PassPoints += (Int64)amount;
+
+    public static (bool, int) amountOfPassPointsIsValid(string amountOfPassPoints)
+    {
+        bool isValid = int.TryParse(amountOfPassPoints, out int amount);
+        
+        if(amount == 0)
+        {
+            isValid = false;
+        }
+        
+        return (isValid, amount);
+    }
+
     // calculate total with ticket, normal menu and lounge pre-order
     public static decimal CalculateFullTotal(decimal ticketTotal, decimal menuTotal, decimal loungePreOrderTotal)
     {
