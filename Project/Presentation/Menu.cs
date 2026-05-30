@@ -6,7 +6,7 @@ static class Menu
     static public void Start()
     {
         string header = (AccountsLogic.CurrentAccount != null)
-            ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
+            ? $"Welcome {AccountsLogic.CurrentAccount.FirstName} (Pass point: {AccountsLogic.CurrentAccount.PassPoints})"
             : "Welcome to Cinema Vier! Please select an option:";
 
         // check if logged in user has a birthday gift available
@@ -76,6 +76,11 @@ static class Menu
         else if (selected == menu.IndexOf("Cinema Info"))
         {
             CinemaInfo.Start();
+        }
+        else if (selected == menu.IndexOf("Top up Movie Pass"))
+        {
+            MoviePass.Start();
+            Start();
         }
         else if (selected == menu.IndexOf("View Reservations"))
         {
