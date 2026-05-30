@@ -17,14 +17,15 @@ public class AccountsAccess : DefaultAccess, IAccess
                 lastName TEXT NOT NULL,
                 dateOfBirth INTEGER NOT NULL,
                 isAdmin INTEGER NOT NULL,
-                freePopcornGiftUsedYear INTEGER NOT NULL
+                freePopcornGiftUsedYear INTEGER NOT NULL,
+                passPoints INTEGER NOT NULL
             );";
         connection.Execute(sql);
     }
 
     public void Write(AccountModel account)
     {
-        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth, isAdmin, freePopcornGiftUsedYear) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin, @FreePopcornGiftUsedYear)";
+        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth, isAdmin, freePopcornGiftUsedYear, passPoints) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin, @FreePopcornGiftUsedYear, @PassPoints)";
         connection.Execute(sql, account);
     }
 
@@ -43,7 +44,7 @@ public class AccountsAccess : DefaultAccess, IAccess
     public void Update(AccountModel account)
     {
         string sql =
-            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin, freePopcornGiftUsedYear = @FreePopcornGiftUsedYear WHERE id = @Id";
+            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin, freePopcornGiftUsedYear = @FreePopcornGiftUsedYear, passPoints = @PassPoints WHERE id = @Id";
         connection.Execute(sql, account);
     }
 
