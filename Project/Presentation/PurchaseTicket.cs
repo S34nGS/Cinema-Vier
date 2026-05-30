@@ -1,8 +1,10 @@
+using System.Net.Http.Headers;
+
 static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
-    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN", "Movie pass"];
     private static List<TimetableModel> CurrentTimetables = [];
 
     public static List<string> CreditCardInput =
@@ -160,54 +162,9 @@ static class PurchaseTicket
             return null;
         }
 
-        int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
-        if (selectedPaymentMethod == -1)
-        {
-            return null;
-        }
+        (bool completePayment, string selectedPaymentMethodString) = Payment(PaymentMethods);
 
-        string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
-        string invalidInputs = "";
-        Dictionary<string, string> paymentInfo = [];
-
-        if (selectedPaymentMethodString == "Credit Card")
-        {
-            foreach (string field in CreditCardInput)
-            {
-                paymentInfo[field] = "";
-            }
-
-            do
-            {
-                paymentInfo = UiHelper.InputForm(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
-
-                bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "credit card");
-            } while (invalidInputs != "");
-        }
-        else if (selectedPaymentMethodString == "IBAN")
-        {
-            foreach (string field in IBANInput)
-            {
-                paymentInfo[field] = "";
-            }
-
-            do
-            {
-                paymentInfo = UiHelper.InputForm(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
-
-                bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "iban");
-
-
-            } while (invalidInputs != "");
-        }
+        if(!completePayment) return null;
 
         UiHelper.SelectionMenu([$"Payment successful."], "");
         ReservationsLogic.CreateReservation(new ReservationModel(-1, (customer != null) ? customer.Id : AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
