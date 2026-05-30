@@ -365,4 +365,74 @@ Food and drinks cannot be refunded after purchase.
     int selected = UiHelper.SelectionMenu(menu, header);
     return selected == 0;
     }
+
+    public static (bool, string) Payment(List<string> paymentMethods)
+    {
+        string selectedPaymentMethodString = "";
+
+        while (true)
+        {
+            int selectedPaymentMethod = UiHelper.SelectionMenu(paymentMethods, "How do you want to pay?");
+            if (selectedPaymentMethod == -1)
+            {
+                return (false, selectedPaymentMethodString);
+            }
+
+            selectedPaymentMethodString = paymentMethods[selectedPaymentMethod];
+            string invalidInputs = "";
+            Dictionary<string, string> paymentInfo = [];
+
+            if (selectedPaymentMethodString == "Credit Card")
+            {
+                foreach (string field in CreditCardInput)
+                {
+                    paymentInfo[field] = "";
+                }
+
+                do
+                {
+                    paymentInfo = UiHelper.InputForm(
+                        paymentInfo,
+                        invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                    );
+
+                    bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
+                    invalidInputs = InValidMessage(isValidInput, "credit card");
+                } while (invalidInputs != "");
+                break;
+            }
+            else if (selectedPaymentMethodString == "IBAN")
+            {
+                foreach (string field in IBANInput)
+                {
+                    paymentInfo[field] = "";
+                }
+
+                do
+                {
+                    paymentInfo = UiHelper.InputForm(
+                        paymentInfo,
+                        invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                    );
+
+                    bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
+                    invalidInputs = InValidMessage(isValidInput, "iban");
+
+                } while (invalidInputs != "");
+                break;
+            }
+            else if (selectedPaymentMethodString == "Movie pass")
+            {
+                if (!PurchaseLogic.MoviePassCheck())
+                {
+                    UiHelper.SelectionMenu([$"Not enough Pass points. Please use another payment method."], "");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        return (true, selectedPaymentMethodString);
+    }
 }
