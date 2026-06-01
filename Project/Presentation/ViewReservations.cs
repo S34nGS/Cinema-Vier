@@ -94,8 +94,8 @@ public static class ViewReservations
         DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
         RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
 
-        ReservationSeatAccess reservationSeatAccess = new();
-        List<ReservationSeatModel> seats = reservationSeatAccess.GetByReservationId(reservation.Id);
+        SeatReservationAccess seatReservationAccess = new();
+        List<SeatModel> seats = seatReservationAccess.GetSeatsByReservationId(reservation.Id);
 
         Console.WriteLine("=== Reservation Details ===");
         Console.WriteLine();
@@ -107,10 +107,8 @@ public static class ViewReservations
         Console.WriteLine($"Room: {room.ScreenType}");
         Console.WriteLine("Seats:");
 
-        foreach (ReservationSeatModel reservationSeat in seats)
+        foreach (SeatModel seat in seats)
         {
-            SeatModel seat = SeatLogic.GetById(reservationSeat.SeatId);
-
             Console.WriteLine($"Row {seat.Row}, Seat {seat.SeatNumber}");
         }
 

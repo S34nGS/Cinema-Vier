@@ -13,12 +13,5 @@ public static class Program
         CreateConsumableOrderTable.Execute();
         CreateMenuItemTable.Execute();
         CreateSeatReservationTable.Execute();
-        CreateReservationSeatTable();
-    }
-
-    public static void CreateReservationSeatTable()
-    {
-        ReservationSeatAccess reservationSeat = new();
-        reservationSeat.CreateTable();
     }
 }
