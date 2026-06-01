@@ -7,18 +7,17 @@ public static class TimeLogic
         return (Int64)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
     }
 
-    public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
+    public static DateTimeOffset ConvertUnixTimeToDateTime(this Int64 unixTimestamp)
     {
         return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
     }
 
     public static DateTime ConvertStringToDateTime(string dateString, string format = "dd-MM-yyyy")
     {
-        // return DateTime.Parse(dateString);
-        return DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
+        return DateTime.ParseExact(dateString, format, null);
     }
 
-    public static string ConvertDateString(DateTimeOffset dateTime, string format = "dd/MM/yyyy HH:mm:ss")
+    public static string ConvertDateString(this DateTimeOffset dateTime, string format = "dd/MM/yyyy HH:mm:ss")
     {
         return dateTime.ToString(format);
     }
@@ -33,5 +32,20 @@ public static class TimeLogic
         return DateTimeOffset
             .FromUnixTimeSeconds(unixTimestamp)
             .DateTime;
+    }
+    
+    public static bool ValidateDateStringAfterToday(string date)
+    {
+        if (!DateTime.TryParseExact(
+            date,
+            "dd-MM-yyyy",
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out DateTime parsedDate))
+        {
+            return false;
+    }
+
+    return parsedDate.Date >= DateTime.Today;
     }
 }

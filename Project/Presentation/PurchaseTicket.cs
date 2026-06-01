@@ -19,7 +19,7 @@ static class PurchaseTicket
         "IBAN number (for example: NL12 ABNA 1234 5678 90)"
     ];
 
-    public static TicketModel? Start(MovieModel movie)
+    public static TicketModel? Start(MovieModel movie, AccountModel? customer = null)
     {
         // reset date menu
         DateMenu.Clear();
@@ -58,15 +58,13 @@ static class PurchaseTicket
             return null;
         }
 
+        SeatSelection seatSelection = new();
+
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
-        List<SeatModel> selectedSeats = [];
-        if (selectedTimetable.RoomId == 1)
-        {
-            selectedSeats = seatSelection.Start(selectedTimetable.RoomId);
-        }
+        List<SeatModel> selectedSeats = seatSelection.Start(selectedTimetable);
 
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
-        DateTime convertedDateTime = TimeLogic.ConvertStringToDateTime(dateTimeString, "dd-MM-yyyy HH:mm");
+        DateTime convertedDateTime = DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", null);
 
         // ticket price for summary
         double ticketTotal = 12.00;
@@ -74,30 +72,51 @@ static class PurchaseTicket
         // selected menu items
         List<OrderItemModel> orderedMenuItems = [];
 
-        // ask if user wants food or drinks
-        List<string> orderMenuChoices = [
-            "Continue without food and drinks",
-            "Add food and drinks"
+        // ask if user wants food or drinks before the movie
+        List<string> orderMenuChoices =
+        [
+            "Continue without food and drinks before the movie",
+            "Add food and drinks before the movie"
         ];
 
-        int selectedOrderChoice = UiHelper.SelectionMenu.WriteMenu(orderMenuChoices, "Do you want to add snacks or drinks?");
+        int selectedOrderChoice = UiHelper.SelectionMenu.WriteMenu(orderMenuChoices, "Do you want to add snacks or drinks before the movie?");
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
+        // add free birthday popcorn gift if available
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        {
+            // add free popcorn as birthday gift
+            OrderItemModel freePopcornGift = new(
+                0,
+                "🎁 Birthday gift: Free popcorn",
+                0.00,
+                1
+            );
+
+            orderedMenuItems.Add(freePopcornGift);
+
+            AccountsLogic accountsLogic = new();
+            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount);
+
+            UiHelper.HoldUser("Happy birthday! A free popcorn gift has been added to your order.");
+        }
+
         // selected lounge pre-order drinks
         List<OrderItemModel> loungePreOrderItems = [];
 
-        // ask if user wants lounge pre-order drinks
-        List<string> loungePreOrderChoices = [
-            "Continue without lounge drink pre-order",
-            "Add lounge drink pre-order"
+        // ask if user wants lounge pre-order drinks before the movie
+        List<string> loungePreOrderChoices =
+        [
+            "Continue without lounge drink pre-order before the movie",
+            "Add lounge drink pre-order before the movie"
         ];
 
         int selectedLoungePreOrderChoice = UiHelper.SelectionMenu.WriteMenu(
             loungePreOrderChoices,
-            "Do you want to pre-order drinks from the lounge/bar?"
+            "Do you want to pre-order drinks from the lounge/bar before the movie?"
         );
 
         if (selectedLoungePreOrderChoice == 1)
@@ -127,9 +146,18 @@ static class PurchaseTicket
             finalTotal
         );
 
-        if (AccountsLogic.CurrentAccount == null)
+        if (AccountsLogic.CurrentAccount == null && customer == null)
         {
             UserLogin.Start();
+        }
+
+        // user must accept terms before payment
+        bool termsAccepted = AcceptTermsAndConditions();
+
+        if (termsAccepted == false)
+        {
+            UiHelper.HoldUser("Purchase cancelled. You must accept the terms and conditions before payment.");
+            return null;
         }
 
         int selectedPaymentMethod = UiHelper.SelectionMenu.WriteMenu(PaymentMethods, "How do you want to pay?");
@@ -182,12 +210,9 @@ static class PurchaseTicket
         }
 
         UiHelper.SelectionMenu.WriteMenu([$"Payment successful."], "");
-        foreach (SeatModel seat in selectedSeats)
-        {
 
-            // public ReservationModel(Int64 id, Int64 userId, Int64 reservationDate, double totalPrice, Int64 timeTableId, Int64 seatId)
-            ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimeLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, seat.Id));
-        }
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimeLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
+
         return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethodString);
     }
 
@@ -240,6 +265,81 @@ static class PurchaseTicket
         }
     }
 
+    // show booking summary before payment
+    static void ShowBookingSummary(
+        decimal ticketTotal,
+        List<OrderItemModel> orderedMenuItems,
+        decimal menuTotal,
+        List<OrderItemModel> loungePreOrderItems,
+        decimal loungePreOrderTotal,
+        decimal finalTotal)
+    {
+        Console.Clear();
+
+        Console.WriteLine($@"
+Booking Summary
+
+Ticket total: €{ticketTotal:0.00}
+");
+
+        if (orderedMenuItems.Count > 0)
+        {
+            Console.WriteLine($@"
+Food and drink items:
+");
+
+            foreach (OrderItemModel item in orderedMenuItems)
+            {
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
+            }
+        }
+        else
+        {
+            Console.WriteLine($@"
+No food or drinks selected.
+");
+        }
+
+        Console.WriteLine($@"
+Food and drink total: €{menuTotal:0.00}
+");
+
+        if (loungePreOrderItems.Count > 0)
+        {
+            Console.WriteLine($@"
+Lounge pre-order drinks before the movie:
+");
+
+            foreach (OrderItemModel item in loungePreOrderItems)
+            {
+                Console.WriteLine($@"
+Item name: {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
+            }
+        }
+        else
+        {
+            Console.WriteLine($@"
+No lounge drinks selected.
+");
+        }
+
+        Console.WriteLine($@"
+Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
+Final total: €{finalTotal:0.00}
+");
+
+        UiHelper.HoldUser();
+    }
+
     public static string InValidMessage(bool[] isValidInput, string paymentMethod)
     {
         string message = "";
@@ -287,5 +387,27 @@ static class PurchaseTicket
         }
 
         return message;
+    }
+
+    static bool AcceptTermsAndConditions()
+    {
+        // show terms before payment
+    List<string> menu =
+    [
+        "Accept terms and continue",
+        "Cancel purchase"
+    ];
+
+    string header = @"
+=== Terms and Conditions ===
+
+By continuing, you agree to the cinema rules and payment conditions.
+
+Tickets are only valid for the selected movie, date and time.
+The user is responsible for entering correct information.
+Food and drinks cannot be refunded after purchase.
+";
+    int selected = UiHelper.SelectionMenu.WriteMenu(menu, header);
+    return selected == 0;
     }
 }

@@ -35,16 +35,12 @@ static class Menu
                 //     Start();
                 // }
 
-                if (AccountsLogic.CurrentAccount != null)
+                PurchaseTicket.SetUpDateMenu(movie);
+                UiHelper.HoldUser(movie.ToString());
+                if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                 {
-                    PurchaseTicket.SetUpDateMenu(movie);
-                    UiHelper.HoldUser(movie.ToString());
-
-                    if (!MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
-                    {
                         UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
                         Start();
-                    }
                 }
 
                 while (true)
@@ -84,6 +80,16 @@ static class Menu
             DisableMovie.Start();
             Start();
         }
+        else if (selected == Array.IndexOf(menu, "Manage Timetables"))
+        {
+            Timetables.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Book Movie For Customer"))
+        {
+            AdminBookMovie.Start();
+            Start();
+        }
         else if (selected == Array.IndexOf(menu, "Logout"))
         {
             AccountsLogic.Logout();
@@ -105,7 +111,7 @@ static class Menu
         }
         else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
         {
-            menu = ["Add Movie", "Edit Movie", "Disable Movie", "Logout"];
+            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
         }
         else
         {

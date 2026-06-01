@@ -1,8 +1,8 @@
 using Dapper;
 
-public class ConsumableAccess : DefaultAccess
+public class ConsumableAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Consumable";
+	public static string Table { get; } = "Consumable";
 
     public override void CreateTable()
     {

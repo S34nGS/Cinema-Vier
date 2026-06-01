@@ -1,8 +1,8 @@
 using Dapper;
 
-public class MenuItemsAccess : DefaultAccess
+public class MenuItemsAccess : DefaultAccess, IAccess
 {
-    protected override string Table => "MenuItems";
+    public static string Table { get; } = "MenuItems";
 
     public override void CreateTable()
     {

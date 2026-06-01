@@ -2,20 +2,18 @@ public class FoodAndDrinkMenu
 {
     public static List<OrderItemModel> ShowFoodAndDrinkMenu()
     {
-        // create logic object
         MenuLogic menuLogic = new();
         List<OrderItemModel> orderItems = [];
 
         while (true)
         {
-            // main category menu
             List<string> categoryMenu = [
-                "Snacks",
-                "Drinks",
+                "Snacks before the movie",
+                "Drinks before the movie",
                 "Finish order"
             ];
 
-            int categoryChoice = UiHelper.SelectionMenu.WriteMenu(categoryMenu, "Choose a category");
+            int categoryChoice = UiHelper.SelectionMenu.WriteMenu(categoryMenu, "Choose snacks or drinks before the movie");
 
             if (categoryChoice == 0)
             {
@@ -39,7 +37,7 @@ public class FoodAndDrinkMenu
         // list for selected lounge drinks
         List<OrderItemModel> orderItems = [];
 
-        // show only drinks
+        // show only drinks before the movie
         ShowCategoryItems(menuLogic.GetDrinks(), menuLogic, orderItems);
 
         return orderItems;
@@ -49,34 +47,32 @@ public class FoodAndDrinkMenu
     {
         while (true)
         {
-            Console.WriteLine($"Choose an item:"); // show items
+            // build item menu with prices
+            List<string> itemMenu = new List<string>();
 
-            for (int i = 0; i < items.Count; i++)
+            foreach (MenuItemModel item in items)
             {
-                Console.WriteLine($"{i + 1}. {items[i].Name} - €{items[i].Price}"); // show items
+                itemMenu.Add($"{item.Name} - €{item.Price:0.00}");
             }
 
-            string? itemChoiceText = Console.ReadLine();
+            int selectedItemIndex = UiHelper.SelectionMenu.WriteMenu(itemMenu, "Choose an item before the movie");
 
-            if (Int64.TryParse(itemChoiceText, out Int64 itemChoice) == false)
+            if (selectedItemIndex == -1)
             {
-                Console.WriteLine($"Invalid number. Please enter a number from the list."); // wrong input
-                continue;
+                return;
             }
 
-            if (itemChoice < 1 || itemChoice > items.Count)
-            {
-                Console.WriteLine($"Invalid choice. Please enter a number from the list."); // out of range
-                continue;
-            }
-
-            MenuItemModel selectedItem = items[(int)itemChoice - 1];
+            MenuItemModel selectedItem = items[selectedItemIndex];
 
             Int64 quantity;
             do
             {
-                Console.WriteLine($"Enter quantity:");
-                string? quantityText = Console.ReadLine();
+                string quantityText = UiHelper.InputMenu.WriteMenu("Enter quantity");
+
+                if (quantityText == "-1")
+                {
+                    return;
+                }
 
                 if (Int64.TryParse(quantityText, out quantity) == false)
                 {
@@ -85,7 +81,7 @@ public class FoodAndDrinkMenu
 
                 if (quantity < 1)
                 {
-                    Console.WriteLine($"Quantity must be at least 1."); // invalid quantity
+                    UiHelper.HoldUser("Quantity must be at least 1."); // invalid quantity
                 }
 
             } while (quantity < 1);
@@ -94,11 +90,11 @@ public class FoodAndDrinkMenu
 
             if (result == false)
             {
-                Console.WriteLine($"Could not add item.");
+                UiHelper.HoldUser("Could not add item.");
                 continue;
             }
 
-            Console.WriteLine($"{selectedItem.Name} added to order."); // success
+            UiHelper.HoldUser($"{selectedItem.Name} added to order."); // success
             ShowSummary(orderItems, menuLogic);
             ShowEditMenu(orderItems, menuLogic);
             break;
@@ -107,22 +103,25 @@ public class FoodAndDrinkMenu
 
     private static void ShowSummary(List<OrderItemModel> orderItems, MenuLogic menuLogic)
     {
-        Console.WriteLine($"");
-        Console.WriteLine($"Order Summary");
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Order Summary
+");
 
         for (int i = 0; i < orderItems.Count; i++)
         {
             OrderItemModel item = orderItems[i];
-            Console.WriteLine($"{i + 1}. {item.Name}"); // item number
-            Console.WriteLine($"Quantity: {item.Quantity}");
-            Console.WriteLine($"Price per item: €{item.PricePerItem}");
-            Console.WriteLine($"Subtotal: €{item.SubTotal}");
-            Console.WriteLine($"");
+
+            Console.WriteLine($@"
+{i + 1}. {item.Name}
+Quantity: {item.Quantity}
+Price per item: €{item.PricePerItem:0.00}
+Subtotal: €{item.SubTotal:0.00}
+");
         }
 
-        Console.WriteLine($"Menu Total: €{menuLogic.CalculateMenuTotal(orderItems)}"); // total
-        Console.WriteLine($"");
+        Console.WriteLine($@"
+Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
+");
     }
 
     private static void ShowEditMenu(List<OrderItemModel> orderItems, MenuLogic menuLogic)
@@ -135,14 +134,16 @@ public class FoodAndDrinkMenu
         while (true)
         {
             // show edit options
-            Console.WriteLine($"Do you want to edit the order?");
-            Console.WriteLine($"1. Update quantity");
-            Console.WriteLine($"2. Remove item");
-            Console.WriteLine($"3. Continue");
+            List<string> editMenu = new List<string>
+            {
+                "Update quantity",
+                "Remove item",
+                "Continue"
+            };
 
-            string? choice = Console.ReadLine();
+            int choice = UiHelper.SelectionMenu.WriteMenu(editMenu, "Do you want to edit the order?");
 
-            if (choice == "1")
+            if (choice == 0)
             {
                 UpdateOrderItem(orderItems, menuLogic);
 
@@ -152,7 +153,7 @@ public class FoodAndDrinkMenu
                 // go back to edit menu
                 continue;
             }
-            else if (choice == "2")
+            else if (choice == 1)
             {
                 RemoveOrderItem(orderItems, menuLogic);
 
@@ -167,51 +168,41 @@ public class FoodAndDrinkMenu
                 // go back to edit menu
                 continue;
             }
-            else if (choice == "3")
-            {
-                return;
-            }
             else
             {
-                Console.WriteLine($"Invalid choice. Please enter a number from the list.");
+                return;
             }
         }
     }
 
     private static void UpdateOrderItem(List<OrderItemModel> orderItems, MenuLogic menuLogic)
     {
-        Int64 index;
+        // build update menu
+        List<string> updateMenu = new List<string>();
 
-        while (true)
+        foreach (OrderItemModel item in orderItems)
         {
-            Console.WriteLine($"Choose item to update:");
-
-            for (int i = 0; i < orderItems.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {orderItems[i].Name}"); // show items
-            }
-
-            string? input = Console.ReadLine();
-
-            if (Int64.TryParse(input, out index) == false || index < 1 || index > orderItems.Count)
-            {
-                Console.WriteLine($"Invalid number. Please enter a number from the list.");
-                continue;
-            }
-
-            break;
+            updateMenu.Add($"{item.Name} - current quantity: {item.Quantity}");
         }
 
-        OrderItemModel selectedItem = orderItems[(int)index - 1];
+        int selectedIndex = UiHelper.SelectionMenu.WriteMenu(updateMenu, "Choose item to update");
 
-        Console.WriteLine($"Selected item: {selectedItem.Name}"); // selected item
-        Console.WriteLine($"Current quantity: {selectedItem.Quantity}");
+        if (selectedIndex == -1)
+        {
+            return;
+        }
+
+        OrderItemModel selectedItem = orderItems[selectedIndex];
 
         Int64 newQuantity;
         do
         {
-            Console.WriteLine($"Enter new quantity:");
-            string? qtyText = Console.ReadLine();
+            string qtyText = UiHelper.InputMenu.WriteMenu($"Enter new quantity for {selectedItem.Name}");
+
+            if (qtyText == "-1")
+            {
+                return;
+            }
 
             if (Int64.TryParse(qtyText, out newQuantity) == false)
             {
@@ -220,7 +211,7 @@ public class FoodAndDrinkMenu
 
             if (newQuantity < 1)
             {
-                Console.WriteLine($"Quantity must be at least 1.");
+                UiHelper.HoldUser("Quantity must be at least 1.");
             }
 
         } while (newQuantity < 1);
@@ -229,49 +220,40 @@ public class FoodAndDrinkMenu
 
         if (result == false)
         {
-            Console.WriteLine($"Could not update quantity.");
+            UiHelper.HoldUser("Could not update quantity.");
             return;
         }
 
-        Console.WriteLine($"Quantity updated.");
+        UiHelper.HoldUser("Quantity updated.");
     }
 
     private static void RemoveOrderItem(List<OrderItemModel> orderItems, MenuLogic menuLogic)
     {
-        Int64 index;
+        // build remove menu
+        List<string> removeMenu = new List<string>();
 
-        while (true)
+        foreach (OrderItemModel item in orderItems)
         {
-            Console.WriteLine($"Choose item to remove:");
-
-            for (int i = 0; i < orderItems.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {orderItems[i].Name}"); // show items
-            }
-
-            Console.WriteLine($"Enter the item number you want to remove:");
-
-            string? input = Console.ReadLine();
-
-            if (Int64.TryParse(input, out index) == false || index < 1 || index > orderItems.Count)
-            {
-                Console.WriteLine($"Invalid number. Please enter a number from the list.");
-                continue;
-            }
-
-            break;
+            removeMenu.Add($"{item.Name} - quantity: {item.Quantity}");
         }
 
-        OrderItemModel selectedItem = orderItems[(int)index - 1];
+        int selectedIndex = UiHelper.SelectionMenu.WriteMenu(removeMenu, "Choose item to remove");
+
+        if (selectedIndex == -1)
+        {
+            return;
+        }
+
+        OrderItemModel selectedItem = orderItems[selectedIndex];
 
         bool result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.MenuItemId);
 
         if (result == false)
         {
-            Console.WriteLine($"Could not remove item.");
+            UiHelper.HoldUser("Could not remove item.");
             return;
         }
 
-        Console.WriteLine($"{selectedItem.Name} removed from order.");
+        UiHelper.HoldUser($"{selectedItem.Name} removed from order.");
     }
 }

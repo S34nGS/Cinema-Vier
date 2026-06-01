@@ -1,17 +1,15 @@
 using Dapper;
 
-public class RoomsAccess : DefaultAccess
+public class RoomsAccess : DefaultAccess, IAccess
 {
-    protected override string Table { get; } = "Room";
+    public static string Table { get; } = "Room";
 
     public override void CreateTable()
     {
         string sql = $@"CREATE TABLE IF NOT EXISTS {Table} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             screenType TEXT NOT NULL,
-            soundTYPE TEXT NOT NULL,
-            height INTEGER NOT NULL,
-            width INTEGER NOT NULL
+            soundTYPE TEXT NOT NULL
         );";
         connection.Execute(sql);
     }
@@ -19,8 +17,8 @@ public class RoomsAccess : DefaultAccess
     public void Write(RoomModel room)
     {
         string sql = $@"INSERT INTO {Table}
-            (screenType, soundType, height, width)
-            VALUES (@ScreenType, @SoundType, @Height, @Width)";
+            (screenType, soundType)
+            VALUES (@ScreenType, @SoundType)";
         connection.Execute(sql, room);
     }
 

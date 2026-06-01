@@ -6,13 +6,28 @@ static class MoviesMenu
     {
         while (true)
         {
-            int preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(
-                [
-                    "Search by name",
-                    "Search by date",
-                    "View available movies"
-                ]
-            );
+            int preMovieListMenu;
+            if(AccountsLogic.CurrentAccount != null)
+            {
+                preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(
+                    [
+                        "Search by name", 
+                        "Search by date", 
+                        "View available movies", 
+                        "Recommended movies"
+                    ]
+                );         
+            }
+            else
+            {
+                preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(
+                    [
+                        "Search by name", 
+                        "Search by date", 
+                        "View available movies"
+                    ]
+                );
+            }
 
             if (preMovieListMenu == -1)
             {
@@ -48,6 +63,32 @@ static class MoviesMenu
                     continue;
                 }
                 return val;
+            }
+
+            if (preMovieListMenu == 3)
+            {
+                while (true)
+                {
+                    List<string> recommendedMoviesTitle = MoviesLogic.GetRecommendedMovies();
+                    
+                    if (recommendedMoviesTitle.Count == 0)
+                    {
+                        UiHelper.SelectionMenu.WriteMenu(["No recommended movies available. Watch some movies first!"], "Recommendations", true);
+                        break;
+                    }
+
+                    int selectedRecommendation = UiHelper.SelectionMenu.WriteMenu(recommendedMoviesTitle, "Recommended Movies");
+
+                    if (selectedRecommendation == -1)
+                    {
+                        break;
+                    }
+
+                    string selectedMovieTitle = recommendedMoviesTitle[selectedRecommendation];
+                    int movieListMenu = MoviesLogic.GetMovieTitles().IndexOf(selectedMovieTitle);
+                    
+                    return movieListMenu;
+                }
             }
         }
     }
