@@ -162,7 +162,16 @@ static class PurchaseTicket
             return null;
         }
 
-        (bool completePayment, string selectedPaymentMethodString) = Payment(PaymentMethods);
+        List<string> PaymentMethods2 = [];
+        foreach(string payment in PaymentMethods)
+        {
+            if(payment != "Movie pass")
+            {
+                PaymentMethods2.Add(payment);
+            }
+        }
+
+        (bool completePayment, string selectedPaymentMethodString) = Payment(AccountsLogic.CurrentAccount.PassPoints <= 0 ? PaymentMethods2 : PaymentMethods);
 
         if(!completePayment) return null;
 
@@ -423,14 +432,7 @@ Food and drinks cannot be refunded after purchase.
             }
             else if (selectedPaymentMethodString == "Movie pass")
             {
-                if (!PurchaseLogic.MoviePassCheck())
-                {
-                    UiHelper.SelectionMenu([$"Not enough Pass points. Please use another payment method."], "");
-                }
-                else
-                {
-                    break;
-                }
+                break;
             }
         }
         return (true, selectedPaymentMethodString);
