@@ -35,9 +35,9 @@ public class SeatLogic
         return _access.GetTakenSeatsByTimetableId(timetableId);
     }
 
-    public static Int64 GetMaxRowByRoomId(Int64 roomId)
+    public static (Int64 RoomId, Int64 MaxRow, Int64 MaxSeatNumber) GetRoomSeatInfo(Int64 roomId)
     {
         SeatAccess access = new SeatAccess();
-        return access.GetMaxRowByRoomId(roomId);
+        return access.GetRoomSeatInfo(roomId);
     }
 }
