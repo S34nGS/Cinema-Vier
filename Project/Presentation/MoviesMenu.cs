@@ -11,7 +11,7 @@ static class MoviesMenu
             int preMovieListMenu;
             if(AccountsLogic.CurrentAccount != null)
             {
-                preMovieListMenu = UiHelper.SelectionMenu(["Search by name", "Search by date", "View available movies", "recommended movies"]);         
+                preMovieListMenu = UiHelper.SelectionMenu(["Search by name", "Search by date", "View available movies", "Recommended movies"]);         
             }
             else
             {

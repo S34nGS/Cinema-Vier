@@ -151,6 +151,15 @@ static class PurchaseTicket
             UserLogin.Start();
         }
 
+        // user must accept terms before payment
+        bool termsAccepted = AcceptTermsAndConditions();
+
+        if (termsAccepted == false)
+        {
+            UiHelper.HoldUser("Purchase cancelled. You must accept the terms and conditions before payment.");
+            return null;
+        }
+
         int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
         if (selectedPaymentMethod == -1)
         {
@@ -376,5 +385,27 @@ Final total: €{finalTotal:0.00}
         }
 
         return message;
+    }
+
+    static bool AcceptTermsAndConditions()
+    {
+        // show terms before payment
+    List<string> menu =
+    [
+        "Accept terms and continue",
+        "Cancel purchase"
+    ];
+
+    string header = @"
+=== Terms and Conditions ===
+
+By continuing, you agree to the cinema rules and payment conditions.
+
+Tickets are only valid for the selected movie, date and time.
+The user is responsible for entering correct information.
+Food and drinks cannot be refunded after purchase.
+";
+    int selected = UiHelper.SelectionMenu(menu, header);
+    return selected == 0;
     }
 }
