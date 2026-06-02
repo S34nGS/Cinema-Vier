@@ -97,20 +97,36 @@ public static class ViewReservations
         SeatReservationAccess seatReservationAccess = new();
         List<SeatModel> seats = seatReservationAccess.GetSeatsByReservationId(reservation.Id);
 
-        Console.WriteLine("=== Reservation Details ===");
+        Console.WriteLine("==================================");
+        Console.WriteLine("      RESERVATION DETAILS");
+        Console.WriteLine("==================================");
         Console.WriteLine();
-        Console.WriteLine($"Reservation Number: {reservation.Id}");
-        Console.WriteLine($"Movie: {movie.Title}");
-        Console.WriteLine($"Date: {TimetablesLogic.GetDateString(date)}");
-        Console.WriteLine($"Time: {TimetablesLogic.GetTimeString(movieTime)}");
-        Console.WriteLine($"Total amount: €{reservation.TotalPrice}");
-        Console.WriteLine($"Room: {room.ScreenType}");
-        Console.WriteLine("Seats:");
+    
+        Console.WriteLine($"Reservation # : {reservation.Id}");
+        Console.WriteLine($"Movie         : {movie.Title}");
+        Console.WriteLine($"Date          : {TimetablesLogic.GetDateString(date)}");
+        Console.WriteLine($"Time          : {TimetablesLogic.GetTimeString(movieTime)}");
+        Console.WriteLine($"Room          : {room.ScreenType}");
+        Console.WriteLine($"Total         : €{reservation.TotalPrice:F2}");
 
-        foreach (SeatModel seat in seats)
+        Console.WriteLine();
+        Console.WriteLine("Seats");
+        Console.WriteLine("----------------------------------");
+
+        if (seats.Count == 0)
         {
-            Console.WriteLine($"Row {seat.Row}, Seat {seat.SeatNumber}");
+            Console.WriteLine("No seats reserved.");
         }
+        else
+        {
+            foreach (SeatModel seat in seats)
+            {
+                Console.WriteLine($"Row {seat.Row}, Seat {seat.SeatNumber}");
+            }
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("==================================");
 
         UiHelper.HoldUser();
     }
