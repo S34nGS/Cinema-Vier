@@ -10,6 +10,11 @@ public static class CinemaInfo
 
             int selected = UiHelper.SelectionMenu(menu, "About Cinema Vier");
 
+            if (selected == -1)
+            {
+                return;
+            }
+
             if (selected == menu.IndexOf("About Us"))
             {
                 ShowAboutUs();
