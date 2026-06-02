@@ -7,6 +7,7 @@ public static class ViewReservations
         {
             Console.WriteLine("Please log in first to view your reservations.");
             UiHelper.HoldUser();
+            Menu.Start();
             return;
         }
 
@@ -25,6 +26,7 @@ public static class ViewReservations
             }
             else
             {
+                Menu.Start();
                 return;
             }
         }

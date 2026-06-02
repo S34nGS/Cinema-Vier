@@ -18,10 +18,6 @@ public class FoodAndDrinkMenu
 
             int categoryChoice = UiHelper.SelectionMenu(categoryMenu, "Choose snacks or drinks before the movie");
 
-            if (categoryChoice == -1)
-            {
-                return orderItems;
-            }
             if (categoryChoice == 0)
             {
                 ShowCategoryItems(menuLogic.GetSnacks(), menuLogic, orderItems);
@@ -30,7 +26,7 @@ public class FoodAndDrinkMenu
             {
                 ShowCategoryItems(menuLogic.GetDrinks(), menuLogic, orderItems);
             }
-            else if (categoryChoice == 2)
+            else
             {
                 break;
             }
@@ -150,11 +146,6 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
 
             int choice = UiHelper.SelectionMenu(editMenu, "Do you want to edit the order?");
 
-            if (choice == -1)
-            {
-                return;
-            }
-
             if (choice == 0)
             {
                 UpdateOrderItem(orderItems, menuLogic);
@@ -180,7 +171,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
                 // go back to edit menu
                 continue;
             }
-            else if (choice == 2)
+            else
             {
                 return;
             }
