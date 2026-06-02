@@ -121,7 +121,10 @@ public static class ViewReservations
         {
             foreach (SeatModel seat in seats)
             {
-                Console.WriteLine($"Row {seat.Row}, Seat {seat.SeatNumber}");
+                Int64 maxRow = SeatLogic.GetMaxRowByRoomId(seat.RoomId);
+                Int64 displayRow = maxRow - seat.Row + 1;
+                
+                Console.WriteLine($"Row {displayRow}, Seat {seat.SeatNumber}");
             }
         }
 

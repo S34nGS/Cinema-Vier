@@ -47,4 +47,10 @@ public class SeatAccess : DefaultAccess, IAccess
     	string sql = $"SELECT * FROM {Table} WHERE id = @SeatId";
     	return connection.QueryFirstOrDefault<SeatModel>(sql, new { SeatId = seatId });
 	}
+
+	public Int64 GetMaxRowByRoomId(Int64 roomId)
+	{
+		string sql = $"SELECT MAX(row) FROM {Table} WHERE roomId = @RoomId";
+		return connection.QuerySingle<Int64>(sql, new { RoomId = roomId });
+	}
 }
