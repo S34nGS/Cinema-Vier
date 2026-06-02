@@ -1,10 +1,10 @@
-public static class Timetables
+﻿public static class Timetables
 {
     public static void Start()
     {
-        List<string> menu = ["Create Timetable", "Edit Timetable", "Delete Timetable"];   
+        List<string> menu = ["Create Timetable", "Edit Timetable", "Delete Timetable"];
 
-        string movieMenuHeader =  "Pick a movie to manage the timetables for";
+        string movieMenuHeader = "Pick a movie to manage the timetables for";
 
         (int selected, MovieModel movie) = TimetablesLogic.ManageTimetables(movieMenuHeader, menu);
 
@@ -100,7 +100,7 @@ public static class Timetables
             {
                 UiHelper.HoldUser($"The timetable with ID: {timetable.Id} has been deleted.");
             }
-            else if(deletedTimetable == 1)
+            else if (deletedTimetable == 1)
             {
                 UiHelper.HoldUser("The timetable hasn't been deleted.");
             }

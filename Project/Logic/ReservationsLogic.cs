@@ -1,4 +1,4 @@
-public static class ReservationsLogic
+﻿public static class ReservationsLogic
 {
     private readonly static ReservationAccess _access = new();
     public static List<ReservationModel> GetFutureReservations(Int64 userId)

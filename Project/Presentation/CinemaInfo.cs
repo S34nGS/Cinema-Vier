@@ -1,4 +1,4 @@
-public static class CinemaInfo
+﻿public static class CinemaInfo
 {
     public static void Start()
     {

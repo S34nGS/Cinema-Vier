@@ -1,4 +1,4 @@
-public class ContinueAndBackMenu
+﻿public class ContinueAndBackMenu
 {
     public void WriteMenu(bool continueSelected = true)
     {

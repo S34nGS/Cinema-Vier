@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 
 public class AccountsAccess : DefaultAccess, IAccess

@@ -1,4 +1,4 @@
-interface IHasSeat
+﻿interface IHasSeat
 {
     Int64 SeatId { get; set; }
 }

@@ -1,4 +1,4 @@
-public class SelectionMenu : BaseComponent
+﻿public class SelectionMenu : BaseComponent
 {
     public int WriteMenu(
         IEnumerable<string> menu,

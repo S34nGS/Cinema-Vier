@@ -1,23 +1,10 @@
-// TODO: rewrite this entire file
-static class PurchaseTicket
+﻿// TODO: rewrite this entire file
+public static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
     public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
     private static List<TimetableModel> CurrentTimetables = [];
-
-    private static SeatSelection seatSelection = new();
-    public static List<string> CreditCardInput = [
-        "Cardholder name",
-        "Card number (13-19 digits)",
-        "Expiration date (MM/YY)",
-        "CVC/CVV code (3-4 digits)"
-    ];
-
-    public static List<string> IBANInput = [
-        "Cardholder name",
-        "IBAN number (for example: NL12 ABNA 1234 5678 90)"
-    ];
 
     public static TicketModel? Start(MovieModel movie, AccountModel? customer = null)
     {
@@ -151,10 +138,8 @@ static class PurchaseTicket
             UserLogin.Start();
         }
 
-        // user must accept terms before payment
-        bool termsAccepted = AcceptTermsAndConditions();
-
-        if (termsAccepted == false)
+        // user must accept T&C
+        if (!TermsAndConditions.Start())
         {
             UiHelper.HoldUser("Purchase cancelled. You must accept the terms and conditions before payment.");
             return null;
@@ -224,12 +209,12 @@ static class PurchaseTicket
         foreach (TimetableModel timetable in timetables)
         {
             if (
-                timetable.StartTime > TimeLogic.ConvertDateToUnixTime(DateTime.Now) &&
-                timetable.StartTime < TimeLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
+                timetable.StartTime > DateTime.Now.ConvertDateToUnixTime() &&
+                timetable.StartTime < DateTime.Now.AddDays(14).ConvertDateToUnixTime()
             )
             {
                 string date = TimeLogic.ConvertDateString(
-                    TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime),
+                    timetable.StartTime.ConvertUnixTimeToDateTime(),
                     "dd-MM-yyyy"
                 );
 
@@ -250,7 +235,7 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (dateString == TimeLogic.ConvertDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime), "dd-MM-yyyy"))
+            if (dateString == timetable.StartTime.ConvertUnixTimeToDateTime().ConvertDateString("dd-MM-yyyy"))
             {
                 DateTime now = DateTime.Now;
 
@@ -258,156 +243,10 @@ static class PurchaseTicket
                 {
                     CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
-                        $"{TimeLogic.ConvertDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime), "HH:mm")} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                        $"{timetable.StartTime.ConvertUnixTimeToDateTime().ConvertDateString("HH:mm")} {RoomsLogic.GetRoomById(timetable.RoomId).ScreenType}"
                     );
                 }
             }
         }
-    }
-
-    // show booking summary before payment
-    static void ShowBookingSummary(
-        decimal ticketTotal,
-        List<OrderItemModel> orderedMenuItems,
-        decimal menuTotal,
-        List<OrderItemModel> loungePreOrderItems,
-        decimal loungePreOrderTotal,
-        decimal finalTotal)
-    {
-        Console.Clear();
-
-        Console.WriteLine($@"
-Booking Summary
-
-Ticket total: €{ticketTotal:0.00}
-");
-
-        if (orderedMenuItems.Count > 0)
-        {
-            Console.WriteLine($@"
-Food and drink items:
-");
-
-            foreach (OrderItemModel item in orderedMenuItems)
-            {
-                Console.WriteLine($@"
-Item name: {item.Name}
-Quantity: {item.Quantity}
-Price per item: €{item.PricePerItem:0.00}
-Subtotal: €{item.SubTotal:0.00}
-");
-            }
-        }
-        else
-        {
-            Console.WriteLine($@"
-No food or drinks selected.
-");
-        }
-
-        Console.WriteLine($@"
-Food and drink total: €{menuTotal:0.00}
-");
-
-        if (loungePreOrderItems.Count > 0)
-        {
-            Console.WriteLine($@"
-Lounge pre-order drinks before the movie:
-");
-
-            foreach (OrderItemModel item in loungePreOrderItems)
-            {
-                Console.WriteLine($@"
-Item name: {item.Name}
-Quantity: {item.Quantity}
-Price per item: €{item.PricePerItem:0.00}
-Subtotal: €{item.SubTotal:0.00}
-");
-            }
-        }
-        else
-        {
-            Console.WriteLine($@"
-No lounge drinks selected.
-");
-        }
-
-        Console.WriteLine($@"
-Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
-Final total: €{finalTotal:0.00}
-");
-
-        UiHelper.HoldUser();
-    }
-
-    public static string InValidMessage(bool[] isValidInput, string paymentMethod)
-    {
-        string message = "";
-        if (paymentMethod == "credit card")
-        {
-            for (int i = 0; i < isValidInput.Length; i++)
-            {
-                if (isValidInput[i] == false)
-                {
-                    if (CreditCardInput[i] == "Cardholder name")
-                    {
-                        message += "Invalid name, ";
-                    }
-                    else if (CreditCardInput[i] == "Card number (13-19 digits)")
-                    {
-                        message += "Invalid card number, ";
-                    }
-                    else if (CreditCardInput[i] == "Expiration date (MM/YY)")
-                    {
-                        message += "Invalid date, ";
-                    }
-                    else if (CreditCardInput[i] == "CVC/CVV code (3-4 digits)")
-                    {
-                        message += "Invalid CVC/CVV code, ";
-                    }
-                }
-            }
-        }
-        else if (paymentMethod == "iban")
-        {
-            for (int i = 0; i < isValidInput.Length; i++)
-            {
-                if (isValidInput[i] == false)
-                {
-                    if (CreditCardInput[i] == "Cardholder name")
-                    {
-                        message += "Invalid name, ";
-                    }
-                    else if (CreditCardInput[i].Contains("IBAN number"))
-                    {
-                        message += "Invalid IBAN number, ";
-                    }
-                }
-            }
-        }
-
-        return message;
-    }
-
-    static bool AcceptTermsAndConditions()
-    {
-        // show terms before payment
-    List<string> menu =
-    [
-        "Accept terms and continue",
-        "Cancel purchase"
-    ];
-
-    string header = @"
-=== Terms and Conditions ===
-
-By continuing, you agree to the cinema rules and payment conditions.
-
-Tickets are only valid for the selected movie, date and time.
-The user is responsible for entering correct information.
-Food and drinks cannot be refunded after purchase.
-";
-    int selected = UiHelper.SelectionMenu.WriteMenu(menu, header);
-    return selected == 0;
     }
 }

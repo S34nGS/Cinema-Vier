@@ -1,4 +1,4 @@
-// TODO: split input & output
+﻿// TODO: split input & output
 public class InputMenu : BaseComponent
 {
     public string WriteMenu(

@@ -1,4 +1,4 @@
-public class MenuLogic
+﻿public class MenuLogic
 {
     private readonly MenuItemsAccess menuItemsAccess = new();
 

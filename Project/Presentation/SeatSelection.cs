@@ -1,10 +1,10 @@
-public class SeatSelection
+﻿public class SeatSelection
 {
     private SeatLogic _logic = new();
     private List<SeatModel> selectedSeats = [];
     private List<SeatModel> unavailableSeats = [];
     private Dictionary<string, Int64> Location = [];
-    private SeatModel[,] Seats = new SeatModel[0,0];
+    private SeatModel[,] Seats = new SeatModel[0, 0];
 
     public List<SeatModel> Start(TimetableModel timetable)
     {
@@ -59,7 +59,7 @@ Confirm: Enter
                 Location["row"]++;
             }
 
-            else if (UiHelper.IsUpKey(input) && Location["row"] > 1 )
+            else if (UiHelper.IsUpKey(input) && Location["row"] > 1)
             {
                 Location["row"]--;
             }
@@ -76,9 +76,9 @@ Confirm: Enter
 
             else if (input == ConsoleKey.Spacebar && unavailableSeats.FirstOrDefault(x => x.Row == Location["row"] && x.SeatNumber == Location["col"]) == null)
             {
-                ToggleSeat(Location["row"], Location["col"]);   
+                ToggleSeat(Location["row"], Location["col"]);
             }
-        } while(input != ConsoleKey.Enter);
+        } while (input != ConsoleKey.Enter);
 
         return selectedSeats;
     }
@@ -130,7 +130,7 @@ Confirm: Enter
                         selectedSeats.FirstOrDefault(x => x.Id == seat.Id) != null,
                         seat.Row == Location["row"] && seat.SeatNumber == Location["col"]
                     );
-                    if(seat.SeatNumber == 6 || seat.SeatNumber == 12)
+                    if (seat.SeatNumber == 6 || seat.SeatNumber == 12)
                     {
                         Console.Write(" ");
                     }
@@ -145,7 +145,7 @@ Confirm: Enter
     {
         for (int row = 0; row < Seats.GetLength(0); row++)
         {
-            if(row == 6 || row == 11)
+            if (row == 6 || row == 11)
             {
                 Console.WriteLine();
             }
@@ -165,7 +165,7 @@ Confirm: Enter
                         selectedSeats.FirstOrDefault(x => x.Id == seat.Id) != null,
                         seat.Row == Location["row"] && seat.SeatNumber == Location["col"]
                     );
-                    if(seat.SeatNumber == 11 || seat.SeatNumber == 19)
+                    if (seat.SeatNumber == 11 || seat.SeatNumber == 19)
                     {
                         Console.Write(" ");
                     }
@@ -192,12 +192,12 @@ Confirm: Enter
             Console.ForegroundColor = ConsoleColor.Blue;
         }
 
-        if(hovering)
+        if (hovering)
         {
             Console.BackgroundColor = ConsoleColor.DarkGray;
         }
 
-        if(available && !selected)
+        if (available && !selected)
         {
             Console.Write("☐");
         }
@@ -216,7 +216,7 @@ Confirm: Enter
     public void ToggleSeat(Int64 row, Int64 col)
     {
         SeatModel l_seat = Seats.Cast<SeatModel>().First(x => x != null && x.Row == row && x.SeatNumber == col);
-        if(selectedSeats.FirstOrDefault(x => x.Row == row && x.SeatNumber == col) == null)
+        if (selectedSeats.FirstOrDefault(x => x.Row == row && x.SeatNumber == col) == null)
         {
             selectedSeats.Add(l_seat);
         }

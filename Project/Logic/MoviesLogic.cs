@@ -1,4 +1,4 @@
-public static class MoviesLogic
+﻿public static class MoviesLogic
 {
     private static MoviesAccess _access = new();
     private static List<MovieModel> _AvailableMovies = [];

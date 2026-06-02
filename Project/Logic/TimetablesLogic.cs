@@ -1,36 +1,36 @@
-public static class TimetablesLogic
+﻿public static class TimetablesLogic
 {
     private static TimetablesAccess _access = new();
     public static List<TimetableModel>? CurrentTimeTables { get; set; }
 
 
-//     // Conversion methods
-//     public static Int64 ConvertDateToUnixTime(DateTime dateTime)
-//     {
-//         return (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-//     }
+    //     // Conversion methods
+    //     public static Int64 ConvertDateToUnixTime(DateTime dateTime)
+    //     {
+    //         return (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+    //     }
 
-//     public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
-//     {
-//         return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
-//     }
+    //     public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
+    //     {
+    //         return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
+    //     }
 
-//     public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
-//     {
-//         return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
-//     }
+    //     public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
+    //     {
+    //         return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
+    //     }
 
-//    public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
-//     {
-//         return DateTimeOffset
-//             .FromUnixTimeSeconds(unixTimestamp)
-//             .DateTime;
-//     }
+    //    public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
+    //     {
+    //         return DateTimeOffset
+    //             .FromUnixTimeSeconds(unixTimestamp)
+    //             .DateTime;
+    //     }
 
-//     public static string ConvertUnixTimeToString(Int64 unixTimestamp)
-//     {
-//         return ConvertDateTimeOffsetToString(ConvertUnixTimeToDateTime(unixTimestamp));
-//     }
+    //     public static string ConvertUnixTimeToString(Int64 unixTimestamp)
+    //     {
+    //         return ConvertDateTimeOffsetToString(ConvertUnixTimeToDateTime(unixTimestamp));
+    //     }
 
     public static Int64 ConvertTimeStringToUnixTime(string time)
     {
@@ -107,7 +107,7 @@ public static class TimetablesLogic
         string movie = MoviesLogic.GetById(timetable.MovieId).Title;
         string date = TimeLogic.ConvertDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
         string time = GetTimeString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
-        return new List<string> 
+        return new List<string>
         {
             timetable.RoomId.ToString(),
             date,

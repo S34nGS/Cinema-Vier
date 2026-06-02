@@ -1,4 +1,4 @@
-static class MoviesMenu
+﻿static class MoviesMenu
 {
     public static string header = "All available movies";
 
@@ -7,23 +7,23 @@ static class MoviesMenu
         while (true)
         {
             int preMovieListMenu;
-            if(AccountsLogic.CurrentAccount != null)
+            if (AccountsLogic.CurrentAccount != null)
             {
                 preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(
                     [
-                        "Search by name", 
-                        "Search by date", 
-                        "View available movies", 
+                        "Search by name",
+                        "Search by date",
+                        "View available movies",
                         "Recommended movies"
                     ]
-                );         
+                );
             }
             else
             {
                 preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(
                     [
-                        "Search by name", 
-                        "Search by date", 
+                        "Search by name",
+                        "Search by date",
                         "View available movies"
                     ]
                 );
@@ -70,7 +70,7 @@ static class MoviesMenu
                 while (true)
                 {
                     List<string> recommendedMoviesTitle = MoviesLogic.GetRecommendedMovies();
-                    
+
                     if (recommendedMoviesTitle.Count == 0)
                     {
                         UiHelper.SelectionMenu.WriteMenu(["No recommended movies available. Watch some movies first!"], "Recommendations", true);
@@ -86,7 +86,7 @@ static class MoviesMenu
 
                     string selectedMovieTitle = recommendedMoviesTitle[selectedRecommendation];
                     int movieListMenu = MoviesLogic.GetMovieTitles().IndexOf(selectedMovieTitle);
-                    
+
                     return movieListMenu;
                 }
             }

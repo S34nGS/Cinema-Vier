@@ -1,4 +1,4 @@
-// TODO: Seperate input & output
+﻿// TODO: Seperate input & output
 public class InputFormMenu : BaseComponent
 {
     public Dictionary<string, string> WriteMenu(

@@ -1,4 +1,4 @@
-namespace UnitTests;
+﻿namespace UnitTests;
 
 [TestClass]
 public sealed class MenuTests

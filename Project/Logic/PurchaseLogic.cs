@@ -1,4 +1,4 @@
-public class PurchaseLogic
+﻿public class PurchaseLogic
 {
     public static TicketModel? CurrentPayment { get; private set; }
     public static Random rng = new();

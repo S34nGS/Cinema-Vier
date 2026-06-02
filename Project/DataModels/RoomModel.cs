@@ -1,4 +1,4 @@
-public class RoomModel : IModel
+﻿public class RoomModel : IModel
 {
     public Int64 Id { get; set; }
     public string ScreenType { get; set; }

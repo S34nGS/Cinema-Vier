@@ -13,12 +13,12 @@
 
     public AccountModel(
         Int64 id,
-        string email, 
-        string password, 
-        string firstName, 
-        string lastName, 
-        Int64 dateOfBirth, 
-        Int64 isAdmin = 0, 
+        string email,
+        string password,
+        string firstName,
+        string lastName,
+        Int64 dateOfBirth,
+        Int64 isAdmin = 0,
         Int64 freePopcornGiftUsedYear = 0
     )
     {

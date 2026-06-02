@@ -1,4 +1,4 @@
-public static class BookingSummary
+﻿public static class BookingSummary
 {
     // TODO: Re-Implement this to be a UiHelper Page :D
     // GeneratePage

@@ -1,4 +1,4 @@
-public class MovieModel : IModel
+﻿public class MovieModel : IModel
 {
     public Int64 Id { get; set; }
     public string Title { get; set; }

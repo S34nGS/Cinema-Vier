@@ -1,4 +1,4 @@
-public static class SelectMovie
+﻿public static class SelectMovie
 {
     private static List<MovieModel>? Movies;
 

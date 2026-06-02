@@ -1,4 +1,4 @@
-public class SeatModel : IModel, IHasRoom
+﻿public class SeatModel : IModel, IHasRoom
 {
     public Int64 Id { get; set; }
     public Int64 RoomId { get; set; }

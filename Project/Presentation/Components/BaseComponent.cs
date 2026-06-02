@@ -1,4 +1,4 @@
-public abstract class BaseComponent
+﻿public abstract class BaseComponent
 {
     protected readonly ContinueAndBackMenu continueAndBackMenu = new();
 

@@ -1,4 +1,4 @@
-public static class UiHelper
+﻿public static class UiHelper
 {
     public static SelectionMenu SelectionMenu { get; private set; }
     public static InputMenu InputMenu { get; private set; }

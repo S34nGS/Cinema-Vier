@@ -1,8 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 
 public static class TimeLogic
 {
-    public static Int64 ConvertDateToUnixTime(DateTime dateTime)
+    public static Int64 ConvertDateToUnixTime(this DateTime dateTime)
     {
         return (Int64)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
     }
@@ -33,7 +33,7 @@ public static class TimeLogic
             .FromUnixTimeSeconds(unixTimestamp)
             .DateTime;
     }
-    
+
     public static bool ValidateDateStringAfterToday(string date)
     {
         if (!DateTime.TryParseExact(
@@ -44,8 +44,8 @@ public static class TimeLogic
             out DateTime parsedDate))
         {
             return false;
-    }
+        }
 
-    return parsedDate.Date >= DateTime.Today;
+        return parsedDate.Date >= DateTime.Today;
     }
 }

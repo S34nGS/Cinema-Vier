@@ -1,4 +1,4 @@
-public class ReservationModel : IModel, IHasUser, IHasTimetable
+﻿public class ReservationModel : IModel, IHasUser, IHasTimetable
 {
     public Int64 Id { get; set; }
     public Int64 UserId { get; set; }
@@ -9,11 +9,11 @@ public class ReservationModel : IModel, IHasUser, IHasTimetable
 
 
     public ReservationModel(
-        Int64 id, 
-        Int64 userId, 
-        Int64 reservationDate, 
-        double totalPrice, 
-        Int64 timeTableId, 
+        Int64 id,
+        Int64 userId,
+        Int64 reservationDate,
+        double totalPrice,
+        Int64 timeTableId,
         List<SeatModel> seats
     ) : this(id, userId, reservationDate, totalPrice, timeTableId)
     {
@@ -21,9 +21,9 @@ public class ReservationModel : IModel, IHasUser, IHasTimetable
     }
 
     public ReservationModel(
-        Int64 id, 
-        Int64 userId, 
-        Int64 reservationDate, 
+        Int64 id,
+        Int64 userId,
+        Int64 reservationDate,
         double totalPrice,
         Int64 timeTableId
     )

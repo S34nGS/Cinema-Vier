@@ -1,4 +1,4 @@
-public static class EditMovie
+﻿public static class EditMovie
 {
     public static void Start()
     {

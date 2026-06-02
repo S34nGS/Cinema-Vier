@@ -1,4 +1,4 @@
-public static class DisableMovie
+﻿public static class DisableMovie
 {
     public static void Start()
     {
