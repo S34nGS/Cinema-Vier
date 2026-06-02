@@ -85,8 +85,8 @@ static class PurchaseTicket
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
-        // add free birthday popcorn gift if available
-        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        // add free birthday popcorn gift if selected movie date is user's birthday
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime))
         {
             // add free popcorn as birthday gift
             OrderItemModel freePopcornGift = new(
@@ -99,9 +99,9 @@ static class PurchaseTicket
             orderedMenuItems.Add(freePopcornGift);
 
             AccountsLogic accountsLogic = new();
-            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount);
+            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime);
 
-            UiHelper.HoldUser("Happy birthday! A free popcorn gift has been added to your order.");
+            UiHelper.HoldUser("🎁 Happy birthday! A free popcorn gift has been added to your order.");
         }
 
         // selected lounge pre-order drinks
@@ -390,13 +390,13 @@ Final total: €{finalTotal:0.00}
     static bool AcceptTermsAndConditions()
     {
         // show terms before payment
-    List<string> menu =
-    [
-        "Accept terms and continue",
-        "Cancel purchase"
-    ];
+        List<string> menu =
+        [
+            "Accept terms and continue",
+            "Cancel purchase"
+        ];
 
-    string header = @"
+        string header = @"
 === Terms and Conditions ===
 
 By continuing, you agree to the cinema rules and payment conditions.
@@ -405,7 +405,7 @@ Tickets are only valid for the selected movie, date and time.
 The user is responsible for entering correct information.
 Food and drinks cannot be refunded after purchase.
 ";
-    int selected = UiHelper.SelectionMenu(menu, header);
-    return selected == 0;
+        int selected = UiHelper.SelectionMenu(menu, header);
+        return selected == 0;
     }
 }

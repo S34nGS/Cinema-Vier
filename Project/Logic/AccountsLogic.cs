@@ -58,7 +58,7 @@ public class AccountsLogic
         {
             return null;
         }
-        
+
         // check date of birth
         if (IsValidDateOfBirth(dateOfBirth) == false)
         {
@@ -96,7 +96,7 @@ public class AccountsLogic
     {
         List<AccountModel> rawAccounts = GetAllCustomerAccounts();
         List<string> accounts = [];
-        foreach(AccountModel account in rawAccounts)
+        foreach (AccountModel account in rawAccounts)
         {
             accounts.Add(account.FullName);
         }
@@ -116,25 +116,26 @@ public class AccountsLogic
         MoviesLogic.ClearRecommendations();
     }
 
-    public static bool IsBirthday(AccountModel account)
+    public static bool IsBirthday(AccountModel account, DateTime movieDate)
     {
         // convert saved date of birth number back to a date
         DateTime dateOfBirth = TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
 
-        return dateOfBirth.Day == DateTime.Today.Day &&
-               dateOfBirth.Month == DateTime.Today.Month;
+        // check if selected movie date is on user's birthday
+        return dateOfBirth.Day == movieDate.Day &&
+               dateOfBirth.Month == movieDate.Month;
     }
 
-    public static bool CanUseFreePopcornGift(AccountModel account)
+    public static bool CanUseFreePopcornGift(AccountModel account, DateTime movieDate)
     {
-        // check if today is birthday and gift is not used this year
-        return IsBirthday(account) &&
-               account.FreePopcornGiftUsedYear != DateTime.Today.Year;
+        // check if movie date is birthday and gift is not used in that year
+        return IsBirthday(account, movieDate) &&
+               account.FreePopcornGiftUsedYear != movieDate.Year;
     }
 
-    public void UseFreePopcornGift(AccountModel account)
+    public void UseFreePopcornGift(AccountModel account, DateTime movieDate)
     {
-        account.FreePopcornGiftUsedYear = DateTime.Today.Year;
+        account.FreePopcornGiftUsedYear = movieDate.Year;
 
         // update only the gift usage year
         _access.UpdateFreePopcornGiftUsedYear(account);

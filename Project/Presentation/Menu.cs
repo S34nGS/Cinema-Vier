@@ -9,11 +9,10 @@ static class Menu
             ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
             : "Welcome to Cinema Vier! Please select an option:";
 
-        // check if logged in user has a birthday gift available
-        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        // show birthday gift information after user logs in
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CurrentAccount.IsAdmin == 0)
         {
-            // show birthday gift message in the main menu
-            header += "\nHappy birthday! You have a free popcorn gift available today.";
+            header += "\n🎉 Happy birthday🎉! Book a movie on your birthday and get free popcorn 🎁.";
         }
 
         List<string> menu = [];
@@ -55,8 +54,8 @@ static class Menu
                 UiHelper.HoldUser(movie.ToString());
                 if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                 {
-                        UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
-                        Start();
+                    UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
+                    Start();
                 }
 
                 while (true)
