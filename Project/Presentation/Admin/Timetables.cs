@@ -1,16 +1,16 @@
-public static class Timetables
+﻿public static class Timetables
 {
     public static void Start()
     {
-        List<string> menu = ["Create Timetable", "Edit Timetable", "Delete Timetable"];   
+        List<string> menu = ["Create Timetable", "Edit Timetable", "Delete Timetable"];
 
-        string movieMenuHeader =  "Pick a movie to manage the timetables for";
+        string movieMenuHeader = "Pick a movie to manage the timetables for";
 
         (int selected, MovieModel movie) = TimetablesLogic.ManageTimetables(movieMenuHeader, menu);
 
         if (selected == menu.IndexOf("Create Timetable"))
         {
-            Dictionary<string, string> CreateTimetableInput = UiHelper.InputForm(
+            Dictionary<string, string> CreateTimetableInput = UiHelper.InputFormMenu.WriteMenu(
                 [
                     "Room Number",
                     "Date (dd-mm-yyyy)",
@@ -52,14 +52,13 @@ public static class Timetables
         {
             TimetableModel timetable = TimetablesLogic.ChooseTimeTableAsAdmin("All timetables from today onward", movie);
 
-            Dictionary<string, string> EditTimetableInput = UiHelper.InputForm(
-                [
-                    "Room Number",
-                    "Date (dd-mm-yyyy)",
-                    "Start Time (hh:mm)",
-                ],
-                "Edit Timetable",
-                filledFields: TimetablesLogic.GetDetailsAsList(timetable)
+            Dictionary<string, string> EditTimetableInput = UiHelper.InputFormMenu.WriteMenu(
+                new Dictionary<string, string>{
+                    {"Room Number", timetable.RoomId.ToString()},
+                    {"Date (dd-mm-yyyy)",  timetable.StartTime.ConvertUnixTimeToDateTime().ConvertDateString("dd-MM-yyyy")},
+                    {"Start Time (hh:mm)", timetable.StartTime.ConvertUnixTimeToDateTime().ConvertDateString("hh:mm")},
+                },
+                "Edit Timetable"
             );
 
             int editedTimetable = TimetablesLogic.EditTimeTableAsAdmin(
@@ -101,7 +100,7 @@ public static class Timetables
             {
                 UiHelper.HoldUser($"The timetable with ID: {timetable.Id} has been deleted.");
             }
-            else if(deletedTimetable == 1)
+            else if (deletedTimetable == 1)
             {
                 UiHelper.HoldUser("The timetable hasn't been deleted.");
             }

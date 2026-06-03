@@ -1,4 +1,4 @@
-public static class BookLogic
+﻿public static class BookLogic
 {
     public static void BookAsAdmin(string header)
     {
@@ -13,8 +13,8 @@ public static class BookLogic
             UiHelper.HoldUser(movie.ToString());
             if (!MoviesLogic.IsOldEnough(movie, account))
             {
-                    UiHelper.HoldUser($"The customer must be {movie.AgeRating}+ to watch this movie.");
-                    BookAsAdmin(header);
+                UiHelper.HoldUser($"The customer must be {movie.AgeRating}+ to watch this movie.");
+                BookAsAdmin(header);
             }
 
             while (true)

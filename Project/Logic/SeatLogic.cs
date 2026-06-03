@@ -1,4 +1,4 @@
-public class SeatLogic
+﻿public class SeatLogic
 {
     private SeatAccess _access = new();
 
@@ -17,7 +17,7 @@ public class SeatLogic
         SeatModel[,] seats = new SeatModel[maxRow, maxSeatNr];
         foreach (SeatModel seat in localSeats)
         {
-            seats[seat.Row - 1, seat.SeatNumber -1] = seat;
+            seats[seat.Row - 1, seat.SeatNumber - 1] = seat;
         }
 
         return seats;

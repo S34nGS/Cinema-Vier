@@ -1,56 +1,39 @@
-static class Menu
+﻿static class Menu
 {
-    //This shows the menu. You can call back to this method to show the menu again
-    //after another presentation method is completed
-    //You could edit this to show different menus depending on the user's role
     static public void Start()
     {
-        while (true)
+        string header = (AccountsLogic.CurrentAccount != null)
+            ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
+            : "Welcome to Cinema Vier! Please select an option:";
+
+        string[] menu = BuildMenu();
+
+        int selected = UiHelper.SelectionMenu.WriteMenu(menu, header, true);
+
+        ActMenuOption(menu, selected);
+    }
+
+    public static void ActMenuOption(string[] menu, int selected)
+    {
+        if (selected == Array.IndexOf(menu, "Login"))
         {
-            string header = (AccountsLogic.CurrentAccount != null)
-                ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
-                : "Welcome to Cinema Vier! Please select an option:";
+            UserLogin.Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Register"))
+        {
+            UserRegistration.Start();
+        }
 
-            // check if logged in user has a birthday gift available
-            if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
-            {
-                // show birthday gift message in the main menu
-                header += "\nHappy birthday! You have a free popcorn gift available today.";
-            }
-
-            List<string> menu = [];
-
-            if (AccountsLogic.CurrentAccount is null)
-            {
-                menu = ["Book Movie", "Login", "Register", "Cinema Info", "Exit"];
-            }
-            else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
-            {
-                menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
-            }
-            else
-            {
-                menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
-            }
-
-            int selected = UiHelper.SelectionMenu(menu, header, true);
-
-            if (selected == menu.IndexOf("Login"))
-            {
-                UserLogin.Start();
-            }
-            else if (selected == menu.IndexOf("Register"))
-            {
-                UserRegistration.Start();
-            }
-            else if (selected == menu.IndexOf("Book Movie"))
+        // TODO: Rework this to be its own seperate Book Movie functionality
+        else if (selected == Array.IndexOf(menu, "Book Movie"))
+        {
+            while (true)
             {
                 MovieModel? movie = MoviesLogic.Start();
-
-                if (movie is null)
-                {
-                    continue;
-                }
+                // if (movie is null)
+                // {
+                //     Start();
+                // }
 
                 PurchaseTicket.SetUpDateMenu(movie);
                 UiHelper.HoldUser(movie.ToString());
@@ -102,5 +85,67 @@ static class Menu
                 Environment.Exit(0);
             }
         }
+        else if (selected == Array.IndexOf(menu, "Cinema Info"))
+        {
+            CinemaInfo.Start();
+        }
+        else if (selected == Array.IndexOf(menu, "View Reservations"))
+        {
+            ViewReservations.Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Add Movie"))
+        {
+            AddMovie.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Edit Movie"))
+        {
+            EditMovie.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Disable Movie"))
+        {
+            DisableMovie.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Manage Timetables"))
+        {
+            Timetables.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Book Movie For Customer"))
+        {
+            AdminBookMovie.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Logout"))
+        {
+            AccountsLogic.Logout();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Exit"))
+        {
+            Console.WriteLine("Thank you for using Cinema Vier! Goodbye!");
+        }
+    }
+
+    public static string[] BuildMenu()
+    {
+        string[] menu;
+
+        if (AccountsLogic.CurrentAccount is null)
+        {
+            menu = ["Book Movie", "Login", "Register", "Cinema Info", "Exit"];
+        }
+        else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
+        {
+            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
+        }
+        else
+        {
+            menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
+        }
+
+        return menu;
     }
 }
