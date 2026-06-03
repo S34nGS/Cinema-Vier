@@ -1,4 +1,4 @@
-public class SeatLogic
+﻿public class SeatLogic
 {
     private SeatAccess _access = new();
 

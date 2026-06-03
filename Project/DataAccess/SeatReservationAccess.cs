@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 
 public class SeatReservationAccess : DefaultAccess, IAccess

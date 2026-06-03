@@ -1,20 +1,11 @@
-public static class ViewReservations
+﻿public static class ViewReservations
 {
     public static void Start()
     {
-        // User must be logged in
-        if (AccountsLogic.CurrentAccount is null)
-        {
-            Console.WriteLine("Please log in first to view your reservations.");
-            UiHelper.HoldUser();
-            Menu.Start();
-            return;
-        }
-
         while (true)
         {
             List<string> menu = ["Upcoming Orders", "Previous Orders"];
-            int selected = UiHelper.SelectionMenu(menu, "Reservations");
+            int selected = UiHelper.SelectionMenu.WriteMenu(menu, "Reservations");
 
             if (selected == menu.IndexOf("Upcoming Orders"))
             {
@@ -72,6 +63,7 @@ public static class ViewReservations
             // show short information first
             reservationMenu.Add($"{TimetablesLogic.GetDateString(date)} - {movie.Title}");
         }
+                DateTimeOffset movieTime = TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
         int selected = UiHelper.SelectionMenu(reservationMenu, title);
 
