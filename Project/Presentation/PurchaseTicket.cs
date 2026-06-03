@@ -44,6 +44,11 @@ public static class PurchaseTicket
             return null;
         }
 
+        if (AccountsLogic.CurrentAccount == null && customer == null)
+        {
+            UserLogin.Start();
+        }
+
         SeatSelection seatSelection = new();
 
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
@@ -132,11 +137,6 @@ public static class PurchaseTicket
             finalTotal
         );
 
-        if (AccountsLogic.CurrentAccount == null && customer == null)
-        {
-            UserLogin.Start();
-        }
-
         // user must accept T&C
         if (!TermsAndConditions.Start())
         {
@@ -144,7 +144,7 @@ public static class PurchaseTicket
             return null;
         }
 
-        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimeLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, convertedDateTime.ConvertDateToUnixTime(), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
         string selectedPaymentMethod = PaymentInformation.Start();
 
