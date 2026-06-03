@@ -58,7 +58,21 @@ public static class PurchaseTicket
         DateTime convertedDateTime = DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", null);
 
         // ticket price for summary
-        double ticketTotal = 12.00;
+        double ticketTotal = 0.0;
+        selectedSeats.ForEach((seat) =>
+        {
+            ticketTotal += 12;
+
+            if (seat.SeatPriority == 2)
+            {
+                ticketTotal += 3;
+            }
+
+            if (seat.SeatPriority == 3)
+            {
+                ticketTotal += 6;
+            }
+        });
 
         // selected menu items
         List<OrderItemModel> orderedMenuItems = [];
