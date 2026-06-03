@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 public class RoomsAccess : DefaultAccess, IAccess
 {
@@ -24,7 +24,7 @@ public class RoomsAccess : DefaultAccess, IAccess
 
     public void Update(RoomModel room)
     {
-        string sql = $@"UPDATE {Table} 
+        string sql = $@"UPDATE {Table}
             SET screenType = @ScreenType, soundType = @SoundType
             WHERE id = @Id";
         connection.Execute(sql, room);
@@ -36,7 +36,7 @@ public class RoomsAccess : DefaultAccess, IAccess
         connection.Execute(sql, new { Id = room.Id });
     }
 
-    public RoomModel GetById(Int64 id)
+    public RoomModel? GetById(Int64 id)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @Id";
         return connection.QueryFirstOrDefault<RoomModel>(sql, new { Id = id });
