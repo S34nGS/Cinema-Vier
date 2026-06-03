@@ -33,28 +33,28 @@ public static class CreateTimetablesTable
 
         List<TimetableModel> timetablesList = [
             // Movie 1
-            new TimetableModel(1, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date1)),
-            new TimetableModel(2, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date2)),
-            new TimetableModel(3, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date3)),
-            new TimetableModel(4, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date4)),
-            new TimetableModel(5, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date5)),
-            new TimetableModel(6, 1, 1, TimetablesLogic.ConvertDateToUnixTime(date6)),
+            new TimetableModel(1, 1, 1, TimeLogic.ConvertDateToUnixTime(date1)),
+            new TimetableModel(2, 1, 1, TimeLogic.ConvertDateToUnixTime(date2)),
+            new TimetableModel(3, 1, 1, TimeLogic.ConvertDateToUnixTime(date3)),
+            new TimetableModel(4, 1, 1, TimeLogic.ConvertDateToUnixTime(date4)),
+            new TimetableModel(5, 1, 1, TimeLogic.ConvertDateToUnixTime(date5)),
+            new TimetableModel(6, 1, 1, TimeLogic.ConvertDateToUnixTime(date6)),
 
             // Movie 2
-            new TimetableModel(7, 2, 2, TimetablesLogic.ConvertDateToUnixTime(date7)),
-            new TimetableModel(8, 2, 2, TimetablesLogic.ConvertDateToUnixTime(date8)),
-            new TimetableModel(9, 2, 2, TimetablesLogic.ConvertDateToUnixTime(date9)),
-            new TimetableModel(10, 2, 2, TimetablesLogic.ConvertDateToUnixTime(date10)),
-            new TimetableModel(11, 2, 2, TimetablesLogic.ConvertDateToUnixTime(date11)),
-            new TimetableModel(12, 2, 2, TimetablesLogic.ConvertDateToUnixTime(date12)),
+            new TimetableModel(7, 2, 2, TimeLogic.ConvertDateToUnixTime(date7)),
+            new TimetableModel(8, 2, 2, TimeLogic.ConvertDateToUnixTime(date8)),
+            new TimetableModel(9, 2, 2, TimeLogic.ConvertDateToUnixTime(date9)),
+            new TimetableModel(10, 2, 2, TimeLogic.ConvertDateToUnixTime(date10)),
+            new TimetableModel(11, 2, 2, TimeLogic.ConvertDateToUnixTime(date11)),
+            new TimetableModel(12, 2, 2, TimeLogic.ConvertDateToUnixTime(date12)),
 
             // Movie 3
-            new TimetableModel(13, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date13)),
-            new TimetableModel(14, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date14)),
-            new TimetableModel(15, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date15)),
-            new TimetableModel(16, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date16)),
-            new TimetableModel(17, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date17)),
-            new TimetableModel(18, 3, 3, TimetablesLogic.ConvertDateToUnixTime(date18)),
+            new TimetableModel(13, 3, 3, TimeLogic.ConvertDateToUnixTime(date13)),
+            new TimetableModel(14, 3, 3, TimeLogic.ConvertDateToUnixTime(date14)),
+            new TimetableModel(15, 3, 3, TimeLogic.ConvertDateToUnixTime(date15)),
+            new TimetableModel(16, 3, 3, TimeLogic.ConvertDateToUnixTime(date16)),
+            new TimetableModel(17, 3, 3, TimeLogic.ConvertDateToUnixTime(date17)),
+            new TimetableModel(18, 3, 3, TimeLogic.ConvertDateToUnixTime(date18)),
         ];
 
         foreach (TimetableModel timetable in timetablesList)

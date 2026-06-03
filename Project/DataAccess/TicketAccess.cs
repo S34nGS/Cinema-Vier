@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 
 public class TicketAccess : DefaultAccess, IAccess
@@ -23,19 +23,19 @@ public class TicketAccess : DefaultAccess, IAccess
 
     public void Write(TicketModel ticket)
     {
-        string sql = $@"INSERT INTO {Table} 
+        string sql = $@"INSERT INTO {Table}
             (reservationId, seatId, price, movieId)
             VALUES (@ReservationId, @SeatId, @Price, @MovieId)";
         connection.Execute(sql, ticket);
     }
 
-    public TicketModel GetByReservationId(int id)
+    public TicketModel? GetByReservationId(int id)
     {
         string sql = $"SELECT * FROM {Table} WHERE reservationId = @ReservationId";
         return connection.QueryFirstOrDefault<TicketModel>(sql, new { ReservationId = id });
     }
 
-    public TicketModel GetBySeatId(int id)
+    public TicketModel? GetBySeatId(int id)
     {
         string sql = $"SELECT * FROM {Table} WHERE seatId = @SeatId";
         return connection.QueryFirstOrDefault<TicketModel>(sql, new { SeatId = id });
@@ -44,13 +44,16 @@ public class TicketAccess : DefaultAccess, IAccess
     public void Update(TicketModel ticket)
     {
         string sql =
-            $"UPDATE {Table} SET reservationId = @ReservationId, seatId = @SeatId, price = @Price, movieId = @MovieId WHERE id = @Id";
+            $@"UPDATE {Table}
+            SET reservationId = @ReservationId, seatId = @SeatId, price = @Price, movieId = @MovieId
+            WHERE id = @Id";
         connection.Execute(sql, ticket);
     }
 
     public void Delete(TicketModel ticket)
     {
-        string sql = $"DELETE FROM {Table} WHERE id = @Id";
+        string sql = $@"DELETE FROM {Table} 
+        WHERE id = @Id";
         connection.Execute(sql, new { Id = ticket.Id });
     }
 }

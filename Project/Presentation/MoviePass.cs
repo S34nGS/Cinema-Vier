@@ -8,7 +8,7 @@ static class MoviePass
 
         do
         {
-            Dictionary<string, string> userInput = UiHelper.InputForm(
+            Dictionary<string, string> userInput = UiHelper.InputFormMenu.WriteMenu(
                 fields, 
                 isValidInput ? "How many Pass points would you like to top up?" : "Invalid input, please try again"
             );
@@ -19,16 +19,15 @@ static class MoviePass
         } while (!isValidInput);
 
         List<string> paymentMethodsForMoviePass = [];
-        foreach(string paymentMethod in PurchaseTicket.PaymentMethods)
+        foreach(string paymentMethod in PaymentInformation.PaymentMethods)
         {
             paymentMethodsForMoviePass.Add(paymentMethod);
         }
         paymentMethodsForMoviePass.Remove("Movie pass");
 
-        (bool completePayment, string selectedPaymentMethodString) = PurchaseTicket.Payment(paymentMethodsForMoviePass);
+        (bool completePayment, string selectedPaymentMethodString) = PaymentInformation.Start(paymentMethodsForMoviePass);
         if(!completePayment) Menu.Start();
 
         PurchaseLogic.TopUpMoviePass(amountOfPassPoints);
-        UiHelper.SelectionMenu([$"Pass Points are added to your Movie pass."], "");
     }
 }

@@ -1,4 +1,4 @@
-public static class RoomsLogic
+﻿public static class RoomsLogic
 {
     private static RoomsAccess _access = new();
 

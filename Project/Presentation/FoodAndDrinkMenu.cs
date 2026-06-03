@@ -1,22 +1,19 @@
-public class FoodAndDrinkMenu
+﻿public class FoodAndDrinkMenu
 {
     public static List<OrderItemModel> ShowFoodAndDrinkMenu()
     {
-        // create logic object
-        MenuLogic menuLogic = new MenuLogic();
-        List<OrderItemModel> orderItems = new List<OrderItemModel>();
+        MenuLogic menuLogic = new();
+        List<OrderItemModel> orderItems = [];
 
         while (true)
         {
-            // main category menu
-            List<string> categoryMenu = new List<string>
-            {
+            List<string> categoryMenu = [
                 "Snacks before the movie",
                 "Drinks before the movie",
                 "Finish order"
-            };
+            ];
 
-            int categoryChoice = UiHelper.SelectionMenu(categoryMenu, "Choose snacks or drinks before the movie");
+            int categoryChoice = UiHelper.SelectionMenu.WriteMenu(categoryMenu, "Choose snacks or drinks before the movie");
 
             if (categoryChoice == 0)
             {
@@ -38,7 +35,7 @@ public class FoodAndDrinkMenu
     public static List<OrderItemModel> ShowOnlyDrinksMenu(MenuLogic menuLogic)
     {
         // list for selected lounge drinks
-        List<OrderItemModel> orderItems = new List<OrderItemModel>();
+        List<OrderItemModel> orderItems = [];
 
         // show only drinks before the movie
         ShowCategoryItems(menuLogic.GetDrinks(), menuLogic, orderItems);
@@ -58,7 +55,7 @@ public class FoodAndDrinkMenu
                 itemMenu.Add($"{item.Name} - €{item.Price:0.00}");
             }
 
-            int selectedItemIndex = UiHelper.SelectionMenu(itemMenu, "Choose an item before the movie");
+            int selectedItemIndex = UiHelper.SelectionMenu.WriteMenu(itemMenu, "Choose an item before the movie");
 
             if (selectedItemIndex == -1)
             {
@@ -70,7 +67,7 @@ public class FoodAndDrinkMenu
             Int64 quantity;
             do
             {
-                string quantityText = UiHelper.Input("Enter quantity");
+                string quantityText = UiHelper.InputMenu.WriteMenu("Enter quantity");
 
                 if (quantityText == "-1")
                 {
@@ -144,7 +141,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
                 "Continue"
             };
 
-            int choice = UiHelper.SelectionMenu(editMenu, "Do you want to edit the order?");
+            int choice = UiHelper.SelectionMenu.WriteMenu(editMenu, "Do you want to edit the order?");
 
             if (choice == 0)
             {
@@ -188,7 +185,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
             updateMenu.Add($"{item.Name} - current quantity: {item.Quantity}");
         }
 
-        int selectedIndex = UiHelper.SelectionMenu(updateMenu, "Choose item to update");
+        int selectedIndex = UiHelper.SelectionMenu.WriteMenu(updateMenu, "Choose item to update");
 
         if (selectedIndex == -1)
         {
@@ -200,7 +197,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
         Int64 newQuantity;
         do
         {
-            string qtyText = UiHelper.Input($"Enter new quantity for {selectedItem.Name}");
+            string qtyText = UiHelper.InputMenu.WriteMenu($"Enter new quantity for {selectedItem.Name}");
 
             if (qtyText == "-1")
             {
@@ -240,7 +237,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
             removeMenu.Add($"{item.Name} - quantity: {item.Quantity}");
         }
 
-        int selectedIndex = UiHelper.SelectionMenu(removeMenu, "Choose item to remove");
+        int selectedIndex = UiHelper.SelectionMenu.WriteMenu(removeMenu, "Choose item to remove");
 
         if (selectedIndex == -1)
         {

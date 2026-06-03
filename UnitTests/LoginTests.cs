@@ -16,7 +16,7 @@ public sealed class Test1
         AccountsLogic l = new();
         AccountsAccess access = new();
 
-        // act 
+        // act
         AccountModel result = l.CheckLogin(m, p);
 
         // assert
@@ -36,7 +36,7 @@ public sealed class Test1
         // arrange
         AccountsLogic l = new();
 
-        // act 
+        // act
         AccountModel result = l.CheckLogin(m, p);
 
         // assert
