@@ -3,7 +3,6 @@ public static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
-    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
     private static List<TimetableModel> CurrentTimetables = [];
 
     public static TicketModel? Start(MovieModel movie, AccountModel? customer = null)
@@ -145,60 +144,11 @@ public static class PurchaseTicket
             return null;
         }
 
-        int selectedPaymentMethod = UiHelper.SelectionMenu.WriteMenu(PaymentMethods, "How do you want to pay?");
-        if (selectedPaymentMethod == -1)
-        {
-            return null;
-        }
-
-        string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
-        string invalidInputs = "";
-        Dictionary<string, string> paymentInfo = [];
-
-        if (selectedPaymentMethodString == "Credit Card")
-        {
-            foreach (string field in CreditCardInput)
-            {
-                paymentInfo[field] = "";
-            }
-
-            do
-            {
-                paymentInfo = UiHelper.InputFormMenu.WriteMenu(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
-
-                bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "credit card");
-            } while (invalidInputs != "");
-        }
-        else if (selectedPaymentMethodString == "IBAN")
-        {
-            foreach (string field in IBANInput)
-            {
-                paymentInfo[field] = "";
-            }
-
-            do
-            {
-                paymentInfo = UiHelper.InputFormMenu.WriteMenu(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
-
-                bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "iban");
-
-
-            } while (invalidInputs != "");
-        }
-
-        UiHelper.SelectionMenu.WriteMenu([$"Payment successful."], "");
-
         ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, TimeLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
-        return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethodString);
+        string selectedPaymentMethod = PaymentInformation.Start();
+
+        return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
     }
 
     public static void SetUpDateMenu(MovieModel movie)
