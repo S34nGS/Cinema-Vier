@@ -160,7 +160,7 @@ public static class PurchaseTicket
         ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, convertedDateTime.ConvertDateToUnixTime(), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
 
-        (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null);
+        (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null, selectedSeats.Count);
         if(!completePayment) return null;
 
         return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
