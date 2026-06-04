@@ -12,7 +12,7 @@
         "IBAN number (for example: NL12 ABNA 1234 5678 90)"
     ];
 
-    public static (bool, string) Start(List<string>? paymentMethods)
+    public static (bool, string) Start(List<string>? paymentMethods, int seatsCount = 1)
     {
         if (paymentMethods is null)
         {
@@ -74,7 +74,7 @@
             }
             else if (selectedPaymentMethodString == "Movie pass")
             {
-                if (!PurchaseLogic.MoviePassCheck())
+                if (!PurchaseLogic.MoviePassCheck(seatsCount))
                 {
                     UiHelper.SelectionMenu.WriteMenu([$"Not enough pass points"], "");
                 }
