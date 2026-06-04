@@ -4,30 +4,30 @@
     {
         while (true)
         {
-            List<string> menu = ["Upcoming Orders", "Previous Orders"];
+            string[] menu = ["Upcoming Orders", "Previous Orders"];
             int selected = UiHelper.SelectionMenu.WriteMenu(menu, "Reservations");
 
-            if (selected == menu.IndexOf("Upcoming Orders"))
+            if (selected == -1)
+            {
+                return;
+            }
+
+            if (selected == Array.IndexOf(menu, "Upcoming Orders"))
             {
                 ShowFutureReservations();
             }
-            else if (selected == menu.IndexOf("Previous Orders"))
+            else if (selected == Array.IndexOf(menu, "Previous Orders"))
             {
                 ShowPastReservations();
             }
-            else
-            {
-                Menu.Start();
-                return;
-            }
         }
     }
+
     static void ShowFutureReservations()
     {
         long userId = AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetFutureReservations(userId);
 
-        // sort reservations from old date to new date
         reservations = reservations.OrderBy(reservation => reservation.ReservationDate).ToList();
         ShowReservationList(reservations, "Upcoming Orders");
     }
@@ -37,7 +37,6 @@
         long userId = AccountsLogic.CurrentAccount!.Id;
         List<ReservationModel> reservations = ReservationsLogic.GetPastReservations(userId);
 
-        // sort reservations from old date to new date
         reservations = reservations.OrderBy(reservation => reservation.ReservationDate).ToList();
         ShowReservationList(reservations, "Previous Orders");
     }
@@ -54,18 +53,17 @@
         }
 
         List<string> reservationMenu = [];
+
         foreach (ReservationModel reservation in reservations)
         {
-            DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+            DateTimeOffset date = TimeLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
             TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
             MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
 
-            // show short information first
-            reservationMenu.Add($"{TimetablesLogic.GetDateString(date)} - {movie.Title}");
+            reservationMenu.Add($"{TimeLogic.ConvertDateString(date, "dd-MM-yyyy")} - {movie.Title}");
         }
-                DateTimeOffset movieTime = TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
 
-        int selected = UiHelper.SelectionMenu(reservationMenu, title);
+        int selected = UiHelper.SelectionMenu.WriteMenu(reservationMenu.ToArray(), title);
 
         if (selected == -1)
         {
@@ -79,11 +77,10 @@
     {
         Console.Clear();
 
-        // get all information for this reservation
-        DateTimeOffset date = TimetablesLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
+        DateTimeOffset date = TimeLogic.ConvertUnixTimeToDateTime(reservation.ReservationDate);
         TimetableModel timetable = TimetablesLogic.GetById(reservation.TimeTableId);
         MovieModel movie = MoviesLogic.GetById(timetable.MovieId);
-        DateTimeOffset movieTime = TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
+        DateTimeOffset movieTime = TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime);
         RoomModel room = RoomsLogic.GetRoomById((int)timetable.RoomId);
 
         SeatReservationAccess seatReservationAccess = new();
@@ -93,11 +90,11 @@
         Console.WriteLine("      RESERVATION DETAILS");
         Console.WriteLine("==================================");
         Console.WriteLine();
-    
+
         Console.WriteLine($"Reservation # : {reservation.Id}");
         Console.WriteLine($"Movie         : {movie.Title}");
-        Console.WriteLine($"Date          : {TimetablesLogic.GetDateString(date)}");
-        Console.WriteLine($"Time          : {TimetablesLogic.GetTimeString(movieTime)}");
+        Console.WriteLine($"Date          : {TimeLogic.ConvertDateString(date, "dd-MM-yyyy")}");
+        Console.WriteLine($"Time          : {TimeLogic.ConvertDateString(movieTime, "HH:mm")}");
         Console.WriteLine($"Room          : {room.ScreenType}");
         Console.WriteLine($"Total         : €{reservation.TotalPrice:F2}");
 
