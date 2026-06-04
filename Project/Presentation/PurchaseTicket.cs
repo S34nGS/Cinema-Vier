@@ -149,7 +149,7 @@ public static class PurchaseTicket
             loungePreOrderItems,
             loungePreOrderTotal,
             finalTotal,
-            selectedSeats
+            selectedSeats.Count
         );
 
         // user must accept T&C
