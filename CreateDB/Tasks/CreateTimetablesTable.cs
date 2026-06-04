@@ -55,6 +55,22 @@ public static class CreateTimetablesTable
             new TimetableModel(16, 3, 3, TimeLogic.ConvertDateToUnixTime(date16)),
             new TimetableModel(17, 3, 3, TimeLogic.ConvertDateToUnixTime(date17)),
             new TimetableModel(18, 3, 3, TimeLogic.ConvertDateToUnixTime(date18)),
+
+            // Movie 4
+            new TimetableModel(19, 4, 1, TimeLogic.ConvertDateToUnixTime(date13)),
+            new TimetableModel(20, 4, 1, TimeLogic.ConvertDateToUnixTime(date14)),
+            new TimetableModel(21, 4, 1, TimeLogic.ConvertDateToUnixTime(date15)),
+            new TimetableModel(22, 4, 1, TimeLogic.ConvertDateToUnixTime(date16)),
+            new TimetableModel(23, 4, 1, TimeLogic.ConvertDateToUnixTime(date17)),
+            new TimetableModel(24, 4, 1, TimeLogic.ConvertDateToUnixTime(date18)),
+
+            // Movie 5
+            new TimetableModel(25, 5, 2, TimeLogic.ConvertDateToUnixTime(date13)),
+            new TimetableModel(26, 5, 2, TimeLogic.ConvertDateToUnixTime(date14)),
+            new TimetableModel(27, 5, 2, TimeLogic.ConvertDateToUnixTime(date15)),
+            new TimetableModel(28, 5, 2, TimeLogic.ConvertDateToUnixTime(date16)),
+            new TimetableModel(29, 5, 2, TimeLogic.ConvertDateToUnixTime(date17)),
+            new TimetableModel(30, 5, 2, TimeLogic.ConvertDateToUnixTime(date18)),
         ];
 
         foreach (TimetableModel timetable in timetablesList)

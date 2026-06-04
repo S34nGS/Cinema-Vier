@@ -80,7 +80,7 @@
             DisableMovie.Start();
             Start();
         }
-        else if (selected == Array.IndexOf(menu, "Manage Timetables"))
+        else if (selected == Array.IndexOf(menu, "Manage Timetable"))
         {
             Timetables.Start();
             Start();
@@ -111,7 +111,7 @@
         }
         else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
         {
-            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
+            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetable", "Logout"];
         }
         else
         {
