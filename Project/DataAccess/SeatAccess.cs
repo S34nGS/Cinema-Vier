@@ -40,6 +40,28 @@ public class SeatAccess : DefaultAccess, IAccess
 				WHERE sr.timetableId = @TimetableId
 		";
 
-        return connection.Query<SeatModel>(sql, new { TimetableId = timetableId }).AsList();
-    }
+		return connection.Query<SeatModel>(sql, new { TimetableId = timetableId }).AsList();
+	}
+	public SeatModel GetById(long seatId)
+	{
+    	string sql = $"SELECT * FROM {Table} WHERE id = @SeatId";
+    	return connection.QueryFirstOrDefault<SeatModel>(sql, new { SeatId = seatId });
+	}
+
+	public (Int64 RoomId, Int64 MaxRow, Int64 MaxSeatNumber) GetRoomSeatInfo(Int64 roomId)
+		{
+			string sql = $@"
+				SELECT 
+					roomId AS RoomId,
+					MAX(row) AS MaxRow,
+					MAX(seatNumber) AS MaxSeatNumber
+				FROM {Table}
+				WHERE roomId = @RoomId
+				GROUP BY roomId";
+
+			return connection.QuerySingle<(Int64 RoomId, Int64 MaxRow, Int64 MaxSeatNumber)>(
+				sql,
+				new { RoomId = roomId }
+			);
+		}
 }
