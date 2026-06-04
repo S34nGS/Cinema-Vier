@@ -148,7 +148,8 @@ public static class PurchaseTicket
             menuTotal,
             loungePreOrderItems,
             loungePreOrderTotal,
-            finalTotal
+            finalTotal,
+            selectedSeats
         );
 
         // user must accept T&C

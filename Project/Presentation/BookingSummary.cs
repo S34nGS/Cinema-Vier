@@ -8,7 +8,8 @@
         double menuTotal,
         List<OrderItemModel> loungePreOrderItems,
         double loungePreOrderTotal,
-        double finalTotal
+        double finalTotal,
+        List<SeatModel> selectedSeats
     )
     {
         string output = @$"Booking Summary
