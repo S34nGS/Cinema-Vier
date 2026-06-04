@@ -1,6 +1,6 @@
 ﻿public static class PaymentInformation
 {
-    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
+    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN", "Movie pass"];
     private static List<string> CreditCardInput = [
         "Cardholder name",
         "Card number (13-19 digits)",
@@ -12,59 +12,81 @@
         "IBAN number (for example: NL12 ABNA 1234 5678 90)"
     ];
 
-    public static string Start()
+    public static (bool, string) Start(List<string>? paymentMethods, int seatsCount = 1)
     {
-        int selectedPaymentMethod = UiHelper.SelectionMenu.WriteMenu(PaymentMethods, "How do you want to pay?");
-        if (selectedPaymentMethod == -1)
+        if (paymentMethods is null)
         {
-            return "-1";
+            paymentMethods = DecidePaymentmethods();
         }
 
-        string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
-        string invalidInputs = "";
-        Dictionary<string, string> paymentInfo = [];
+        string selectedPaymentMethodString = "";
 
-        if (selectedPaymentMethodString == "Credit Card")
+        while (true)
         {
-            foreach (string field in CreditCardInput)
+            int selectedPaymentMethod = UiHelper.SelectionMenu.WriteMenu(paymentMethods, "How do you want to pay?");
+            if (selectedPaymentMethod == -1)
             {
-                paymentInfo[field] = "";
+                return (false, selectedPaymentMethodString);
             }
 
-            do
-            {
-                paymentInfo = UiHelper.InputFormMenu.WriteMenu(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
+            selectedPaymentMethodString = paymentMethods[selectedPaymentMethod];
+            string invalidInputs = "";
+            Dictionary<string, string> paymentInfo = [];
 
-                bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "credit card");
-            } while (invalidInputs != "");
-        }
-        else if (selectedPaymentMethodString == "IBAN")
-        {
-            foreach (string field in IBANInput)
+            if (selectedPaymentMethodString == "Credit Card")
             {
-                paymentInfo[field] = "";
+                foreach (string field in CreditCardInput)
+                {
+                    paymentInfo[field] = "";
+                }
+
+                do
+                {
+                    paymentInfo = UiHelper.InputFormMenu.WriteMenu(
+                        paymentInfo,
+                        invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                    );
+
+                    bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
+                    invalidInputs = InValidMessage(isValidInput, "credit card");
+                } while (invalidInputs != "");
+                break;
             }
-
-            do
+            else if (selectedPaymentMethodString == "IBAN")
             {
-                paymentInfo = UiHelper.InputFormMenu.WriteMenu(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
+                foreach (string field in IBANInput)
+                {
+                    paymentInfo[field] = "";
+                }
 
-                bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "iban");
+                do
+                {
+                    paymentInfo = UiHelper.InputFormMenu.WriteMenu(
+                        paymentInfo,
+                        invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
+                    );
 
+                    bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
+                    invalidInputs = InValidMessage(isValidInput, "iban");
 
-            } while (invalidInputs != "");
+                } while (invalidInputs != "");
+                break;
+            }
+            else if (selectedPaymentMethodString == "Movie pass")
+            {
+                if (!PurchaseLogic.MoviePassCheck(seatsCount))
+                {
+                    UiHelper.SelectionMenu.WriteMenu([$"Not enough pass points"], "");
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         UiHelper.SelectionMenu.WriteMenu([$"Payment successful."], "");
-        return selectedPaymentMethodString;
+        return (true, selectedPaymentMethodString);
     }
 
     private static string InValidMessage(bool[] isValidInput, string paymentMethod)
@@ -114,5 +136,20 @@
         }
 
         return message;
+    }
+
+    public static List<string> DecidePaymentmethods()
+    {
+        List<string> PaymentMethods2 = [];
+        foreach(string payment in PaymentInformation.PaymentMethods)
+        {
+            if(payment != "Movie pass")
+            {
+                PaymentMethods2.Add(payment);
+            }
+        }
+
+        List<string> paymentMethods = AccountsLogic.CurrentAccount.PassPoints <= 0 ? PaymentMethods2 : PaymentMethods;
+        return paymentMethods;
     }
 }

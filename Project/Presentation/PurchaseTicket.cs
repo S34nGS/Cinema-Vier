@@ -1,4 +1,3 @@
-﻿// TODO: rewrite this entire file
 public static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
@@ -160,7 +159,9 @@ public static class PurchaseTicket
 
         ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, convertedDateTime.ConvertDateToUnixTime(), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
-        string selectedPaymentMethod = PaymentInformation.Start();
+
+        (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null, selectedSeats.Count);
+        if(!completePayment) return null;
 
         return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
     }
