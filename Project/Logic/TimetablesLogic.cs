@@ -135,7 +135,6 @@
         return true;
     }
 
-
     public static bool ValidateTimeString(string time)
     {
         if (time.Length != 5 || time[2] != ':')
@@ -240,7 +239,7 @@
                 string id = timetable.Id.ToString();
                 string date = GetDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
                 string time = GetTimeString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
-                timetableIds.Add($"Timetable ID: {id}, Date: {date}, Time: {time}");
+                timetableIds.Add($"Showing ID: {id}, Date: {date}, Time: {time}");
             }
         }
         // TODO: add a presentation layer file for this
