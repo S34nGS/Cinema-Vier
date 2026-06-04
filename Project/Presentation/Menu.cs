@@ -2,15 +2,23 @@
 {
     static public void Start()
     {
-        string header = (AccountsLogic.CurrentAccount != null)
-            ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
-            : "Welcome to Cinema Vier! Please select an option:";
+        while (true)
+        {
+            string header = (AccountsLogic.CurrentAccount != null)
+                ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
+                : "Welcome to Cinema Vier! Please select an option:";
 
-        string[] menu = BuildMenu();
+            string[] menu = BuildMenu();
 
-        int selected = UiHelper.SelectionMenu.WriteMenu(menu, header, true);
+            int selected = UiHelper.SelectionMenu.WriteMenu(menu, header, true);
 
-        ActMenuOption(menu, selected);
+            if (selected == -1)
+            {
+                continue;
+            }
+
+            ActMenuOption(menu, selected);
+        }
     }
 
     public static void ActMenuOption(string[] menu, int selected)
@@ -23,67 +31,29 @@
         {
             UserRegistration.Start();
         }
-
-        // TODO: Rework this to be its own seperate Book Movie functionality
         else if (selected == Array.IndexOf(menu, "Book Movie"))
         {
-            while (true)
-            {
-                MovieModel? movie = MoviesLogic.Start();
-                // if (movie is null)
-                // {
-                //     Start();
-                // }
+            MovieModel? movie = MoviesLogic.Start();
 
-                PurchaseTicket.SetUpDateMenu(movie);
-                UiHelper.HoldUser(movie.ToString());
+            if (movie is null)
+            {
+                return;
+            }
 
-                if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
-                {
-                    UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
-                    continue;
-                }
+            PurchaseTicket.SetUpDateMenu(movie);
+            UiHelper.HoldUser(movie.ToString());
 
-                PurchaseTicket.Start(movie);
-            }
-            else if (selected == menu.IndexOf("Book Movie For Customer"))
+            if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
             {
-                AdminBookMovie.Start();
+                UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
+                return;
             }
-            else if (selected == menu.IndexOf("Cinema Info"))
-            {
-                CinemaInfo.Start();
-            }
-            else if (selected == menu.IndexOf("View Reservations"))
-            {
-                ViewReservations.Start();
-            }
-            else if (selected == menu.IndexOf("Add Movie"))
-            {
-                AddMovie.Start();
-            }
-            else if (selected == menu.IndexOf("Edit Movie"))
-            {
-                EditMovie.Start();
-            }
-            else if (selected == menu.IndexOf("Disable Movie"))
-            {
-                DisableMovie.Start();
-            }
-            else if (selected == menu.IndexOf("Manage Timetables"))
-            {
-                Timetables.Start();
-            }
-            else if (selected == menu.IndexOf("Logout"))
-            {
-                AccountsLogic.Logout();
-                continue;
-            }
-            else if (selected == menu.IndexOf("Exit"))
-            {
-                Console.WriteLine("Thank you for using Cinema Vier! Goodbye!");
-                Environment.Exit(0);
-            }
+
+            PurchaseTicket.Start(movie);
+        }
+        else if (selected == Array.IndexOf(menu, "Book Movie For Customer"))
+        {
+            AdminBookMovie.Start();
         }
         else if (selected == Array.IndexOf(menu, "Cinema Info"))
         {
@@ -96,36 +66,27 @@
         else if (selected == Array.IndexOf(menu, "Add Movie"))
         {
             AddMovie.Start();
-            Start();
         }
         else if (selected == Array.IndexOf(menu, "Edit Movie"))
         {
             EditMovie.Start();
-            Start();
         }
         else if (selected == Array.IndexOf(menu, "Disable Movie"))
         {
             DisableMovie.Start();
-            Start();
         }
         else if (selected == Array.IndexOf(menu, "Manage Timetables"))
         {
             Timetables.Start();
-            Start();
-        }
-        else if (selected == Array.IndexOf(menu, "Book Movie For Customer"))
-        {
-            AdminBookMovie.Start();
-            Start();
         }
         else if (selected == Array.IndexOf(menu, "Logout"))
         {
             AccountsLogic.Logout();
-            Start();
         }
         else if (selected == Array.IndexOf(menu, "Exit"))
         {
             Console.WriteLine("Thank you for using Cinema Vier! Goodbye!");
+            Environment.Exit(0);
         }
     }
 
