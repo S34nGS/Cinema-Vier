@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 public class TimetablesAccess : DefaultAccess, IAccess
 {
@@ -44,16 +44,16 @@ public class TimetablesAccess : DefaultAccess, IAccess
     public List<TimetableModel> GetTimeTablesByMovieId(Int64 movieId)
     {
         string sql = $"SELECT * FROM {Table} WHERE movieId = @MovieId";
-        return connection.Query<TimetableModel>(sql, new { MovieId = movieId}).AsList();
+        return connection.Query<TimetableModel>(sql, new { MovieId = movieId }).AsList();
     }
 
-    public RoomModel GetRoomByTimetableId(Int64 timetableId)
+    public RoomModel? GetRoomByTimetableId(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
-        return connection.QueryFirstOrDefault<RoomModel>(sql, new {TimetableId = timetableId});
+        return connection.QueryFirstOrDefault<RoomModel>(sql, new { TimetableId = timetableId });
     }
 
-    public TimetableModel GetById(Int64 timetableId)
+    public TimetableModel? GetById(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
         return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });
@@ -62,15 +62,15 @@ public class TimetablesAccess : DefaultAccess, IAccess
     public List<TimetableModel> GetAllTimetablesFromDate(Int64 startTime)
     {
         string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime ORDER BY id";
-        return connection.Query<TimetableModel>(sql, new {StartTime = startTime}).AsList();
+        return connection.Query<TimetableModel>(sql, new { StartTime = startTime }).AsList();
     }
 
     public List<TimetableModel> GetSpecificTimetablesFromDate(Int64 startTime, Int64 movieId)
     {
         string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime AND movieId = @MovieId ORDER BY id";
-        return connection.Query<TimetableModel>(sql, new {StartTime = startTime, MovieId = movieId}).AsList();
+        return connection.Query<TimetableModel>(sql, new { StartTime = startTime, MovieId = movieId }).AsList();
     }
-    
+
     public List<TimetableModel> GetTimetablesByDateRange(Int64 startTime, Int64 endTime)
     {
         string sql = $"SELECT * FROM {Table} WHERE startTime >= @StartTime AND startTime <= @EndTime";

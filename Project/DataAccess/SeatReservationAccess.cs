@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 
 public class SeatReservationAccess : DefaultAccess, IAccess
@@ -25,5 +25,16 @@ public class SeatReservationAccess : DefaultAccess, IAccess
     {
         string sql = $"INSERT INTO {Table} (seatId, reservationId, timetableId) VALUES (@SeatId, @ReservationId, @TimetableId)";
         connection.Execute(sql, new { SeatId = seatId, ReservationId = reservationId, TimetableId = timetableId });
+    }
+
+    public List<SeatModel> GetSeatsByReservationId(Int64 reservationId)
+    {
+    string sql = $@"
+        SELECT s.*
+        FROM Seat s
+        JOIN {Table} sr ON s.id = sr.seatId
+        WHERE sr.reservationId = @ReservationId";
+
+    return connection.Query<SeatModel>(sql, new { ReservationId = reservationId }).AsList();
     }
 }

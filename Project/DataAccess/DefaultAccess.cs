@@ -1,7 +1,7 @@
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 public abstract class DefaultAccess
 {
-    protected SqliteConnection connection = new SqliteConnection("Data Source=./Project/DataSources/project.db");
+    protected SqliteConnection connection = new("Data Source=./Project/DataSources/project.db");
     public abstract void CreateTable();
 }

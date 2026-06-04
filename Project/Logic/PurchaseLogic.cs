@@ -1,7 +1,4 @@
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-
-public class PurchaseLogic  
+﻿public class PurchaseLogic
 {
     public static TicketModel? CurrentPayment { get; private set; }
     public static Random rng = new();
@@ -10,21 +7,21 @@ public class PurchaseLogic
     {
         bool[] isValidInput = new bool[creditCardInfo.Count];
 
-        foreach(KeyValuePair<string, string> info in creditCardInfo)
+        foreach (KeyValuePair<string, string> info in creditCardInfo)
         {
-            if(info.Key == "Cardholder name") 
+            if (info.Key == "Cardholder name")
             {
                 isValidInput[0] = CardHolderNameCheck(info.Value);
             }
-            else if(info.Key == "Card number (13-19 digits)")
+            else if (info.Key == "Card number (13-19 digits)")
             {
                 isValidInput[1] = CreditCardNumberCheck(info.Value);
             }
-            else if(info.Key == "Expiration date (MM/YY)")
+            else if (info.Key == "Expiration date (MM/YY)")
             {
                 isValidInput[2] = CreditCardExpirationDateCheck(info.Value);
             }
-            else if(info.Key == "CVC/CVV code (3-4 digits)")
+            else if (info.Key == "CVC/CVV code (3-4 digits)")
             {
                 isValidInput[3] = CreditCardCVCCVVCheck(info.Value);
             }
@@ -37,13 +34,13 @@ public class PurchaseLogic
     {
         bool[] isValidInput = new bool[iBANInfo.Count];
 
-        foreach(KeyValuePair<string, string> info in iBANInfo)
+        foreach (KeyValuePair<string, string> info in iBANInfo)
         {
-            if(info.Key == "Cardholder name")
+            if (info.Key == "Cardholder name")
             {
                 isValidInput[0] = CardHolderNameCheck(info.Value);
             }
-            else if(info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
+            else if (info.Key == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
             {
                 isValidInput[1] = IBANNumberCheck(info.Value);
             }
@@ -52,8 +49,32 @@ public class PurchaseLogic
         return isValidInput;
     }
 
+    public static bool MoviePassCheck(int seatsCount = 1)
+    {
+        if (AccountsLogic.CurrentAccount.PassPoints >= seatsCount)
+        {
+            AccountsLogic.CurrentAccount.PassPoints -= seatsCount;
+            return true;
+        }
+        return false;
+    }
+
+    public static void TopUpMoviePass(int amount) => AccountsLogic.CurrentAccount.PassPoints += (Int64)amount;
+
+    public static (bool, int) amountOfPassPointsIsValid(string amountOfPassPoints)
+    {
+        bool isValid = int.TryParse(amountOfPassPoints, out int amount);
+        
+        if(amount == 0)
+        {
+            isValid = false;
+        }
+        
+        return (isValid, amount);
+    }
+
     // calculate total with ticket, normal menu and lounge pre-order
-    public static decimal CalculateFullTotal(decimal ticketTotal, decimal menuTotal, decimal loungePreOrderTotal)
+    public static double CalculateFullTotal(double ticketTotal, double menuTotal, double loungePreOrderTotal)
     {
         return ticketTotal + menuTotal + loungePreOrderTotal;
     }
@@ -167,9 +188,9 @@ public class PurchaseLogic
         string moveIban = iban.Substring(4, iban.Length - 4) + iban.Substring(0, 4);
         string ibanAsNumber = "";
 
-        foreach(char c in moveIban)
+        foreach (char c in moveIban)
         {
-            if (replaceLetter.ContainsKey(c)) 
+            if (replaceLetter.ContainsKey(c))
             {
                 ibanAsNumber += replaceLetter[c];
             }
@@ -180,7 +201,7 @@ public class PurchaseLogic
         }
 
         int divisionResult = 0;
-        foreach(char c in ibanAsNumber)
+        foreach (char c in ibanAsNumber)
         {
             int digit = (int)char.GetNumericValue(c);
             divisionResult = (divisionResult * 10 + digit) % 97;
