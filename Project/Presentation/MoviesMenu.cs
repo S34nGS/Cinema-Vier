@@ -7,7 +7,7 @@
         while (true)
         {
             int preMovieListMenu;
-            if (AccountsLogic.CurrentAccount != null)
+            if (AccountsLogic.CurrentAccount != null && AccountsLogic.CurrentAccount.IsAdmin == 0)
             {
                 preMovieListMenu = UiHelper.SelectionMenu.WriteMenu(
                     [
