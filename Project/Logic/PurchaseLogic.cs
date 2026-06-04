@@ -49,11 +49,11 @@
         return isValidInput;
     }
 
-    public static bool MoviePassCheck()
+    public static bool MoviePassCheck(int seatsCount = 1)
     {
-        if (AccountsLogic.CurrentAccount.PassPoints > 0)
+        if (AccountsLogic.CurrentAccount.PassPoints >= seatsCount)
         {
-            AccountsLogic.CurrentAccount.PassPoints --;
+            AccountsLogic.CurrentAccount.PassPoints -= seatsCount;
             return true;
         }
         return false;
