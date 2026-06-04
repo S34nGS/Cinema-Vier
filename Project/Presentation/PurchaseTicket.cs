@@ -1,25 +1,11 @@
-static class PurchaseTicket
+﻿// TODO: rewrite this entire file
+public static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
-    public static List<string> PaymentMethods { get; } = ["Credit Card", "IBAN"];
     private static List<TimetableModel> CurrentTimetables = [];
 
-    public static List<string> CreditCardInput =
-    [
-        "Cardholder name",
-        "Card number (13-19 digits)",
-        "Expiration date (MM/YY)",
-        "CVC/CVV code (3-4 digits)"
-    ];
-
-    public static List<string> IBANInput =
-    [
-        "Cardholder name",
-        "IBAN number (for example: NL12 ABNA 1234 5678 90)"
-    ];
-
-    public static TicketModel? Start(MovieModel movie, AccountModel customer = null)
+    public static TicketModel? Start(MovieModel movie, AccountModel? customer = null)
     {
         // reset date menu
         DateMenu.Clear();
@@ -27,7 +13,7 @@ static class PurchaseTicket
 
         if (DateMenu.Count == 0)
         {
-            int dates = UiHelper.SelectionMenu(
+            int dates = UiHelper.SelectionMenu.WriteMenu(
                 ["No available dates."],
                 "Pick a date",
                 true
@@ -39,7 +25,7 @@ static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiHelper.SelectionMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, "Pick a date");
         if (selectedDate == -1)
         {
             return null;
@@ -51,11 +37,16 @@ static class PurchaseTicket
         TimeMenu.Clear();
         SetUpTimeMenu(movie, selectedDateString);
 
-        int selectedTime = UiHelper.SelectionMenu(TimeMenu, "Pick a time");
+        int selectedTime = UiHelper.SelectionMenu.WriteMenu(TimeMenu, "Pick a time");
 
         if (selectedTime == -1)
         {
             return null;
+        }
+
+        if (AccountsLogic.CurrentAccount == null && customer == null)
+        {
+            UserLogin.Start();
         }
 
         SeatSelection seatSelection = new();
@@ -67,10 +58,24 @@ static class PurchaseTicket
         DateTime convertedDateTime = DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", null);
 
         // ticket price for summary
-        decimal ticketTotal = 12.00m;
+        double ticketTotal = 0.0;
+        selectedSeats.ForEach((seat) =>
+        {
+            ticketTotal += 12;
+
+            if (seat.SeatPriority == 2)
+            {
+                ticketTotal += 3;
+            }
+
+            if (seat.SeatPriority == 3)
+            {
+                ticketTotal += 6;
+            }
+        });
 
         // selected menu items
-        List<OrderItemModel> orderedMenuItems = new List<OrderItemModel>();
+        List<OrderItemModel> orderedMenuItems = [];
 
         // ask if user wants food or drinks before the movie
         List<string> orderMenuChoices =
@@ -79,7 +84,7 @@ static class PurchaseTicket
             "Add food and drinks before the movie"
         ];
 
-        int selectedOrderChoice = UiHelper.SelectionMenu(orderMenuChoices, "Do you want to add snacks or drinks before the movie?");
+        int selectedOrderChoice = UiHelper.SelectionMenu.WriteMenu(orderMenuChoices, "Do you want to add snacks or drinks before the movie?");
         if (selectedOrderChoice == 1)
         {
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
@@ -92,7 +97,7 @@ static class PurchaseTicket
             OrderItemModel freePopcornGift = new(
                 0,
                 "🎁 Birthday gift: Free popcorn",
-                0.00m,
+                0.00,
                 1
             );
 
@@ -105,7 +110,7 @@ static class PurchaseTicket
         }
 
         // selected lounge pre-order drinks
-        List<OrderItemModel> loungePreOrderItems = new List<OrderItemModel>();
+        List<OrderItemModel> loungePreOrderItems = [];
 
         // ask if user wants lounge pre-order drinks before the movie
         List<string> loungePreOrderChoices =
@@ -114,7 +119,7 @@ static class PurchaseTicket
             "Add lounge drink pre-order before the movie"
         ];
 
-        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu(
+        int selectedLoungePreOrderChoice = UiHelper.SelectionMenu.WriteMenu(
             loungePreOrderChoices,
             "Do you want to pre-order drinks from the lounge/bar before the movie?"
         );
@@ -122,22 +127,22 @@ static class PurchaseTicket
         if (selectedLoungePreOrderChoice == 1)
         {
             // show only drinks for lounge pre-order
-            MenuLogic loungeMenuLogic = new MenuLogic();
+            MenuLogic loungeMenuLogic = new();
             loungePreOrderItems = FoodAndDrinkMenu.ShowOnlyDrinksMenu(loungeMenuLogic);
         }
 
         // calculate totals
-        MenuLogic menuLogic = new MenuLogic();
-        decimal menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
+        MenuLogic menuLogic = new();
+        double menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
 
         // calculate lounge pre-order total
-        decimal loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
+        double loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
 
         // calculate final total with lounge pre-order
-        decimal finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
+        double finalTotal = PurchaseLogic.CalculateFullTotal(ticketTotal, menuTotal, loungePreOrderTotal);
 
         // show summary before payment
-        ShowBookingSummary(
+        BookingSummary.Start(
             ticketTotal,
             orderedMenuItems,
             menuTotal,
@@ -146,64 +151,18 @@ static class PurchaseTicket
             finalTotal
         );
 
-        if (AccountsLogic.CurrentAccount == null && customer == null)
+        // user must accept T&C
+        if (!TermsAndConditions.Start())
         {
-            UserLogin.Start();
-        }
-
-        int selectedPaymentMethod = UiHelper.SelectionMenu(PaymentMethods, "How do you want to pay?");
-        if (selectedPaymentMethod == -1)
-        {
+            UiHelper.HoldUser("Purchase cancelled. You must accept the terms and conditions before payment.");
             return null;
         }
 
-        string selectedPaymentMethodString = PaymentMethods[selectedPaymentMethod];
-        string invalidInputs = "";
-        Dictionary<string, string> paymentInfo = [];
+        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, convertedDateTime.ConvertDateToUnixTime(), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
-        if (selectedPaymentMethodString == "Credit Card")
-        {
-            foreach (string field in CreditCardInput)
-            {
-                paymentInfo[field] = "";
-            }
+        string selectedPaymentMethod = PaymentInformation.Start();
 
-            do
-            {
-                paymentInfo = UiHelper.InputForm(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
-
-                bool[] isValidInput = PurchaseLogic.CreditCardCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "credit card");
-            } while (invalidInputs != "");
-        }
-        else if (selectedPaymentMethodString == "IBAN")
-        {
-            foreach (string field in IBANInput)
-            {
-                paymentInfo[field] = "";
-            }
-
-            do
-            {
-                paymentInfo = UiHelper.InputForm(
-                    paymentInfo,
-                    invalidInputs != "" ? $"Invalid input: {invalidInputs} please try again" : "Please fill in the payment information"
-                );
-
-                bool[] isValidInput = PurchaseLogic.IBANCheck(paymentInfo);
-                invalidInputs = InValidMessage(isValidInput, "iban");
-
-
-            } while (invalidInputs != "");
-        }
-
-        UiHelper.SelectionMenu([$"Payment successful."], "");
-        ReservationsLogic.CreateReservation(new ReservationModel(-1, (customer != null) ? customer.Id : AccountsLogic.CurrentAccount!.Id, TimetablesLogic.ConvertDateToUnixTime(convertedDateTime), (double)finalTotal, selectedTimetable.Id, selectedSeats));
-
-        return new TicketModel(null, null, convertedDateTime, selectedPaymentMethodString);
+        return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
     }
 
     public static void SetUpDateMenu(MovieModel movie)
@@ -214,12 +173,13 @@ static class PurchaseTicket
         foreach (TimetableModel timetable in timetables)
         {
             if (
-                timetable.StartTime > TimetablesLogic.ConvertDateToUnixTime(DateTime.Now) &&
-                timetable.StartTime < TimetablesLogic.ConvertDateToUnixTime(DateTime.Now.AddDays(14))
-                )
+                timetable.StartTime > DateTime.Now.ConvertDateToUnixTime() &&
+                timetable.StartTime < DateTime.Now.AddDays(14).ConvertDateToUnixTime()
+            )
             {
-                string date = TimetablesLogic.GetDateString(
-                    TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)
+                string date = TimeLogic.ConvertDateString(
+                    timetable.StartTime.ConvertUnixTimeToDateTime(),
+                    "dd-MM-yyyy"
                 );
 
                 if (DateMenu.Contains(date) == false)
@@ -239,142 +199,18 @@ static class PurchaseTicket
 
         foreach (TimetableModel timetable in timetables)
         {
-            if (dateString == TimetablesLogic.GetDateString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime)))
+            if (dateString == timetable.StartTime.ConvertUnixTimeToDateTime().ConvertDateString("dd-MM-yyyy"))
             {
                 DateTime now = DateTime.Now;
 
-                if (TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
+                if (TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime) > now)
                 {
                     CurrentTimetables.Add(timetable);
                     TimeMenu.Add(
-                        $"{TimetablesLogic.GetTimeString(TimetablesLogic.ConvertUnixTimeToDateTime(timetable.StartTime))} {RoomsLogic.GetRoomById(Convert.ToInt32(timetable.RoomId)).ScreenType}"
+                        $"{timetable.StartTime.ConvertUnixTimeToDateTime().ConvertDateString("HH:mm")} {RoomsLogic.GetRoomById(timetable.RoomId).ScreenType}"
                     );
                 }
             }
         }
-    }
-
-    // show booking summary before payment
-    static void ShowBookingSummary(
-        decimal ticketTotal,
-        List<OrderItemModel> orderedMenuItems,
-        decimal menuTotal,
-        List<OrderItemModel> loungePreOrderItems,
-        decimal loungePreOrderTotal,
-        decimal finalTotal)
-    {
-        Console.Clear();
-
-        Console.WriteLine($@"
-Booking Summary
-
-Ticket total: €{ticketTotal:0.00}
-");
-
-        if (orderedMenuItems.Count > 0)
-        {
-            Console.WriteLine($@"
-Food and drink items:
-");
-
-            foreach (OrderItemModel item in orderedMenuItems)
-            {
-                Console.WriteLine($@"
-Item name: {item.Name}
-Quantity: {item.Quantity}
-Price per item: €{item.PricePerItem:0.00}
-Subtotal: €{item.SubTotal:0.00}
-");
-            }
-        }
-        else
-        {
-            Console.WriteLine($@"
-No food or drinks selected.
-");
-        }
-
-        Console.WriteLine($@"
-Food and drink total: €{menuTotal:0.00}
-");
-
-        if (loungePreOrderItems.Count > 0)
-        {
-            Console.WriteLine($@"
-Lounge pre-order drinks before the movie:
-");
-
-            foreach (OrderItemModel item in loungePreOrderItems)
-            {
-                Console.WriteLine($@"
-Item name: {item.Name}
-Quantity: {item.Quantity}
-Price per item: €{item.PricePerItem:0.00}
-Subtotal: €{item.SubTotal:0.00}
-");
-            }
-        }
-        else
-        {
-            Console.WriteLine($@"
-No lounge drinks selected.
-");
-        }
-
-        Console.WriteLine($@"
-Lounge drink pre-order total: €{loungePreOrderTotal:0.00}
-Final total: €{finalTotal:0.00}
-");
-
-        UiHelper.HoldUser();
-    }
-
-    public static string InValidMessage(bool[] isValidInput, string paymentMethod)
-    {
-        string message = "";
-        if (paymentMethod == "credit card")
-        {
-            for (int i = 0; i < isValidInput.Length; i++)
-            {
-                if (isValidInput[i] == false)
-                {
-                    if (CreditCardInput[i] == "Cardholder name")
-                    {
-                        message += "Invalid name, ";
-                    }
-                    else if (CreditCardInput[i] == "Card number (13-19 digits)")
-                    {
-                        message += "Invalid card number, ";
-                    }
-                    else if (CreditCardInput[i] == "Expiration date (MM/YY)")
-                    {
-                        message += "Invalid date, ";
-                    }
-                    else if (CreditCardInput[i] == "CVC/CVV code (3-4 digits)")
-                    {
-                        message += "Invalid CVC/CVV code, ";
-                    }
-                }
-            }
-        }
-        else if (paymentMethod == "iban")
-        {
-            for (int i = 0; i < isValidInput.Length; i++)
-            {
-                if (isValidInput[i] == false)
-                {
-                    if (CreditCardInput[i] == "Cardholder name")
-                    {
-                        message += "Invalid name, ";
-                    }
-                    else if (CreditCardInput[i] == "IBAN number (for example: NL12 ABNA 1234 5678 90)")
-                    {
-                        message += "Invalid IBAN number, ";
-                    }
-                }
-            }
-        }
-
-        return message;
     }
 }

@@ -15,7 +15,7 @@
         while (acc == null && LoginAttempts < 3)
         {
             inputs["Password"] = "";
-            inputs = UiHelper.InputForm(inputs, "Please enter your login information", header: errorMessage);
+            inputs = UiHelper.InputFormMenu.WriteMenu(inputs, "Please enter your login information", header: errorMessage);
             acc = _accountsLogic.CheckLogin(inputs["Email"], inputs["Password"]);
 
             errorMessage = "No account found with that email and password";

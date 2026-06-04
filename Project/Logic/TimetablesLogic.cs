@@ -1,37 +1,36 @@
-using System.Globalization;
-
-public static class TimetablesLogic
+﻿public static class TimetablesLogic
 {
     private static TimetablesAccess _access = new();
+    public static List<TimetableModel>? CurrentTimeTables { get; set; }
 
 
-    // Conversion methods
-    public static Int64 ConvertDateToUnixTime(DateTime dateTime)
-    {
-        return (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-    }
+    //     // Conversion methods
+    //     public static Int64 ConvertDateToUnixTime(DateTime dateTime)
+    //     {
+    //         return (int)dateTime.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+    //     }
 
-    public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
-    {
-        return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
-    }
+    //     public static string ConvertDateTimeOffsetToString(DateTimeOffset dateTime)
+    //     {
+    //         return dateTime.ToString("dd/MM/yyyy HH:mm:ss");
+    //     }
 
-    public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
-    {
-        return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
-    }
+    //     public static DateTimeOffset ConvertUnixTimeToDateTime(Int64 unixTimestamp)
+    //     {
+    //         return DateTimeOffset.FromUnixTimeSeconds(unixTimestamp);
+    //     }
 
-   public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
-    {
-        return DateTimeOffset
-            .FromUnixTimeSeconds(unixTimestamp)
-            .DateTime;
-    }
+    //    public static DateTime ConvertUnixTimeToDateTimeValue(Int64 unixTimestamp)
+    //     {
+    //         return DateTimeOffset
+    //             .FromUnixTimeSeconds(unixTimestamp)
+    //             .DateTime;
+    //     }
 
-    public static string ConvertUnixTimeToString(Int64 unixTimestamp)
-    {
-        return ConvertDateTimeOffsetToString(ConvertUnixTimeToDateTime(unixTimestamp));
-    }
+    //     public static string ConvertUnixTimeToString(Int64 unixTimestamp)
+    //     {
+    //         return ConvertDateTimeOffsetToString(ConvertUnixTimeToDateTime(unixTimestamp));
+    //     }
 
     public static Int64 ConvertTimeStringToUnixTime(string time)
     {
@@ -52,43 +51,43 @@ public static class TimetablesLogic
         return _access.GetTimeTablesByMovieId(movieId);
     }
 
-    public static RoomModel GetRoomByTimetableId(Int64 timetableId)
+    public static RoomModel? GetRoomByTimetableId(Int64 timetableId)
     {
         return _access.GetRoomByTimetableId(timetableId);
     }
 
-    public static TimetableModel GetById(Int64 timetableId)
+    public static TimetableModel? GetById(Int64 timetableId)
     {
         return _access.GetById(timetableId);
     }
 
     public static List<TimetableModel> GetTimetablesByDate(string dateString)
     {
-        DateTime date = ConvertStringToDateTime(dateString);
-        Int64 startUnixTime = ConvertDateToUnixTime(date.Date);
-        Int64 endUnixTime = ConvertDateToUnixTime(date.Date.AddDays(1)) - 1;
-        
+        DateTime date = TimeLogic.ConvertStringToDateTime(dateString);
+        Int64 startUnixTime = TimeLogic.ConvertDateToUnixTime(date.Date);
+        Int64 endUnixTime = TimeLogic.ConvertDateToUnixTime(date.Date.AddDays(1)) - 1;
+
         return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
     }
 
     public static List<TimetableModel> GetTimetablesByDateRange(DateTime startDate, DateTime endDate)
     {
-        Int64 startUnixTime = ConvertDateToUnixTime(startDate.Date);
-        Int64 endUnixTime = ConvertDateToUnixTime(endDate.Date);
-        
+        Int64 startUnixTime = TimeLogic.ConvertDateToUnixTime(startDate.Date);
+        Int64 endUnixTime = TimeLogic.ConvertDateToUnixTime(endDate.Date);
+
         return _access.GetTimetablesByDateRange(startUnixTime, endUnixTime);
     }
 
     public static List<TimetableModel> GetAllTimetablesFromToday()
     {
-        Int64 today = ConvertDateToUnixTime(DateTime.Today);
+        Int64 today = TimeLogic.ConvertDateToUnixTime(DateTime.Today);
 
         return _access.GetAllTimetablesFromDate(today);
     }
 
     public static List<TimetableModel> GetSpecificTimetablesFromToday(Int64 movieId)
     {
-        Int64 today = ConvertDateToUnixTime(DateTime.Today);
+        Int64 today = TimeLogic.ConvertDateToUnixTime(DateTime.Today);
 
         return _access.GetSpecificTimetablesFromDate(today, movieId);
     }
@@ -106,9 +105,9 @@ public static class TimetablesLogic
     public static List<string> GetDetailsAsList(TimetableModel timetable)
     {
         string movie = MoviesLogic.GetById(timetable.MovieId).Title;
-        string date = GetDateString(ConvertUnixTimeToDateTime(timetable.StartTime));
-        string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
-        return new List<string> 
+        string date = TimeLogic.ConvertDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
+        string time = GetTimeString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
+        return new List<string>
         {
             timetable.RoomId.ToString(),
             date,
@@ -134,21 +133,6 @@ public static class TimetablesLogic
             return false;
         }
         return true;
-    }
-
-    public static bool ValidateDateString(string date)
-    {
-        if (!DateTime.TryParseExact(
-            date,
-            "dd-MM-yyyy",
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.None,
-            out DateTime parsedDate))
-        {
-            return false;
-    }
-
-    return parsedDate.Date >= DateTime.Today;
     }
 
     public static bool ValidateTimeString(string time)
@@ -200,7 +184,7 @@ public static class TimetablesLogic
     public static (int, MovieModel) ManageTimetables(string movieMenuHeader, List<string> menu)
     {
         MovieModel movie = MoviesLogic.PickMovieToManage(movieMenuHeader);
-        int selected = UiHelper.SelectionMenu(menu, movie.Title);
+        int selected = UiHelper.SelectionMenu.WriteMenu(menu, movie.Title);
 
         if (selected >= 0 && selected < menu.Count)
             return (selected, movie);
@@ -214,7 +198,7 @@ public static class TimetablesLogic
         {
             return 1;
         }
-        else if (!ValidateDateString(date))
+        else if (!TimeLogic.ValidateDateStringAfterToday(date))
         {
             return 2;
         }
@@ -223,7 +207,7 @@ public static class TimetablesLogic
             return 3;
         }
 
-        Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
+        Int64 unixDate = TimeLogic.ConvertDateToUnixTime(ConvertStringToDateTime(date));
         Int64 unixTime = ConvertTimeStringToUnixTime(time);
         Int64 startTime = unixDate + unixTime;
 
@@ -253,12 +237,13 @@ public static class TimetablesLogic
             if (timetable.IsActive)
             {
                 string id = timetable.Id.ToString();
-                string date = GetDateString(ConvertUnixTimeToDateTime(timetable.StartTime));
-                string time = GetTimeString(ConvertUnixTimeToDateTime(timetable.StartTime));
-                timetableIds.Add($"Timetable ID: {id}, Date: {date}, Time: {time}");
+                string date = GetDateString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
+                string time = GetTimeString(TimeLogic.ConvertUnixTimeToDateTime(timetable.StartTime));
+                timetableIds.Add($"Showing ID: {id}, Date: {date}, Time: {time}");
             }
         }
-        int selected = UiHelper.SelectionMenu(timetableIds, header);
+        // TODO: add a presentation layer file for this
+        int selected = UiHelper.SelectionMenu.WriteMenu(timetableIds, header);
 
         return timetables[selected];
     }
@@ -269,7 +254,7 @@ public static class TimetablesLogic
         {
             return 1;
         }
-        else if (!ValidateDateString(date))
+        else if (!TimeLogic.ValidateDateStringAfterToday(date))
         {
             return 2;
         }
@@ -278,7 +263,7 @@ public static class TimetablesLogic
             return 3;
         }
 
-        Int64 unixDate = ConvertDateToUnixTime(ConvertStringToDateTime(date));
+        Int64 unixDate = TimeLogic.ConvertDateToUnixTime(ConvertStringToDateTime(date));
         Int64 unixTime = ConvertTimeStringToUnixTime(time);
         Int64 startTime = unixDate + unixTime;
 
@@ -297,7 +282,7 @@ public static class TimetablesLogic
 
     public static int DeleteTimetableAsAdmin(TimetableModel timetable, List<string> deletionMenuOptions, string deletionMenuHeader)
     {
-        int selected = UiHelper.SelectionMenu(deletionMenuOptions, deletionMenuHeader);
+        int selected = UiHelper.SelectionMenu.WriteMenu(deletionMenuOptions, deletionMenuHeader);
 
         if (selected == 0)
         {
