@@ -148,7 +148,7 @@
 
         if (pastReservations.Count == 0) return new List<string>();
 
-        List<string> userGenres = new List<string>();
+        Dictionary<string, int> genreCount = new Dictionary<string, int>();
         List<Int64> watchedMovieIds = new List<Int64>();
 
         foreach (ReservationModel reservation in pastReservations)
@@ -161,12 +161,30 @@
             foreach (string genre in genres)
             {
                 string trimmedGenre = genre.Trim();
-                if (!userGenres.Contains(trimmedGenre))
+                if (genreCount.ContainsKey(trimmedGenre))
                 {
-                    userGenres.Add(trimmedGenre);
+                    genreCount[trimmedGenre]++;
+                }
+                else
+                {
+                    genreCount[trimmedGenre] = 1;
                 }
             }
         }
+
+        string mostWatchedGenre = "";
+        int highestCount = 0;
+        
+        foreach (var genreEntry in genreCount)
+        {
+            if (genreEntry.Value > highestCount)
+            {
+                highestCount = genreEntry.Value;
+                mostWatchedGenre = genreEntry.Key;
+            }
+        }
+
+        if (string.IsNullOrEmpty(mostWatchedGenre)) return new List<string>();
 
         List<MovieModel> allMovies = _access.GetAllMovies();
         List<string> recommendedMovies = new List<string>();
@@ -176,19 +194,16 @@
             if (movie.IsActive != 1 || watchedMovieIds.Contains(movie.Id)) continue;
 
             string[] movieGenres = movie.Genre.Split(',');
-            bool foundMatch = false;
             foreach (string movieGenre in movieGenres)
             {
-                if (userGenres.Contains(movieGenre.Trim()))
+                if (movieGenre.Trim() == mostWatchedGenre)
                 {
-                    foundMatch = true;
+                    if (!recommendedMovies.Contains(movie.Title))
+                    {
+                        recommendedMovies.Add(movie.Title);
+                    }
                     break;
                 }
-            }
-
-            if (foundMatch && !recommendedMovies.Contains(movie.Title))
-            {
-                recommendedMovies.Add(movie.Title);
             }
         }
 
