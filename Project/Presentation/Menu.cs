@@ -36,7 +36,6 @@
                 // }
 
                 PurchaseTicket.SetUpDateMenu(movie);
-                UiHelper.HoldUser(movie.ToString());
                 if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
                 {
                     UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
