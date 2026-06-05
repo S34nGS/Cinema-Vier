@@ -24,7 +24,7 @@ public static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, $"{movie.ToString()}{Environment.NewLine}Pick a date");
         if (selectedDate == -1)
         {
             return null;
