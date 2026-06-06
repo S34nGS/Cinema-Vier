@@ -65,6 +65,42 @@
         return age >= movie.AgeRating;
     }
 
+    public static DateTime? GetAvailableDate(MovieModel movie, AccountModel account)
+    {
+        InitializeMovies();
+        
+        DateTime userBirthday = TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
+        DateTime now = DateTime.Now;
+        DateTime twoWeeksFromNow = now.AddDays(14);
+        
+        int currentAge = AccountsLogic.CalculateAge(userBirthday);
+        
+        if (currentAge >= movie.AgeRating)
+        {
+            return now;
+        }
+        
+        int currentYear = now.Year;
+        DateTime nextBirthday = new DateTime(currentYear, userBirthday.Month, userBirthday.Day);
+        
+        if (nextBirthday < now)
+        {
+            nextBirthday = nextBirthday.AddYears(1);
+        }
+        
+        if (nextBirthday <= twoWeeksFromNow)
+        {
+            int ageAfterBirthday = nextBirthday.Year - userBirthday.Year;
+            
+            if (ageAfterBirthday >= movie.AgeRating)
+            {
+                return nextBirthday;
+            }
+        }
+        
+        return null;
+    }
+
     public static MovieModel? Start()
     {
         InitializeMovies();
