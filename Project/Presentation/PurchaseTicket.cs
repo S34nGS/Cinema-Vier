@@ -171,6 +171,13 @@ public static class PurchaseTicket
         // get all timetables for movie
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
+
+        DateTime? availableDate = null;
+        if (AccountsLogic.CurrentAccount != null)
+        {
+            availableDate = MoviesLogic.GetAvailableDate(movie, AccountsLogic.CurrentAccount);
+        }
+
         foreach (TimetableModel timetable in timetables)
         {
             if (
@@ -178,8 +185,16 @@ public static class PurchaseTicket
                 timetable.StartTime < DateTime.Now.AddDays(14).ConvertDateToUnixTime()
             )
             {
+                DateTimeOffset timetableDateTime = timetable.StartTime.ConvertUnixTimeToDateTime();
+                
+                // If we have an earliest watch date, skip dates before it
+                if (availableDate != null && timetableDateTime.Date < availableDate.Value.Date)
+                {
+                    continue;
+                }
+                
                 string date = TimeLogic.ConvertDateString(
-                    timetable.StartTime.ConvertUnixTimeToDateTime(),
+                    timetableDateTime,
                     "dd-MM-yyyy"
                 );
 
