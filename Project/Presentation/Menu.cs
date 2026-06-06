@@ -36,10 +36,22 @@
                 // }
 
                 PurchaseTicket.SetUpDateMenu(movie);
-                if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
+                
+                if (AccountsLogic.CurrentAccount != null)
                 {
-                    UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
-                    Start();
+                    bool isOldEnough = MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount);
+                    DateTime? availableDate = MoviesLogic.GetAvailableDate(movie, AccountsLogic.CurrentAccount);
+                    
+                    if (!isOldEnough && availableDate == null)
+                    {
+                        UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie. You will not reach this age within the next 2 weeks.");
+                        Start();
+                    }
+                    else if (!isOldEnough && availableDate != null)
+                    {
+                        string birthdayMessage = availableDate.Value.ToString("dd-MM-yyyy");
+                        UiHelper.HoldUser($"You will turn {movie.AgeRating}+ on {birthdayMessage}. Dates before this day will not be available.");
+                    }
                 }
 
                 while (true)
