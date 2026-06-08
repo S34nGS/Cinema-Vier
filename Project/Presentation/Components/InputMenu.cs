@@ -60,4 +60,46 @@ public class InputMenu : BaseComponent
             }
         }
     }
+
+    public int RateMenu(string header)
+    {
+        int rating = 0;
+        char[] stars = ['\u2606','\u2606','\u2606','\u2606','\u2606'];
+        int length = 10;
+
+        while (true)
+        {
+            Console.Clear();
+            WriteHeader(header);
+
+            string shown = new string(stars) + new string(' ', length - stars.Length);
+
+            Console.WriteLine($"{shown}");
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+
+            if (IsLeftKey(keyInfo.Key, false))
+            {
+                if (rating > 0)
+                {
+                    rating--;
+                    stars[rating] = '\u2606';
+                }
+            }
+            else if (IsRightKey(keyInfo.Key, false))
+            {
+                if (rating < stars.Length)
+                {
+                    stars[rating] = '\u2B50';
+                    rating++;
+                }
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                break;
+            }
+        }
+
+        return rating;
+    }
 }
