@@ -6,12 +6,6 @@
             ? $"Welcome {AccountsLogic.CurrentAccount.FirstName} (Pass point: {AccountsLogic.CurrentAccount.PassPoints})"
             : "Welcome to Cinema Vier! Please select an option:";
 
-        // show birthday gift information after user logs in
-        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CurrentAccount.IsAdmin == 0)
-        {
-            header += "\n🎉 Happy birthday🎉! Book a movie on your birthday and get free popcorn 🎁.";
-        }
-
         string[] menu = BuildMenu();
 
         int selected = UiHelper.SelectionMenu.WriteMenu(menu, header, true);
