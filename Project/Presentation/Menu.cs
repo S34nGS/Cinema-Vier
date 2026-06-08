@@ -70,6 +70,10 @@
             MoviePass.Start();
             Start();
         }
+        else if (selected == Array.IndexOf(menu, "Rate Movies"))
+        {
+            RateMovies.Start();
+        }
         else if (selected == Array.IndexOf(menu, "Add Movie"))
         {
             AddMovie.Start();
@@ -120,7 +124,7 @@
         }
         else
         {
-            menu = ["Book Movie", "View Reservations", "Top up Movie Pass", "Cinema Info", "Logout", "Exit"];
+            menu = ["Book Movie", "View Reservations", "Top up Movie Pass", "Rate Movies", "Cinema Info", "Logout", "Exit"];
         }
 
         return menu;
