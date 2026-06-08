@@ -144,7 +144,16 @@
 
             foreach (TimetableModel timetable in searchedDateTimetableList)
             {
-                searchedDateMovieList.Add(MoviesLogic.GetById(timetable.MovieId).Title);
+                MovieModel? movie = MoviesLogic.GetById(timetable.MovieId);
+                if (movie == null)
+                {
+                    continue;
+                }
+                string title = movie.Title;
+                if (!searchedDateMovieList.Contains(title))
+                {
+                    searchedDateMovieList.Add(title);
+                }
             }
 
             if (searchedDateMovieList.Count == 0)
@@ -161,7 +170,12 @@
             {
                 return -1;
             }
-            return movieListMenuSearch;
+
+            PurchaseTicket.PresetDate = dates[pickedDate];
+
+            string selectedTitle = searchedDateMovieList[movieListMenuSearch];
+            int movieIndex = MoviesLogic.GetMovieTitles().IndexOf(selectedTitle);
+            return movieIndex >= 0 ? movieIndex : -1;
         }
     }
 
