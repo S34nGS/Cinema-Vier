@@ -10,41 +10,48 @@
 
         if (selected == menu.IndexOf("Create a showing"))
         {
-            Dictionary<string, string> CreateTimetableInput = UiHelper.InputFormMenu.WriteMenu(
-                [
-                    "Room Number",
-                    "Date (dd-mm-yyyy)",
-                    "Start Time (hh:mm)",
-                ],
-                $"Add showing for {movie.Title}"
-            );
+            if (movie.IsActive == 0)
+            {
+                UiHelper.HoldUser("It's not possible to create new showings for disabled movies.");
+            }
+            else
+            {
+                Dictionary<string, string> CreateTimetableInput = UiHelper.InputFormMenu.WriteMenu(
+                    [
+                        "Room Number",
+                        "Date (dd-mm-yyyy)",
+                        "Start Time (hh:mm)",
+                    ],
+                    $"Add showing for {movie.Title}"
+                );
 
-            int createdTimetable = TimetablesLogic.CreateTimetableAsAdmin(
-                movie,
-                CreateTimetableInput["Room Number"],
-                CreateTimetableInput["Date (dd-mm-yyyy)"],
-                CreateTimetableInput["Start Time (hh:mm)"]
-            );
+                int createdTimetable = TimetablesLogic.CreateTimetableAsAdmin(
+                    movie,
+                    CreateTimetableInput["Room Number"],
+                    CreateTimetableInput["Date (dd-mm-yyyy)"],
+                    CreateTimetableInput["Start Time (hh:mm)"]
+                );
 
-            if (createdTimetable == 0)
-            {
-                UiHelper.HoldUser("Showing added successfully.");
-            }
-            else if (createdTimetable == 1)
-            {
-                UiHelper.HoldUser("The room number doesn't exist");
-            }
-            else if (createdTimetable == 2)
-            {
-                UiHelper.HoldUser("The given date is invalid");
-            }
-            else if (createdTimetable == 3)
-            {
-                UiHelper.HoldUser("The given start time is invalid.");
-            }
-            else if (createdTimetable == 4)
-            {
-                UiHelper.HoldUser("There's already a movie playing at this time and room");
+                if (createdTimetable == 0)
+                {
+                    UiHelper.HoldUser("Showing added successfully.");
+                }
+                else if (createdTimetable == 1)
+                {
+                    UiHelper.HoldUser("The room number doesn't exist");
+                }
+                else if (createdTimetable == 2)
+                {
+                    UiHelper.HoldUser("The given date is invalid");
+                }
+                else if (createdTimetable == 3)
+                {
+                    UiHelper.HoldUser("The given start time is invalid.");
+                }
+                else if (createdTimetable == 4)
+                {
+                    UiHelper.HoldUser("There's already a movie playing at this time and room");
+                }
             }
         }
 

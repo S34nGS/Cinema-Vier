@@ -81,7 +81,7 @@
 
     public static MovieModel PickMovieToManage(string? header = null)
     {
-        List<string> menu = MoviesLogic.GetMovieTitles();
+        List<string> menu = MoviesLogic.GetMovieTitles(false);
 
         // TODO: make this it's own presentation layer file
         int selected = UiHelper.SelectionMenu.WriteMenu(menu, header);
