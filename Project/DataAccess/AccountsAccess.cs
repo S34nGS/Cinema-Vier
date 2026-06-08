@@ -10,14 +10,15 @@ public class AccountsAccess : DefaultAccess, IAccess
         string sql = $@"
         CREATE TABLE IF NOT EXISTS {Table} (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT UNIQUE NOT NULL,
+                emailAddress TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL,
                 fullName TEXT NOT NULL,
                 firstName TEXT NOT NULL,
                 lastName TEXT NOT NULL,
                 dateOfBirth INTEGER NOT NULL,
                 isAdmin INTEGER NOT NULL,
-                freePopcornGiftUsedYear INTEGER NOT NULL
+                freePopcornGiftUsedYear INTEGER NOT NULL,
+                passPoints INTEGER NOT NULL
         );";
         connection.Execute(sql);
     }
@@ -26,14 +27,14 @@ public class AccountsAccess : DefaultAccess, IAccess
     {
         string sql = $@"
             INSERT INTO {Table} 
-            (email, password, fullname, firstName, lastName, dateOfBirth, isAdmin, freePopcornGiftUsedYear) 
-            VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin, @FreePopcornGiftUsedYear)";
+            (emailAddress, password, fullName, firstName, lastName, dateOfBirth, isAdmin, freePopcornGiftUsedYear, passPoints) 
+            VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin, @FreePopcornGiftUsedYear, @PassPoints)";
         connection.Execute(sql, account);
     }
 
     public AccountModel? GetByEmail(string email)
     {
-        string sql = $"SELECT * FROM {Table} WHERE email = @Email;";
+        string sql = $"SELECT * FROM {Table} WHERE emailAddress = @Email;";
         return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email });
     }
 
@@ -48,7 +49,7 @@ public class AccountsAccess : DefaultAccess, IAccess
         string sql =
             $@"
             UPDATE {Table}
-                SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin, freePopcornGiftUsedYear = @FreePopcornGiftUsedYear
+                SET emailAddress = @EmailAddress, password = @Password, fullName = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin, freePopcornGiftUsedYear = @FreePopcornGiftUsedYear, passPoints = @PassPoints
             WHERE id = @Id;";
         connection.Execute(sql, account);
     }

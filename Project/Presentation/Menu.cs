@@ -5,7 +5,7 @@
         while (true)
         {
             string header = (AccountsLogic.CurrentAccount != null)
-                ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
+                ? $"Welcome {AccountsLogic.CurrentAccount.FirstName} (Pass point: {AccountsLogic.CurrentAccount.PassPoints})"
                 : "Welcome to Cinema Vier! Please select an option:";
 
             string[] menu = BuildMenu();
@@ -63,6 +63,10 @@
         {
             ViewReservations.Start();
         }
+        else if (selected == Array.IndexOf(menu, "Top up Movie Pass"))
+        {
+            MoviePass.Start();
+        }
         else if (selected == Array.IndexOf(menu, "Add Movie"))
         {
             AddMovie.Start();
@@ -104,7 +108,7 @@
         }
         else
         {
-            menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
+            menu = ["Book Movie", "View Reservations", "Top up Movie Pass", "Cinema Info", "Logout", "Exit"];
         }
 
         return menu;
