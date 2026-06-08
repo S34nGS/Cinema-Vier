@@ -147,7 +147,8 @@
             menuTotal,
             loungePreOrderItems,
             loungePreOrderTotal,
-            finalTotal
+            finalTotal,
+            selectedSeats.Count
         );
 
         // user must accept T&C

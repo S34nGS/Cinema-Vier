@@ -8,12 +8,14 @@
         double menuTotal,
         List<OrderItemModel> loungePreOrderItems,
         double loungePreOrderTotal,
-        double finalTotal
+        double finalTotal,
+        int numberOfSeats
     )
     {
         string output = @$"Booking Summary
 
 Ticket total: €{ticketTotal:0.00}
+Number of seats: {numberOfSeats}
 ";
 
         if (orderedMenuItems.Count > 0)
