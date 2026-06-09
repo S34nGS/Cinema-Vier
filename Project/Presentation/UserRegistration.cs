@@ -30,4 +30,13 @@
 
         Menu.Start();
     }
+
+    private static string GetErrorMessage(RegistrationResult result) => result switch
+    {
+        RegistrationResult.InvalidEmail       => "Invalid email address",
+        RegistrationResult.InvalidPassword    => "Password must be between 8 and 32 characters",
+        RegistrationResult.InvalidDateOfBirth => "Invalid date of birth",
+        RegistrationResult.EmailAlreadyExists => "An account with this email already exists",
+        _                                     => "Invalid input"
+    };
 }
