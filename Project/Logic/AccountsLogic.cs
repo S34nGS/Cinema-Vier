@@ -1,4 +1,12 @@
-﻿
+﻿public enum RegistrationResult
+{
+    Success,
+    InvalidEmail,
+    InvalidPassword,
+    InvalidDateOfBirth,
+    EmailAlreadyExists
+}
+
 public class AccountsLogic
 {
     public static AccountModel? CurrentAccount { get; private set; }
