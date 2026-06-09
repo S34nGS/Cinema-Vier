@@ -26,7 +26,7 @@
             }
             else if (selected == Array.IndexOf(menu, "Previous Orders"))
             {
-                return;
+                ShowPastReservations();
             }
         }
     }
