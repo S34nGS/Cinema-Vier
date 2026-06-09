@@ -2,6 +2,11 @@
 
 public abstract class DefaultAccess
 {
-    protected SqliteConnection connection = new("Data Source=./Project/DataSources/project.db");
+    private static readonly string DbPath =
+        Directory.Exists("./Project") ? "./Project/DataSources/project.db" :
+        Directory.Exists("../Project") ? "../Project/DataSources/project.db" :
+        Path.Combine(AppContext.BaseDirectory, "DataSources", "project.db");
+
+    protected SqliteConnection connection = new($"Data Source={DbPath}");
     public abstract void CreateTable();
 }
