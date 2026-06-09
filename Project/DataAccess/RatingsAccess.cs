@@ -26,6 +26,14 @@ public class RatingsAccess : DefaultAccess, IAccess
         connection.Execute(sql, rating);
     }
 
+    public void Update(RatingModel rating)
+    {
+        string sql = $@"UPDATE {Table}
+            SET userId = @UserId, movieId = @MovieId, rating = @Rating
+            WHERE id = @Id";
+        connection.Execute(sql, rating);
+    }
+
     public List<RatingModel> GetRatingsByMovieId(Int64 movieId)
     {
         // get all ratings for one movie
