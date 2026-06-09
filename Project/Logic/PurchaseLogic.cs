@@ -79,6 +79,30 @@
         return ticketTotal + menuTotal + loungePreOrderTotal;
     }
 
+    public static double GetSeatPrice(SeatModel seat)
+    {
+        double price = 12.0;
+        if (seat.SeatPriority == 2)
+        {
+            price += 3;
+        }
+        if (seat.SeatPriority == 3)
+        {
+            price += 6;
+        }
+        return price;
+    }
+
+    public static string GetSeatTypeName(Int64 seatPriority)
+    {
+        return seatPriority switch
+        {
+            2 => "Deluxe",
+            3 => "Premium",
+            _ => "Standard",
+        };
+    }
+
     private static bool CardHolderNameCheck(string fullname)
     {
         if (string.IsNullOrWhiteSpace(fullname)) return false;
