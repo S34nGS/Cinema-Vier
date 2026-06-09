@@ -1,12 +1,8 @@
 ﻿namespace UnitTests;
 
-
-
 [TestClass]
 public sealed class UserRegistrationTests
 {
-
-
     [DataTestMethod]
     [DataRow("newuser@example.com", "password123", "John", "Doe", "01/01/2000")]
     public void RegisterValidCredentials(string email, string password, string firstName, string lastName, string dateOfBirthStr)
