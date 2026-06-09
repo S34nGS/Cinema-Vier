@@ -59,6 +59,12 @@
         {
             TimetableModel timetable = TimetablesLogic.ChooseTimeTableAsAdmin("All showings from today onward", movie);
 
+            if (ReservationsLogic.GetReservationsByTimetableId(timetable.Id).Count > 0)
+            {
+                UiHelper.HoldUser("This showing already has booked tickets and cannot be edited.");
+                return;
+            }
+
             Dictionary<string, string> EditTimetableInput = UiHelper.InputFormMenu.WriteMenu(
                 new Dictionary<string, string>{
                     {"Room Number", timetable.RoomId.ToString()},
@@ -97,6 +103,12 @@
         if (selected == menu.IndexOf("Delete a showing"))
         {
             TimetableModel timetable = TimetablesLogic.ChooseTimeTableAsAdmin("All showings from today onward", movie);
+
+            if (ReservationsLogic.GetReservationsByTimetableId(timetable.Id).Count > 0)
+            {
+                UiHelper.HoldUser("This showing already has booked tickets and cannot be deleted.");
+                return;
+            }
 
             List<string> deletionMenuOptions = ["Yes", "No"];
             string deletionMenuHeader = "Are you sure you want to delete this showing?";
