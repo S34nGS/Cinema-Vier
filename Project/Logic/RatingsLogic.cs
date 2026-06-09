@@ -30,8 +30,32 @@ public static class RatingsLogic
 
     public static void RateMovie(MovieModel movie, string header)
     {
-        int ratingNumber = UiHelper.InputMenu.RateMenu(header);
-        RatingModel rating = new(-1, AccountsLogic.CurrentAccount.Id, movie.Id, ratingNumber);
-        _access.Write(rating);
+        (bool exists, RatingModel existingRating) = CheckForExistingRating(movie.Id);
+        double ratingNumber = exists ? UiHelper.InputMenu.RateMenu(header, (int)existingRating.Rating) : UiHelper.InputMenu.RateMenu(header);
+        
+        if (exists)
+        {
+            existingRating.Rating = ratingNumber;
+            _access.Update(existingRating);
+        }
+        else
+        {
+            RatingModel rating = new(-1, AccountsLogic.CurrentAccount.Id, movie.Id, ratingNumber);
+            _access.Write(rating);
+        }
+    }
+
+    public static (bool, RatingModel?) CheckForExistingRating(Int64 movieId)
+    {
+        Int64 userId = AccountsLogic.CurrentAccount.Id;
+        List<RatingModel> existingRatings = _access.GetRatingsByUserId(userId);
+        foreach(RatingModel rating in existingRatings)
+        {
+            if(rating.MovieId == movieId)
+            {
+                return (true, rating);
+            }
+        }
+        return (false, null);
     }
 }
