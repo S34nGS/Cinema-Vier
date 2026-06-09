@@ -10,7 +10,7 @@
             MovieModel? movie = MoviesLogic.Start();
 
             PurchaseTicket.SetUpDateMenu(movie);
-            UiHelper.HoldUser(movie.ToString());
+            UiHelper.HoldUser(MoviesLogic.GetMovieDetails(movie));
             if (!MoviesLogic.IsOldEnough(movie, account))
             {
                 UiHelper.HoldUser($"The customer must be {movie.AgeRating}+ to watch this movie.");

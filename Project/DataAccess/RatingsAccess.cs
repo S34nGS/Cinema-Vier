@@ -12,7 +12,7 @@ public class RatingsAccess : DefaultAccess, IAccess
             movieId INTEGER NOT NULL,
             rating REAL NOT NULL,
 
-            FOREIGN KEY (movieId) REFERENCES Movie(id)
+            FOREIGN KEY (movieId) REFERENCES Movie(id),
             FOREIGN KEY (userId) REFERENCES Account(id)
         );";
         connection.Execute(sql);
@@ -24,5 +24,12 @@ public class RatingsAccess : DefaultAccess, IAccess
             (userId, movieId, rating) 
             VALUES (@UserId, @MovieId, @Rating)";
         connection.Execute(sql, rating);
+    }
+
+    public List<RatingModel> GetRatingsByMovieId(Int64 movieId)
+    {
+        // get all ratings for one movie
+        string sql = $"SELECT * FROM {Table} WHERE movieId = @MovieId";
+        return connection.Query<RatingModel>(sql, new { MovieId = movieId }).AsList();
     }
 }
