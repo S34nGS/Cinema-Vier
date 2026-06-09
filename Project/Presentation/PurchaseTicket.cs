@@ -53,6 +53,17 @@
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
         List<SeatModel> selectedSeats = seatSelection.Start(selectedTimetable);
 
+        // show selected seats after choosing seats on the map
+        string selectedSeatsText = "Selected seats:";
+
+        foreach (SeatModel seat in selectedSeats)
+        {
+            selectedSeatsText += $@"
+Row: {seat.Row}, Seat: {seat.SeatNumber}";
+        }
+
+        UiHelper.HoldUser(selectedSeatsText);
+
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", null);
 
@@ -148,7 +159,7 @@
             loungePreOrderItems,
             loungePreOrderTotal,
             finalTotal,
-            selectedSeats.Count
+            selectedSeats
         );
 
         // user must accept T&C
