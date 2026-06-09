@@ -1,4 +1,4 @@
-public static class PurchaseTicket
+﻿public static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
@@ -24,7 +24,7 @@ public static class PurchaseTicket
             }
         }
 
-        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, "Pick a date");
+        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, $"{movie.ToString()}{Environment.NewLine}Pick a date");
         if (selectedDate == -1)
         {
             return null;
@@ -89,8 +89,8 @@ public static class PurchaseTicket
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
-        // add free birthday popcorn gift if available
-        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        // add free birthday popcorn gift if selected movie date is user's birthday
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime))
         {
             // add free popcorn as birthday gift
             OrderItemModel freePopcornGift = new(
@@ -103,9 +103,9 @@ public static class PurchaseTicket
             orderedMenuItems.Add(freePopcornGift);
 
             AccountsLogic accountsLogic = new();
-            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount);
+            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime);
 
-            UiHelper.HoldUser("Happy birthday! A free popcorn gift has been added to your order.");
+            UiHelper.HoldUser("🎁 Happy birthday! A free popcorn gift has been added to your order.");
         }
 
         // selected lounge pre-order drinks
@@ -147,7 +147,8 @@ public static class PurchaseTicket
             menuTotal,
             loungePreOrderItems,
             loungePreOrderTotal,
-            finalTotal
+            finalTotal,
+            selectedSeats.Count
         );
 
         // user must accept T&C
@@ -171,6 +172,13 @@ public static class PurchaseTicket
         // get all timetables for movie
         List<TimetableModel> timetables = TimetablesLogic.GetTimeTablesByMovieId(movie.Id);
 
+
+        DateTime? availableDate = null;
+        if (AccountsLogic.CurrentAccount != null)
+        {
+            availableDate = MoviesLogic.GetAvailableDate(movie, AccountsLogic.CurrentAccount);
+        }
+
         foreach (TimetableModel timetable in timetables)
         {
             if (
@@ -178,8 +186,16 @@ public static class PurchaseTicket
                 timetable.StartTime < DateTime.Now.AddDays(14).ConvertDateToUnixTime()
             )
             {
+                DateTimeOffset timetableDateTime = timetable.StartTime.ConvertUnixTimeToDateTime();
+                
+                // If we have an earliest watch date, skip dates before it
+                if (availableDate != null && timetableDateTime.Date < availableDate.Value.Date)
+                {
+                    continue;
+                }
+                
                 string date = TimeLogic.ConvertDateString(
-                    timetable.StartTime.ConvertUnixTimeToDateTime(),
+                    timetableDateTime,
                     "dd-MM-yyyy"
                 );
 
