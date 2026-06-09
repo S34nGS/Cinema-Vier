@@ -112,8 +112,9 @@
             {
                 var roomSeatInfo = SeatLogic.GetRoomSeatInfo(seat.RoomId);
                 Int64 displayRow = roomSeatInfo.MaxRow - seat.Row + 1;
+                double seatPrice = PurchaseLogic.GetSeatPrice(seat);
 
-                Console.WriteLine($"Row {displayRow}, Seat {seat.SeatNumber}");
+                Console.WriteLine($"Row {displayRow}, Seat {seat.SeatNumber} - €{seatPrice:F2}");
             }
         }
 

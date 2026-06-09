@@ -142,13 +142,12 @@
 
         // show summary before payment
         BookingSummary.Start(
-            ticketTotal,
+            selectedSeats,
             orderedMenuItems,
             menuTotal,
             loungePreOrderItems,
             loungePreOrderTotal,
-            finalTotal,
-            selectedSeats.Count
+            finalTotal
         );
 
         // user must accept T&C
