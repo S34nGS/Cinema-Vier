@@ -61,11 +61,17 @@ public class InputMenu : BaseComponent
         }
     }
 
-    public int RateMenu(string header)
+    public int RateMenu(string header, int existingRating = -1)
     {
-        int rating = 0;
+        int rating = (existingRating >= 0) ? existingRating : 0;
+        
         char[] stars = ['\u2606','\u2606','\u2606','\u2606','\u2606'];
         int length = 10;
+
+        for(int i = 0; i < rating; i++)
+        {
+            stars[i] = '\u2B50';
+        }
 
         while (true)
         {
