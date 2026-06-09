@@ -18,15 +18,15 @@ public class AccountsLogic
 
     public AccountModel? CreateAccount(string email, string password, string firstName, string lastName, DateTime dateOfBirth)
     {
-        if (ValidDataLogic.IsValidEmail(email) == false)
+        if (!ValidDataLogic.IsValidEmail(email))
         {
             return null;
         }
-        else if (ValidDataLogic.IsValidPassword(password) == false)
+        else if (!ValidDataLogic.IsValidPassword(password))
         {
             return null;
         }
-        else if (ValidDataLogic.IsValidDateOfBirth(dateOfBirth) == false)
+        else if (!ValidDataLogic.IsValidDateOfBirth(dateOfBirth))
         {
             return null;
         }
@@ -34,7 +34,6 @@ public class AccountsLogic
         {
             return null;
         }
-
 
         AccountModel? account = new(0, email, HashPassword(password), firstName, lastName, TimeLogic.ConvertDateToUnixTime(dateOfBirth));
 
@@ -87,25 +86,26 @@ public class AccountsLogic
         MoviesLogic.ClearRecommendations();
     }
 
-    public static bool IsBirthday(AccountModel account)
+    public static bool IsBirthday(AccountModel account, DateTime movieDate)
     {
         // convert saved date of birth number back to a date
         DateTime dateOfBirth = TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
 
-        return dateOfBirth.Day == DateTime.Today.Day &&
-               dateOfBirth.Month == DateTime.Today.Month;
+        // check if selected movie date is on user's birthday
+        return dateOfBirth.Day == movieDate.Day &&
+            dateOfBirth.Month == movieDate.Month;
     }
 
-    public static bool CanUseFreePopcornGift(AccountModel account)
+    public static bool CanUseFreePopcornGift(AccountModel account, DateTime movieDate)
     {
-        // check if today is birthday and gift is not used this year
-        return IsBirthday(account) &&
-               account.FreePopcornGiftUsedYear != DateTime.Today.Year;
+        // check if movie date is birthday and gift is not used in that year
+        return IsBirthday(account, movieDate) &&
+            account.FreePopcornGiftUsedYear != movieDate.Year;
     }
 
-    public void UseFreePopcornGift(AccountModel account)
+    public void UseFreePopcornGift(AccountModel account, DateTime movieDate)
     {
-        account.FreePopcornGiftUsedYear = DateTime.Today.Year;
+        account.FreePopcornGiftUsedYear = movieDate.Year;
 
         // update only the gift usage year
         _access.UpdateFreePopcornGiftUsedYear(account);

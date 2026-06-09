@@ -1,4 +1,4 @@
-public static class PurchaseTicket
+﻿public static class PurchaseTicket
 {
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
@@ -89,8 +89,8 @@ public static class PurchaseTicket
             orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
-        // add free birthday popcorn gift if available
-        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount))
+        // add free birthday popcorn gift if selected movie date is user's birthday
+        if (AccountsLogic.CurrentAccount != null && AccountsLogic.CanUseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime))
         {
             // add free popcorn as birthday gift
             OrderItemModel freePopcornGift = new(
@@ -103,9 +103,9 @@ public static class PurchaseTicket
             orderedMenuItems.Add(freePopcornGift);
 
             AccountsLogic accountsLogic = new();
-            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount);
+            accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime);
 
-            UiHelper.HoldUser("Happy birthday! A free popcorn gift has been added to your order.");
+            UiHelper.HoldUser("🎁 Happy birthday! A free popcorn gift has been added to your order.");
         }
 
         // selected lounge pre-order drinks
