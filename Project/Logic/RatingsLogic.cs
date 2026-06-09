@@ -31,7 +31,7 @@ public static class RatingsLogic
     public static void RateMovie(MovieModel movie, string header)
     {
         (bool exists, RatingModel existingRating) = CheckForExistingRating(movie.Id);
-        double ratingNumber = exists ? UiHelper.InputMenu.RateMenu(header, (int)existingRating.Rating) : UiHelper.InputMenu.RateMenu(header);
+        double ratingNumber = exists ? UiHelper.RateMenu.WriteMenu(header, (int)existingRating.Rating) : UiHelper.RateMenu.WriteMenu(header);
         
         if (exists)
         {
