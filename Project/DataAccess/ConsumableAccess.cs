@@ -15,4 +15,19 @@ public class ConsumableAccess : DefaultAccess, IAccess
         );";
         connection.Execute(sql);
     }
+
+    public void Write(ConsumableModel consumable)
+    {
+        string sql = $@"
+            INSERT INTO {Table} (name, price, ageRating)
+            VALUES (@Name, @Price, @AgeRating)";
+
+        connection.Execute(sql, consumable);
+    }
+
+    public ConsumableModel GetById(Int64 id)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE id = @Id";
+        return connection.QueryFirstOrDefault<ConsumableModel>(sql, new { Id = id });
+    }
 }

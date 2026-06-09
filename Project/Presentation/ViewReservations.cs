@@ -98,6 +98,32 @@
         Console.WriteLine($"Room          : {room.ScreenType}");
         Console.WriteLine($"Total         : €{reservation.TotalPrice:F2}");
 
+        ConsumableOrderAccess consumableOrderAccess = new();
+        MenuItemsAccess menuItemsAccess = new();
+
+        List<ConsumableOrderModel> consumableOrders =
+            consumableOrderAccess.GetByReservationId(reservation.Id);
+
+        Console.WriteLine();
+        Console.WriteLine("Food & Drinks");
+        Console.WriteLine("----------------------------------");
+
+        if (consumableOrders.Count == 0)
+        {
+            Console.WriteLine("No food or drinks ordered.");
+        }
+        else
+        {
+            foreach (ConsumableOrderModel order in consumableOrders)
+            {
+                MenuItemModel? item = menuItemsAccess.GetMenuItemById(order.ConsumableId);
+
+                if (item != null)
+                {
+                    Console.WriteLine($"{item.Name} x{order.Amount}");
+                }
+            }
+        }
         Console.WriteLine();
         Console.WriteLine("Seats");
         Console.WriteLine("----------------------------------");
