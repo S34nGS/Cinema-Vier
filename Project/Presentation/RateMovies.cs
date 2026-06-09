@@ -5,6 +5,7 @@ static class RateMovies
         if(RatingsLogic.GetWatchedMovies(AccountsLogic.CurrentAccount!.Id).Count == 0)
         {
             UiHelper.HoldUser("You can only rate movies that you've already seen.");
+            Menu.Start();
         }
 
         MovieModel movie = RatingsLogic.PickMovieToRate("Pick a movie to give a rating to");
