@@ -32,4 +32,10 @@ public class RatingsAccess : DefaultAccess, IAccess
         string sql = $"SELECT * FROM {Table} WHERE movieId = @MovieId";
         return connection.Query<RatingModel>(sql, new { MovieId = movieId }).AsList();
     }
+
+    public List<RatingModel> GetRatingsByUserId(Int64 userId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE userId = @UserId";
+        return connection.Query<RatingModel>(sql, new { UserId = userId }).AsList();
+    }
 }
