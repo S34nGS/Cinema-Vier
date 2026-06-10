@@ -2,14 +2,6 @@
 {
     public static void Start()
     {
-        // User must be logged in
-        if (AccountsLogic.CurrentAccount is null)
-        {
-            Console.WriteLine("Please log in first to view your reservations.");
-            UiHelper.HoldUser();
-            return;
-        }
-
         while (true)
         {
             string[] menu = ["Upcoming Orders", "Previous Orders"];
