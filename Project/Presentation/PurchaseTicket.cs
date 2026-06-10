@@ -3,34 +3,45 @@
     public static List<string> DateMenu { get; } = [];
     public static List<string> TimeMenu { get; } = [];
     private static List<TimetableModel> CurrentTimetables = [];
+    public static string? PresetDate { get; set; } = null;
 
     public static TicketModel? Start(MovieModel movie, AccountModel? customer = null)
     {
-        // reset date menu
-        DateMenu.Clear();
-        SetUpDateMenu(movie);
 
-        if (DateMenu.Count == 0)
+        string selectedDateString;
+
+        if (!string.IsNullOrEmpty(PresetDate))
         {
-            int dates = UiHelper.SelectionMenu.WriteMenu(
-                ["No available dates."],
-                "Pick a date",
-                true
-            );
+            selectedDateString = PresetDate!;
+            PresetDate = null;
+        }
+        else
+        {
+            DateMenu.Clear();
+            SetUpDateMenu(movie);
 
-            if (dates == 0)
+            if (DateMenu.Count == 0)
+            {
+                int dates = UiHelper.SelectionMenu.WriteMenu(
+                    ["No available dates."],
+                    "Pick a date",
+                    true
+                );
+
+                if (dates == 0)
+                {
+                    return null;
+                }
+            }
+
+            int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, "Pick a date");
+            if (selectedDate == -1)
             {
                 return null;
             }
+            
+            selectedDateString = DateMenu[selectedDate];
         }
-
-        int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, $"{movie.ToString()}{Environment.NewLine}Pick a date");
-        if (selectedDate == -1)
-        {
-            return null;
-        }
-
-        string selectedDateString = DateMenu[selectedDate];
 
         // reset time menu
         TimeMenu.Clear();
