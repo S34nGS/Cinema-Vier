@@ -10,7 +10,7 @@
             MovieModel? movie = MoviesLogic.Start();
 
             PurchaseTicket.SetUpDateMenu(movie);
-            UiHelper.HoldUser(movie.ToString());
+            UiHelper.HoldUser(MoviesLogic.GetMovieDetails(movie));
             
             // Check if user is old enough now or will be within 2 weeks
             bool isOldEnough = MoviesLogic.IsOldEnough(movie, account);

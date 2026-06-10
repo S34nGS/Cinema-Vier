@@ -13,5 +13,6 @@ public static class Program
         CreateConsumableOrderTable.Execute();
         CreateMenuItemTable.Execute();
         CreateSeatReservationTable.Execute();
+        CreateRatingsTable.Execute();
     }
 }
