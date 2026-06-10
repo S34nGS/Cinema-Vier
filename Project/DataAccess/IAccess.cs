@@ -1,4 +1,4 @@
-interface IAccess
+﻿interface IAccess
 {
     public static String Table { get; }
 }

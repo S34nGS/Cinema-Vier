@@ -1,6 +1,6 @@
-public static class ReservationsLogic
+﻿public static class ReservationsLogic
 {
-    private static ReservationAccess _access = new();
+    private readonly static ReservationAccess _access = new();
     public static List<ReservationModel> GetFutureReservations(Int64 userId)
     {
         ReservationAccess access = new ReservationAccess();
@@ -10,7 +10,7 @@ public static class ReservationsLogic
 
         foreach (ReservationModel reservation in allReservations)
         {
-            DateTime reservationDate = TimetablesLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
+            DateTime reservationDate = TimeLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
 
             if (reservationDate.Date >= DateTime.Today)
             {
@@ -29,7 +29,7 @@ public static class ReservationsLogic
 
         foreach (ReservationModel reservation in allReservations)
         {
-            DateTime reservationDate = TimetablesLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
+            DateTime reservationDate = TimeLogic.ConvertUnixTimeToDateTimeValue(reservation.ReservationDate);
 
             if (reservationDate.Date < DateTime.Today)
             {
@@ -39,9 +39,12 @@ public static class ReservationsLogic
 
         return pastReservations;
     }
-
-    public static void CreateReservation(ReservationModel reservation)
+    public static List<ReservationModel> GetReservationsByTimetableId(Int64 timetableId)
     {
-        _access.Write(reservation);
+        return _access.GetReservationsByTimetableId(timetableId);
+    }
+    public static ReservationModel CreateReservation(ReservationModel reservation)
+    {
+        return _access.Write(reservation);
     }
 }

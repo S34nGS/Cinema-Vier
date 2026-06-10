@@ -1,4 +1,4 @@
-public static class BookLogic
+﻿public static class BookLogic
 {
     public static void BookAsAdmin(string header)
     {
@@ -10,11 +10,21 @@ public static class BookLogic
             MovieModel? movie = MoviesLogic.Start();
 
             PurchaseTicket.SetUpDateMenu(movie);
-            UiHelper.HoldUser(movie.ToString());
-            if (!MoviesLogic.IsOldEnough(movie, account))
+            UiHelper.HoldUser(MoviesLogic.GetMovieDetails(movie));
+            
+            // Check if user is old enough now or will be within 2 weeks
+            bool isOldEnough = MoviesLogic.IsOldEnough(movie, account);
+            DateTime? availableDate = MoviesLogic.GetAvailableDate(movie, account);
+            
+            if (!isOldEnough && availableDate == null)
             {
-                    UiHelper.HoldUser($"The customer must be {movie.AgeRating}+ to watch this movie.");
-                    BookAsAdmin(header);
+                UiHelper.HoldUser($"The customer must be {movie.AgeRating}+ to watch this movie. They will not reach this age within the next 2 weeks.");
+                BookAsAdmin(header);
+            }
+            else if (!isOldEnough && availableDate != null)
+            {
+                string birthdayMessage = availableDate.Value.ToString("dd-MM-yyyy");
+                UiHelper.HoldUser($"The customer will turn {movie.AgeRating}+ on {birthdayMessage}. Dates before this day will not be available.");
             }
 
             while (true)

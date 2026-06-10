@@ -3,26 +3,24 @@
 
 
 [TestClass]
-[Ignore]
-public sealed class Test1
+// [Ignore]
+public sealed class LoginTests
 {
-
-
     [DataTestMethod]
-    [DataRow("kevin@kevin.nl", "kevin")]
+    [DataRow("john@example.com", "demo_password")]
     public void LoginValidCredentials(string m, string p)
     {
         // arrange
         AccountsLogic l = new();
         AccountsAccess access = new();
 
-        // act 
+        // act
         AccountModel result = l.CheckLogin(m, p);
 
         // assert
         Assert.IsNotNull(result);
         Assert.AreEqual(m, result.EmailAddress);
-        Assert.AreEqual(p, result.Password);
+        Assert.AreEqual(AccountsLogic.HashPassword(p), result.Password);
     }
 
     [DataTestMethod]
@@ -36,7 +34,7 @@ public sealed class Test1
         // arrange
         AccountsLogic l = new();
 
-        // act 
+        // act
         AccountModel result = l.CheckLogin(m, p);
 
         // assert

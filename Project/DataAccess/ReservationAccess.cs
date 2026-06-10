@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 public class ReservationAccess : DefaultAccess, IAccess
 {
@@ -21,7 +21,10 @@ public class ReservationAccess : DefaultAccess, IAccess
     }
     public ReservationModel Write(ReservationModel reservation)
     {
-        string sql = $"INSERT INTO {Table} (userId, reservationDate, totalPrice, timeTableId) VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId)";
+        string sql = $@"INSERT INTO {Table} 
+            (userId, reservationDate, totalPrice, timeTableId) 
+            VALUES (@UserId, @ReservationDate, @TotalPrice, @TimeTableId)
+        ";
         connection.Execute(sql, reservation);
         reservation.Id = connection.QuerySingle<int>("SELECT last_insert_rowid()");
 
@@ -38,8 +41,12 @@ public class ReservationAccess : DefaultAccess, IAccess
         string sql = $"SELECT * FROM {Table} WHERE userId = @UserId";
         return connection.Query<ReservationModel>(sql, new { UserId = userId }).AsList();
     }
-
-    public TimetableModel GetById(Int64 timetableId)
+    public List<ReservationModel> GetReservationsByTimetableId(Int64 timetableId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE timetableId = @TimetableId";
+        return connection.Query<ReservationModel>(sql, new {TimetableId = timetableId}).AsList();
+    }
+    public TimetableModel? GetById(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";
         return connection.QueryFirstOrDefault<TimetableModel>(sql, new { TimetableId = timetableId });

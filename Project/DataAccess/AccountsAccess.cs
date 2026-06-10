@@ -1,4 +1,4 @@
-using Dapper;
+﻿using Dapper;
 
 
 public class AccountsAccess : DefaultAccess, IAccess
@@ -7,30 +7,34 @@ public class AccountsAccess : DefaultAccess, IAccess
 
     public override void CreateTable()
     {
-        string sql = $@"CREATE TABLE IF NOT EXISTS {Table} 
-            (
-                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                email TEXT UNIQUE NOT NULL, 
-                password TEXT NOT NULL, 
-                fullname TEXT NOT NULL, 
+        string sql = $@"
+        CREATE TABLE IF NOT EXISTS {Table} (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                emailAddress TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                fullName TEXT NOT NULL,
                 firstName TEXT NOT NULL,
                 lastName TEXT NOT NULL,
                 dateOfBirth INTEGER NOT NULL,
                 isAdmin INTEGER NOT NULL,
-                freePopcornGiftUsedYear INTEGER NOT NULL
-            );";
+                freePopcornGiftUsedYear INTEGER NOT NULL,
+                passPoints INTEGER NOT NULL
+        );";
         connection.Execute(sql);
     }
 
     public void Write(AccountModel account)
     {
-        string sql = $"INSERT INTO {Table} (email, password, fullname, firstName, lastName, dateOfBirth, isAdmin, freePopcornGiftUsedYear) VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin, @FreePopcornGiftUsedYear)";
+        string sql = $@"
+            INSERT INTO {Table} 
+            (emailAddress, password, fullName, firstName, lastName, dateOfBirth, isAdmin, freePopcornGiftUsedYear, passPoints) 
+            VALUES (@EmailAddress, @Password, @FullName, @FirstName, @LastName, @DateOfBirth, @IsAdmin, @FreePopcornGiftUsedYear, @PassPoints)";
         connection.Execute(sql, account);
     }
 
-    public AccountModel GetByEmail(string email)
+    public AccountModel? GetByEmail(string email)
     {
-        string sql = $"SELECT * FROM {Table} WHERE email = @Email";
+        string sql = $"SELECT * FROM {Table} WHERE emailAddress = @Email;";
         return connection.QueryFirstOrDefault<AccountModel>(sql, new { Email = email });
     }
 
@@ -43,7 +47,10 @@ public class AccountsAccess : DefaultAccess, IAccess
     public void Update(AccountModel account)
     {
         string sql =
-            $"UPDATE {Table} SET email = @EmailAddress, password = @Password, fullname = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin, freePopcornGiftUsedYear = @FreePopcornGiftUsedYear WHERE id = @Id";
+            $@"
+            UPDATE {Table}
+                SET emailAddress = @EmailAddress, password = @Password, fullName = @FullName, firstName = @FirstName, lastName = @LastName, dateOfBirth = @DateOfBirth, isAdmin = @IsAdmin, freePopcornGiftUsedYear = @FreePopcornGiftUsedYear, passPoints = @PassPoints
+            WHERE id = @Id;";
         connection.Execute(sql, account);
     }
 
@@ -56,7 +63,7 @@ public class AccountsAccess : DefaultAccess, IAccess
 
     public void Delete(AccountModel account)
     {
-        string sql = $"DELETE FROM {Table} WHERE id = @Id";
+        string sql = $"DELETE FROM {Table} WHERE id = @Id;";
         connection.Execute(sql, new { Id = account.Id });
     }
 }

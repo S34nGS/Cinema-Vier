@@ -1,41 +1,20 @@
-using System.Formats.Asn1;
-using System.Text.RegularExpressions;
+﻿public enum RegistrationResult
+{
+    Success,
+    InvalidEmail,
+    InvalidPassword,
+    InvalidDateOfBirth,
+    EmailAlreadyExists
+}
 
 public class AccountsLogic
 {
     public static AccountModel? CurrentAccount { get; private set; }
-    private AccountsAccess _access = new();
+    private readonly AccountsAccess _access = new();
 
-    public string HashPassword(string password)
+    public static string HashPassword(string password)
     {
         return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
-    }
-
-    public bool IsValidEmail(string email)
-    {
-        Match match = Regex.Match(email, @"([^ ])+@([A-Z])+\.([A-Z])+", RegexOptions.IgnoreCase);
-        return match.Success;
-    }
-
-    // checks if password is empty or too short
-    public bool IsValidPassword(string password)
-    {
-        if (String.IsNullOrEmpty(password))
-        {
-            return false;
-        }
-
-        if (password.Length < 6)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public bool IsValidDateOfBirth(DateTime dateOfBirth)
-    {
-        return dateOfBirth < DateTime.Today && dateOfBirth > DateTime.Today.AddYears(-120);
     }
 
     public static int CalculateAge(DateTime dateOfBirth)
@@ -45,47 +24,42 @@ public class AccountsLogic
         return age;
     }
 
-    public AccountModel? CreateAccount(string email, string password, string firstName, string lastName, DateTime dateOfBirth)
+    public (AccountModel? account, RegistrationResult result) CreateAccount(string email, string password, string firstName, string lastName, DateTime dateOfBirth)
     {
-        // check email
-        if (IsValidEmail(email) == false)
+        if (!ValidDataLogic.IsValidEmail(email))
         {
-            return null;
+            return (null, RegistrationResult.InvalidEmail);
+        }
+        else if (!ValidDataLogic.IsValidPassword(password))
+        {
+            return (null, RegistrationResult.InvalidPassword);
+        }
+        else if (!ValidDataLogic.IsValidDateOfBirth(dateOfBirth))
+        {
+            return (null, RegistrationResult.InvalidDateOfBirth);
+        }
+        else if (_access.GetByEmail(email) is not null)
+        {
+            return (null, RegistrationResult.EmailAlreadyExists);
         }
 
-        // check password
-        if (IsValidPassword(password) == false)
-        {
-            return null;
-        }
-        
-        // check date of birth
-        if (IsValidDateOfBirth(dateOfBirth) == false)
-        {
-            return null;
-        }
-
-        // create account with first and last name
-        AccountModel account = new AccountModel(0, email, HashPassword(password), firstName, lastName, TimetablesLogic.ConvertDateToUnixTime(dateOfBirth));
-
+        AccountModel account = new(0, email, HashPassword(password), firstName, lastName, TimeLogic.ConvertDateToUnixTime(dateOfBirth));
         _access.Write(account);
-
-        account = _access.GetByEmail(email);
-        return account;
+        return (_access.GetByEmail(email), RegistrationResult.Success);
     }
 
-    public AccountModel? CheckLogin(string email, string password)
-    {
-        AccountModel acc = _access.GetByEmail(email);
-
-        if (acc != null && acc.Password == HashPassword(password))
+        public AccountModel? CheckLogin(string email, string password)
         {
-            CurrentAccount = acc;
-            return acc;
-        }
+            AccountModel? acc = _access.GetByEmail(email);
 
-        return null;
-    }
+            if (acc != null && acc.Password == HashPassword(password))
+            {
+                CurrentAccount = acc;
+                return acc;
+            }
+
+            return null;
+        }
 
     public List<AccountModel> GetAllCustomerAccounts()
     {
@@ -96,12 +70,13 @@ public class AccountsLogic
     {
         List<AccountModel> rawAccounts = GetAllCustomerAccounts();
         List<string> accounts = [];
-        foreach(AccountModel account in rawAccounts)
+        foreach (AccountModel account in rawAccounts)
         {
             accounts.Add(account.FullName);
         }
 
-        int selected = UiHelper.SelectionMenu(accounts, header);
+        // TODO: make this it's own presentation layer file
+        int selected = UiHelper.SelectionMenu.WriteMenu(accounts, header);
         return rawAccounts[selected];
     }
 
@@ -116,25 +91,26 @@ public class AccountsLogic
         MoviesLogic.ClearRecommendations();
     }
 
-    public static bool IsBirthday(AccountModel account)
+    public static bool IsBirthday(AccountModel account, DateTime movieDate)
     {
         // convert saved date of birth number back to a date
-        DateTime dateOfBirth = TimetablesLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
+        DateTime dateOfBirth = TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
 
-        return dateOfBirth.Day == DateTime.Today.Day &&
-               dateOfBirth.Month == DateTime.Today.Month;
+        // check if selected movie date is on user's birthday
+        return dateOfBirth.Day == movieDate.Day &&
+            dateOfBirth.Month == movieDate.Month;
     }
 
-    public static bool CanUseFreePopcornGift(AccountModel account)
+    public static bool CanUseFreePopcornGift(AccountModel account, DateTime movieDate)
     {
-        // check if today is birthday and gift is not used this year
-        return IsBirthday(account) &&
-               account.FreePopcornGiftUsedYear != DateTime.Today.Year;
+        // check if movie date is birthday and gift is not used in that year
+        return IsBirthday(account, movieDate) &&
+            account.FreePopcornGiftUsedYear != movieDate.Year;
     }
 
-    public void UseFreePopcornGift(AccountModel account)
+    public void UseFreePopcornGift(AccountModel account, DateTime movieDate)
     {
-        account.FreePopcornGiftUsedYear = DateTime.Today.Year;
+        account.FreePopcornGiftUsedYear = movieDate.Year;
 
         // update only the gift usage year
         _access.UpdateFreePopcornGiftUsedYear(account);

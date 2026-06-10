@@ -1,4 +1,4 @@
-public static class CinemaInfo
+﻿public static class CinemaInfo
 {
     public static void Start()
     {
@@ -8,7 +8,7 @@ public static class CinemaInfo
 
             List<string> menu = ["About Us", "Cinema Experience", "Events", "Prices", "Policies", "General Information"];
 
-            int selected = UiHelper.SelectionMenu(menu, "About Cinema Vier");
+            int selected = UiHelper.SelectionMenu.WriteMenu(menu, "About Cinema Vier");
 
             if (selected == menu.IndexOf("About Us"))
             {
@@ -36,79 +36,50 @@ public static class CinemaInfo
             }
             else
             {
-                // Back handled by UiHelper
                 Menu.Start();
-                return;
             }
         }
     }
 
-    static void ShowAboutUs()
-    {
-        Console.Clear();
-        Console.WriteLine(@"
+    public readonly static Action ShowAboutUs = UiHelper.GeneratePage(@"
 === About Us ===
 
 Cinema Vier is a modern cinema located in Rotterdam.
 We offer a comfortable and simple movie experience.
 Users can browse movies, make reservations and enjoy their visit.
 ");
-        UiHelper.HoldUser();
-    }
 
-    static void ShowCinemaExperience()
-    {
-        Console.Clear();
-        Console.WriteLine(@"
+    public readonly static Action ShowCinemaExperience = UiHelper.GeneratePage(@"
 === Cinema Experience ===
 
 Our cinema offers a comfortable viewing experience with modern screens and sound.
 Before the movie, visitors can stay in the waiting lounge.
 In the lounge, customers can buy popcorn and a variety of hot and cold drinks.
-");
-        UiHelper.HoldUser();
-    }
+    ");
 
-    static void ShowEvents()
-    {
-        Console.Clear();
-        Console.WriteLine(@"
+    public readonly static Action ShowEvents = UiHelper.GeneratePage(@"
 === Events ===
 
 At the moment, we focus on providing a simple movie experience.
 In the future, special events or themed movie nights may be added.
-");
-        UiHelper.HoldUser();
-    }
+    ");
 
-    static void ShowPrices()
-    {
-        Console.Clear();
-        Console.WriteLine(@"
+    public readonly static Action ShowPrices = UiHelper.GeneratePage(@"
 === Prices ===
 
 Ticket prices may vary depending on the movie and time.
 Food and drinks such as popcorn and beverages are sold separately.
-");
-        UiHelper.HoldUser();
-    }
+    ");
 
-    static void ShowPolicies()
-    {
-        Console.Clear();
-        Console.WriteLine(@"
+    public readonly static Action ShowPolicies = UiHelper.GeneratePage(@"
 === Policies ===
 
 Users must provide correct information when making a reservation.
 Payment must be completed before a reservation is confirmed.
 Customers should follow general cinema rules during their visit.
-");
-        UiHelper.HoldUser();
-    }
-    static void ShowGeneralInformation()
-    {
-        Console.Clear();
-        Console.WriteLine(@"
+    ");
+
+    public readonly static Action ShowGeneralInformation = UiHelper.GeneratePage(@"
 === General Information ===
 
 Opening Hours:
@@ -122,7 +93,5 @@ Wijnhaven 107, 3011 WN Rotterdam, Netherlands
 Phone: +31 10 123 4567
 
 Email: info@cinemavier.nl
-");
-        UiHelper.HoldUser();
-    }
+    ");
 }

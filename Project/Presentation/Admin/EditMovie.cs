@@ -1,36 +1,27 @@
-public static class EditMovie
+﻿public static class EditMovie
 {
     public static void Start()
     {
-        List<string> movies = MoviesLogic.GetMovieTitles();
+        MovieModel? movie = SelectMovie.Start();
 
-        int selectedMovie = UiHelper.SelectionMenu(movies);
-        if (selectedMovie == -1) return;
+        if (movie is null) return;
 
-        MovieModel movie = MoviesLogic.GetMovieByTitle(movies[selectedMovie]);
-
-        Dictionary<string, string> movieInput = UiHelper.InputForm(
-            [
-                "Title",
-                "Duration",
-                "Summary",
-                "Director",
-                "Age Rating",
-                "Genre",
-                "Release Year"
-            ],
-            "Edit Movie"
+        Dictionary<string, string> movieInput = UiHelper.InputFormMenu.WriteMenu(
+            new Dictionary<string, string>
+            {
+                {"Title", movie.Title},
+                {"Duration", movie.Duration.ToString()},
+                {"Summary", movie.Summary},
+                {"Director", movie.Director},
+                {"Age Rating", movie.AgeRating.ToString()},
+                {"Genre", movie.Genre},
+                {"Release Year", movie.ReleaseDate.ToString()},
+            },
+            "Edit Movie",
+            50
         );
 
-        movie.Title = movieInput["Title"];
-        movie.Duration = Convert.ToInt32(movieInput["Duration"]);
-        movie.Summary = movieInput["Summary"];
-        movie.Director = movieInput["Director"];
-        movie.AgeRating = Convert.ToInt32(movieInput["Age Rating"]);
-        movie.Genre = movieInput["Genre"];
-        movie.ReleaseDate = Convert.ToInt32(movieInput["Release Year"]);
-
-        MoviesLogic.EditMovie(movie);
+        MoviesLogic.EditMovie(movie.Id, movieInput);
 
         UiHelper.HoldUser("Movie updated successfully.");
     }
