@@ -64,6 +64,11 @@
         TimetableModel selectedTimetable = CurrentTimetables[selectedTime];
         List<SeatModel> selectedSeats = seatSelection.Start(selectedTimetable);
 
+        if (selectedSeats.Count == 0)
+        {
+            return Start(movie, customer);
+        }
+
         string dateTimeString = $"{selectedDateString} {TimeMenu[selectedTime].Substring(0, 5)}";
         DateTime convertedDateTime = DateTime.ParseExact(dateTimeString, "dd-MM-yyyy HH:mm", null);
 

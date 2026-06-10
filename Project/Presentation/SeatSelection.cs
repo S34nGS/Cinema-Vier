@@ -29,6 +29,7 @@
 Selected seats = {selectedSeats.Count}
 Select: Space
 Move: Arrows
+Back: B
 Confirm: Enter
             ");
 
@@ -52,6 +53,10 @@ Confirm: Enter
 
 
             input = Console.ReadKey().Key;
+            if (input == ConsoleKey.B)
+            {
+                return [];
+            }
 
             // TODO: make sure the user cant get out of the map
             if (UiHelper.IsDownKey(input) && Location["row"] < Seats.GetLength(0))
