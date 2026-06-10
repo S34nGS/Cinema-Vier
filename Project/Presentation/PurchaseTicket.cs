@@ -168,11 +168,43 @@
             return null;
         }
 
-        ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, convertedDateTime.ConvertDateToUnixTime(), (double)finalTotal, selectedTimetable.Id, selectedSeats));
+        ReservationModel reservation = ReservationsLogic.CreateReservation(new ReservationModel(-1, AccountsLogic.CurrentAccount!.Id, convertedDateTime.ConvertDateToUnixTime(), (double)finalTotal, selectedTimetable.Id, selectedSeats));
 
 
         (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null, selectedSeats.Count);
         if(!completePayment) return null;
+
+        ConsumableOrderAccess consumableOrderAccess = new();
+
+        foreach (OrderItemModel item in orderedMenuItems)
+        {
+            if (item.MenuItemId != 0)
+            {
+                ConsumableOrderModel order = new ConsumableOrderModel(
+                    -1,
+                    reservation.Id,
+                    item.MenuItemId,
+                    item.Quantity
+                );
+
+                consumableOrderAccess.Write(order);
+            }
+        }
+
+        foreach (OrderItemModel item in loungePreOrderItems)
+        {
+            if (item.MenuItemId != 0)
+            {
+                ConsumableOrderModel order = new ConsumableOrderModel(
+                    -1,
+                    reservation.Id,
+                    item.MenuItemId,
+                    item.Quantity
+                );
+
+                consumableOrderAccess.Write(order);
+            }
+        }
 
         return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
     }
