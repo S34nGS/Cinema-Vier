@@ -12,14 +12,14 @@ public sealed class UserRegistrationTests
         DateTime dateOfBirth = DateTime.ParseExact(dateOfBirthStr, "dd/MM/yyyy", null);
 
         // act
-        AccountModel result = l.CreateAccount(email, password, firstName, lastName, dateOfBirth);
+        (AccountModel? account, RegistrationResult _) = l.CreateAccount(email, password, firstName, lastName, dateOfBirth);
 
         // assert
-        Assert.IsNotNull(result);
-        Assert.AreEqual(email, result.EmailAddress);
-        Assert.AreEqual(AccountsLogic.HashPassword(password), result.Password);
-        Assert.AreEqual(firstName, result.FirstName);
-        Assert.AreEqual(lastName, result.LastName);
+        Assert.IsNotNull(account);
+        Assert.AreEqual(email, account!.EmailAddress);
+        Assert.AreEqual(AccountsLogic.HashPassword(password), account.Password);
+        Assert.AreEqual(firstName, account.FirstName);
+        Assert.AreEqual(lastName, account.LastName);
     }
 
     [DataTestMethod]
@@ -36,9 +36,9 @@ public sealed class UserRegistrationTests
         DateTime dateOfBirth = DateTime.ParseExact(dateOfBirthStr, "dd/MM/yyyy", null);
 
         // act
-        AccountModel result = l.CreateAccount(email, password, firstName, lastName, dateOfBirth);
+        (AccountModel? account, RegistrationResult _) = l.CreateAccount(email, password, firstName, lastName, dateOfBirth);
 
         // assert
-        Assert.IsNull(result);
+        Assert.IsNull(account);
     }
 }
