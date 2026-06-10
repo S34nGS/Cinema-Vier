@@ -118,7 +118,7 @@
 
     public static MovieModel PickMovieToManage(string? header = null)
     {
-        List<string> menu = MoviesLogic.GetMovieTitles();
+        List<string> menu = MoviesLogic.GetMovieTitles(false);
 
         int selected = UiHelper.SelectionMenu.WriteMenu(menu, header);
 
