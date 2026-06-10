@@ -37,7 +37,6 @@
             else
             {
                 Menu.Start();
-                return;
             }
         }
     }

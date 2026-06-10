@@ -9,7 +9,7 @@
 
             if (selected == -1)
             {
-                return;
+                Menu.Start();
             }
 
             if (selected == Array.IndexOf(menu, "Upcoming Orders"))
@@ -49,7 +49,7 @@
         {
             Console.WriteLine($"No {title.ToLower()} found.");
             UiHelper.HoldUser();
-            return;
+            Start();
         }
 
         List<string> reservationMenu = [];
@@ -67,7 +67,7 @@
 
         if (selected == -1)
         {
-            return;
+            Start();
         }
 
         ShowReservationDetails(reservations[selected]);
