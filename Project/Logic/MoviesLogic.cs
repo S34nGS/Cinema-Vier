@@ -1,6 +1,7 @@
 ﻿public static class MoviesLogic
 {
     private static MoviesAccess _access = new();
+    private static RatingsAccess _ratingsAccess = new();
     private static List<MovieModel> _AvailableMovies = [];
 
     private static List<string> _cachedRecommendations = null;
@@ -65,6 +66,42 @@
         return age >= movie.AgeRating;
     }
 
+    public static DateTime? GetAvailableDate(MovieModel movie, AccountModel account)
+    {
+        InitializeMovies();
+        
+        DateTime userBirthday = TimeLogic.ConvertUnixTimeToDateTimeValue(account.DateOfBirth);
+        DateTime now = DateTime.Now;
+        DateTime twoWeeksFromNow = now.AddDays(14);
+        
+        int currentAge = AccountsLogic.CalculateAge(userBirthday);
+        
+        if (currentAge >= movie.AgeRating)
+        {
+            return now;
+        }
+        
+        int currentYear = now.Year;
+        DateTime nextBirthday = new DateTime(currentYear, userBirthday.Month, userBirthday.Day);
+        
+        if (nextBirthday < now)
+        {
+            nextBirthday = nextBirthday.AddYears(1);
+        }
+        
+        if (nextBirthday <= twoWeeksFromNow)
+        {
+            int ageAfterBirthday = nextBirthday.Year - userBirthday.Year;
+            
+            if (ageAfterBirthday >= movie.AgeRating)
+            {
+                return nextBirthday;
+            }
+        }
+        
+        return null;
+    }
+
     public static MovieModel? Start()
     {
         InitializeMovies();
@@ -83,7 +120,6 @@
     {
         List<string> menu = MoviesLogic.GetMovieTitles();
 
-        // TODO: make this it's own presentation layer file
         int selected = UiHelper.SelectionMenu.WriteMenu(menu, header);
 
         return MoviesLogic.GetMovieByTitle(menu[selected]);
@@ -140,6 +176,44 @@
         RefreshMovies();
     }
 
+    public static double GetAverageRating(Int64 movieId)
+    {
+        // get all ratings for this movie
+        List<RatingModel> ratings = _ratingsAccess.GetRatingsByMovieId(movieId);
+
+        if (ratings.Count == 0)
+        {
+            return 0;
+        }
+
+        double total = 0;
+
+        foreach (RatingModel rating in ratings)
+        {
+            total += rating.Rating;
+        }
+
+        return total / ratings.Count;
+    }
+
+    public static string GetMovieDetails(MovieModel movie)
+    {
+        // calculate average rating for movie details
+        double averageRating = GetAverageRating(movie.Id);
+
+        string ratingText = averageRating == 0
+            ? "No ratings yet"
+            : $"{averageRating:0.0}/5";
+
+        return $@"Title: {movie.Title}
+Description: {movie.Summary}
+Genre: {movie.Genre}
+Duration: {movie.Duration}
+Age Rating: {movie.AgeRating}
+Average Rating: {ratingText}
+";
+    }
+
     public static List<string> GetRecommendedMovies()
     {
         if (_cachedRecommendations != null) return _cachedRecommendations;
@@ -148,7 +222,7 @@
 
         if (pastReservations.Count == 0) return new List<string>();
 
-        List<string> userGenres = new List<string>();
+        Dictionary<string, int> genreCount = new Dictionary<string, int>();
         List<Int64> watchedMovieIds = new List<Int64>();
 
         foreach (ReservationModel reservation in pastReservations)
@@ -161,12 +235,30 @@
             foreach (string genre in genres)
             {
                 string trimmedGenre = genre.Trim();
-                if (!userGenres.Contains(trimmedGenre))
+                if (genreCount.ContainsKey(trimmedGenre))
                 {
-                    userGenres.Add(trimmedGenre);
+                    genreCount[trimmedGenre]++;
+                }
+                else
+                {
+                    genreCount[trimmedGenre] = 1;
                 }
             }
         }
+
+        string mostWatchedGenre = "";
+        int highestCount = 0;
+        
+        foreach (var genreEntry in genreCount)
+        {
+            if (genreEntry.Value > highestCount)
+            {
+                highestCount = genreEntry.Value;
+                mostWatchedGenre = genreEntry.Key;
+            }
+        }
+
+        if (string.IsNullOrEmpty(mostWatchedGenre)) return new List<string>();
 
         List<MovieModel> allMovies = _access.GetAllMovies();
         List<string> recommendedMovies = new List<string>();
@@ -176,19 +268,16 @@
             if (movie.IsActive != 1 || watchedMovieIds.Contains(movie.Id)) continue;
 
             string[] movieGenres = movie.Genre.Split(',');
-            bool foundMatch = false;
             foreach (string movieGenre in movieGenres)
             {
-                if (userGenres.Contains(movieGenre.Trim()))
+                if (movieGenre.Trim() == mostWatchedGenre)
                 {
-                    foundMatch = true;
+                    if (!recommendedMovies.Contains(movie.Title))
+                    {
+                        recommendedMovies.Add(movie.Title);
+                    }
                     break;
                 }
-            }
-
-            if (foundMatch && !recommendedMovies.Contains(movie.Title))
-            {
-                recommendedMovies.Add(movie.Title);
             }
         }
 

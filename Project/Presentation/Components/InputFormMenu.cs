@@ -41,15 +41,30 @@ public class InputFormMenu : BaseComponent
             foreach (KeyValuePair<string, string> title in fields)
             {
                 Console.WriteLine($"╠═ {title.Key} {new string('═', longest - title.Key.Length)}╣");
-                if (title.Key == currentField)
+
+                string displayText = ShowInput(inputs[title.Key], title.Key);
+                List<string> lines = WrapText(displayText, longest);
+
+                bool isSelected = title.Key == currentField;
+
+
+                for (int i = 0; i < lines.Count; i++)
                 {
-                    Console.WriteLine(
-                        $"║>{ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)}<║");
-                }
-                else
-                {
-                    Console.WriteLine(
-                        $"║ {ShowInput(inputs[title.Key], title.Key)} {new string(' ', longest - ShowInput(inputs[title.Key], title.Key).Length)} ║");
+                    string line = lines[i];
+                    bool isLastLine = i == lines.Count - 1;
+
+                    if (isSelected && isLastLine)
+                    {
+                        Console.WriteLine($"║>{line}{new string(' ', longest - line.Length + 1)}<║");
+                    }
+                    else if (isSelected)
+                    {
+                        Console.WriteLine($"║ {line}{new string(' ', longest - line.Length + 1)} ║");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"║ {line}{new string(' ', longest - line.Length + 1)} ║");
+                    }
                 }
             }
 
@@ -75,7 +90,7 @@ public class InputFormMenu : BaseComponent
             else
             {
                 char character = key.KeyChar;
-                if (!char.IsControl(character) && inputs[currentField].Length < maxLength)
+                if (!char.IsControl(character))
                 {
                     inputs[currentField] += character;
                 }
@@ -83,5 +98,42 @@ public class InputFormMenu : BaseComponent
         }
 
         return inputs;
+    }
+
+    private static List<string> WrapText(string text, int width)
+    {
+        List<string> lines = [];
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            lines.Add("");
+            return lines;
+        }
+
+        string[] words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        string currentLine = "";
+
+        foreach (string word in words)
+        {
+            if (string.IsNullOrEmpty(currentLine))
+            {
+                currentLine = word;
+            }
+            else if (currentLine.Length + 1 + word.Length <= width)
+            {
+                currentLine += " " + word;
+            }
+            else
+            {
+                lines.Add(currentLine);
+                currentLine = word;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(currentLine))
+        {
+            lines.Add(currentLine);
+        }
+
+        return lines;
     }
 }

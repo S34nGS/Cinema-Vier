@@ -13,7 +13,7 @@
                     [
                         "Search by name",
                         "Search by date",
-                        "View available movies",
+                        "View upcoming movies",
                         "Recommended movies"
                     ]
                 );
@@ -24,7 +24,7 @@
                     [
                         "Search by name",
                         "Search by date",
-                        "View available movies"
+                        "View upcoming movies"
                     ]
                 );
             }

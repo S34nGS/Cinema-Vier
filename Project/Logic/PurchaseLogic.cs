@@ -49,10 +49,58 @@
         return isValidInput;
     }
 
+    public static bool MoviePassCheck(int seatsCount = 1)
+    {
+        if (AccountsLogic.CurrentAccount.PassPoints >= seatsCount)
+        {
+            AccountsLogic.CurrentAccount.PassPoints -= seatsCount;
+            return true;
+        }
+        return false;
+    }
+
+    public static void TopUpMoviePass(int amount) => AccountsLogic.CurrentAccount.PassPoints += (Int64)amount;
+
+    public static (bool, int) amountOfPassPointsIsValid(string amountOfPassPoints)
+    {
+        bool isValid = int.TryParse(amountOfPassPoints, out int amount);
+        
+        if(amount == 0)
+        {
+            isValid = false;
+        }
+        
+        return (isValid, amount);
+    }
+
     // calculate total with ticket, normal menu and lounge pre-order
     public static double CalculateFullTotal(double ticketTotal, double menuTotal, double loungePreOrderTotal)
     {
         return ticketTotal + menuTotal + loungePreOrderTotal;
+    }
+
+    public static double GetSeatPrice(SeatModel seat)
+    {
+        double price = 12.0;
+        if (seat.SeatPriority == 2)
+        {
+            price += 3;
+        }
+        if (seat.SeatPriority == 3)
+        {
+            price += 6;
+        }
+        return price;
+    }
+
+    public static string GetSeatTypeName(Int64 seatPriority)
+    {
+        return seatPriority switch
+        {
+            2 => "Deluxe",
+            3 => "Premium",
+            _ => "Standard",
+        };
     }
 
     private static bool CardHolderNameCheck(string fullname)

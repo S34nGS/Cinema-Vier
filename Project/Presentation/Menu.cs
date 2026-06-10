@@ -3,7 +3,7 @@
     static public void Start()
     {
         string header = (AccountsLogic.CurrentAccount != null)
-            ? $"Welcome {AccountsLogic.CurrentAccount.FirstName}"
+            ? $"Welcome {AccountsLogic.CurrentAccount.FirstName} (Pass point: {AccountsLogic.CurrentAccount.PassPoints})"
             : "Welcome to Cinema Vier! Please select an option:";
 
         string[] menu = BuildMenu();
@@ -36,11 +36,22 @@
                 // }
 
                 PurchaseTicket.SetUpDateMenu(movie);
-                UiHelper.HoldUser(movie.ToString());
-                if (AccountsLogic.CurrentAccount != null && !MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount))
+                
+                if (AccountsLogic.CurrentAccount != null)
                 {
-                    UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie.");
-                    Start();
+                    bool isOldEnough = MoviesLogic.IsOldEnough(movie, AccountsLogic.CurrentAccount);
+                    DateTime? availableDate = MoviesLogic.GetAvailableDate(movie, AccountsLogic.CurrentAccount);
+                    
+                    if (!isOldEnough && availableDate == null)
+                    {
+                        UiHelper.HoldUser($"You must be {movie.AgeRating}+ to watch this movie. You will not reach this age within the next 2 weeks.");
+                        Start();
+                    }
+                    else if (!isOldEnough && availableDate != null)
+                    {
+                        string birthdayMessage = availableDate.Value.ToString("dd-MM-yyyy");
+                        UiHelper.HoldUser($"You will turn {movie.AgeRating}+ on {birthdayMessage}. Dates before this day will not be available.");
+                    }
                 }
 
                 while (true)
@@ -65,6 +76,15 @@
         {
             ViewReservations.Start();
         }
+        else if (selected == Array.IndexOf(menu, "Top up Movie Pass"))
+        {
+            MoviePass.Start();
+            Start();
+        }
+        else if (selected == Array.IndexOf(menu, "Rate Movies"))
+        {
+            RateMovies.Start();
+        }
         else if (selected == Array.IndexOf(menu, "Add Movie"))
         {
             AddMovie.Start();
@@ -80,7 +100,7 @@
             DisableMovie.Start();
             Start();
         }
-        else if (selected == Array.IndexOf(menu, "Manage Timetables"))
+        else if (selected == Array.IndexOf(menu, "Manage Timetable"))
         {
             Timetables.Start();
             Start();
@@ -111,11 +131,11 @@
         }
         else if (AccountsLogic.CurrentAccount.IsAdmin == 1)
         {
-            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetables", "Logout"];
+            menu = ["Book Movie For Customer", "Add Movie", "Edit Movie", "Disable Movie", "Manage Timetable", "Logout"];
         }
         else
         {
-            menu = ["Book Movie", "View Reservations", "Cinema Info", "Logout", "Exit"];
+            menu = ["Book Movie", "View Reservations", "Top up Movie Pass", "Rate Movies", "Cinema Info", "Logout", "Exit"];
         }
 
         return menu;

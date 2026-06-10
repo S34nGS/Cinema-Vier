@@ -3,7 +3,7 @@
     // TODO: Re-Implement this to be a UiHelper Page :D
     // GeneratePage
     public static void Start(
-        double ticketTotal,
+        List<SeatModel> selectedSeats,
         List<OrderItemModel> orderedMenuItems,
         double menuTotal,
         List<OrderItemModel> loungePreOrderItems,
@@ -11,9 +11,41 @@
         double finalTotal
     )
     {
-        string output = @$"Booking Summary
+        double ticketTotal = 0.0;
+        foreach (SeatModel seat in selectedSeats)
+        {
+            ticketTotal += PurchaseLogic.GetSeatPrice(seat);
+        }
 
+        string output = "Booking Summary\n\n";
+
+        if (selectedSeats.Count > 0)
+        {
+            output += "Seats:\n";
+            var seatGroups = selectedSeats
+                .GroupBy(s => s.SeatPriority)
+                .Select(g => new
+                {
+                    Priority = g.Key,
+                    Count = g.Count(),
+                    Price = PurchaseLogic.GetSeatPrice(g.First()),
+                    Total = g.Count() * PurchaseLogic.GetSeatPrice(g.First())
+                });
+
+            foreach (var group in seatGroups)
+            {
+                string typeName = PurchaseLogic.GetSeatTypeName(group.Priority);
+                output += $"{typeName} (€{group.Price:0.00}): {group.Count} - €{group.Total:0.00}\n";
+            }
+        }
+        else
+        {
+            output += "No seats selected.\n";
+        }
+
+        output += $@"
 Ticket total: €{ticketTotal:0.00}
+Number of seats: {selectedSeats.Count}
 ";
 
         if (orderedMenuItems.Count > 0)

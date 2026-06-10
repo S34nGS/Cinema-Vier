@@ -3,12 +3,14 @@
     public static SelectionMenu SelectionMenu { get; private set; }
     public static InputMenu InputMenu { get; private set; }
     public static InputFormMenu InputFormMenu { get; private set; }
+    public static RateMenu RateMenu {get; private set;}
 
     static UiHelper()
     {
         SelectionMenu = new();
         InputMenu = new();
         InputFormMenu = new();
+        RateMenu = new();
     }
 
     public static Action GeneratePage(string content)
