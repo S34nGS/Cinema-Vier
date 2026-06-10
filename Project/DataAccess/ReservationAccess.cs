@@ -41,7 +41,11 @@ public class ReservationAccess : DefaultAccess, IAccess
         string sql = $"SELECT * FROM {Table} WHERE userId = @UserId";
         return connection.Query<ReservationModel>(sql, new { UserId = userId }).AsList();
     }
-
+    public List<ReservationModel> GetReservationsByTimetableId(Int64 timetableId)
+    {
+        string sql = $"SELECT * FROM {Table} WHERE timetableId = @TimetableId";
+        return connection.Query<ReservationModel>(sql, new {TimetableId = timetableId}).AsList();
+    }
     public TimetableModel? GetById(Int64 timetableId)
     {
         string sql = $"SELECT * FROM {Table} WHERE id = @TimetableId";

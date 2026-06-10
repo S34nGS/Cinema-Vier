@@ -123,11 +123,11 @@
             {
                 if (isValidInput[i] == false)
                 {
-                    if (CreditCardInput[i] == "Cardholder name")
+                    if (IBANInput[i] == "Cardholder name")
                     {
                         message += "Invalid name, ";
                     }
-                    else if (CreditCardInput[i].Contains("IBAN number"))
+                    else if (IBANInput[i].Contains("IBAN number"))
                     {
                         message += "Invalid IBAN number, ";
                     }

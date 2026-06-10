@@ -1,6 +1,7 @@
 ﻿public static class MoviesLogic
 {
     private static MoviesAccess _access = new();
+    private static RatingsAccess _ratingsAccess = new();
     private static List<MovieModel> _AvailableMovies = [];
 
     private static List<string> _cachedRecommendations = null;
@@ -117,9 +118,8 @@
 
     public static MovieModel PickMovieToManage(string? header = null)
     {
-        List<string> menu = MoviesLogic.GetMovieTitles();
+        List<string> menu = MoviesLogic.GetMovieTitles(false);
 
-        // TODO: make this it's own presentation layer file
         int selected = UiHelper.SelectionMenu.WriteMenu(menu, header);
 
         return MoviesLogic.GetMovieByTitle(menu[selected]);
@@ -174,6 +174,44 @@
     {
         _access.Update(movie);
         RefreshMovies();
+    }
+
+    public static double GetAverageRating(Int64 movieId)
+    {
+        // get all ratings for this movie
+        List<RatingModel> ratings = _ratingsAccess.GetRatingsByMovieId(movieId);
+
+        if (ratings.Count == 0)
+        {
+            return 0;
+        }
+
+        double total = 0;
+
+        foreach (RatingModel rating in ratings)
+        {
+            total += rating.Rating;
+        }
+
+        return total / ratings.Count;
+    }
+
+    public static string GetMovieDetails(MovieModel movie)
+    {
+        // calculate average rating for movie details
+        double averageRating = GetAverageRating(movie.Id);
+
+        string ratingText = averageRating == 0
+            ? "No ratings yet"
+            : $"{averageRating:0.0}/5";
+
+        return $@"Title: {movie.Title}
+Description: {movie.Summary}
+Genre: {movie.Genre}
+Duration: {movie.Duration}
+Age Rating: {movie.AgeRating}
+Average Rating: {ratingText}
+";
     }
 
     public static List<string> GetRecommendedMovies()

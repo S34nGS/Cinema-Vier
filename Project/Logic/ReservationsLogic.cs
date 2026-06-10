@@ -39,7 +39,10 @@
 
         return pastReservations;
     }
-
+    public static List<ReservationModel> GetReservationsByTimetableId(Int64 timetableId)
+    {
+        return _access.GetReservationsByTimetableId(timetableId);
+    }
     public static ReservationModel CreateReservation(ReservationModel reservation)
     {
         return _access.Write(reservation);
