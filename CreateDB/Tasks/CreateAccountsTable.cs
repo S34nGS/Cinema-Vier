@@ -10,6 +10,7 @@ public static class CreateAccountsTable
             new AccountModel(2, "jane@example.com", "demo_password", "Jane", "Smith", TimeLogic.ConvertDateToUnixTime(new DateTime(2010, 1, 1))),
             new AccountModel(3, "admin@example.com", "demo_password", "Admin", "Admin", TimeLogic.ConvertDateToUnixTime(new DateTime(2000, 1, 1)), 1),
             new AccountModel(4, "tom@example.com", "demo_password", "tom", "Smith", TimeLogic.ConvertDateToUnixTime(new DateTime(1995, 1, 1))),
+            new AccountModel(5, "bob@example.com", "demo_password", "bob", "robert", TimeLogic.ConvertDateToUnixTime(DateTime.Today.AddYears(-17).AddDays(-357)))
         ];
 
         foreach (AccountModel account in accountsList)
