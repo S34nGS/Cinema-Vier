@@ -10,6 +10,11 @@
 
             int selected = UiHelper.SelectionMenu.WriteMenu(menu, "About Cinema Vier");
 
+            if (selected == -1)
+            {
+                return;
+            }
+
             if (selected == menu.IndexOf("About Us"))
             {
                 ShowAboutUs();
@@ -36,7 +41,8 @@
             }
             else
             {
-                Menu.Start();
+                // Back handled by UiHelper
+                return;
             }
         }
     }
