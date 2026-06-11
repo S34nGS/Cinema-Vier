@@ -33,13 +33,14 @@
                     return null;
                 }
             }
+            string SelectionHeader = MoviesLogic.GetMovieDetails(movie) + Environment.NewLine + "Pick a Date:";
 
-            int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, "Pick a date");
+            int selectedDate = UiHelper.SelectionMenu.WriteMenu(DateMenu, SelectionHeader);
             if (selectedDate == -1)
             {
                 return null;
             }
-            
+
             selectedDateString = DateMenu[selectedDate];
         }
 
@@ -172,7 +173,7 @@
 
 
         (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null, selectedSeats.Count);
-        if(!completePayment) return null;
+        if (!completePayment) return null;
 
         ConsumableOrderAccess consumableOrderAccess = new();
 
@@ -229,13 +230,13 @@
             )
             {
                 DateTimeOffset timetableDateTime = timetable.StartTime.ConvertUnixTimeToDateTime();
-                
+
                 // If we have an earliest watch date, skip dates before it
                 if (availableDate != null && timetableDateTime.Date < availableDate.Value.Date)
                 {
                     continue;
                 }
-                
+
                 string date = TimeLogic.ConvertDateString(
                     timetableDateTime,
                     "dd-MM-yyyy"
