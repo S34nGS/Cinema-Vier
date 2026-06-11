@@ -29,6 +29,7 @@ public class InputFormMenu : BaseComponent
             formTitle.Length
         );
         int selected = 0;
+        int totalOptions = fields.Count + 1;
 
         Dictionary<string, string> inputs = fields;
 
@@ -37,7 +38,12 @@ public class InputFormMenu : BaseComponent
             Console.Clear();
             WriteHeader(header);
             Console.WriteLine("╔═ " + formTitle + $" {new string('═', longest - formTitle.Length)}╗");
-            string currentField = fields.Keys.ToList()[selected];
+            string? currentField = null;
+            if (selected < fields.Count)
+            {
+                currentField = fields.Keys.ToList()[selected];
+            }
+
             foreach (KeyValuePair<string, string> title in fields)
             {
                 Console.WriteLine($"╠═ {title.Key} {new string('═', longest - title.Key.Length)}╣");
@@ -69,13 +75,30 @@ public class InputFormMenu : BaseComponent
             }
 
             Console.WriteLine($"╚{new string('═', longest + 3)}╝");
+            bool backSelected = selected == fields.Count;
+
+            Console.WriteLine("╔════════╗");
+            if (backSelected)
+            {
+                Console.WriteLine("║> Back <║");
+            }
+            else
+            {
+                Console.WriteLine("║  Back  ║");
+            }
+            Console.WriteLine("╚════════╝");
+
             ConsoleKeyInfo key = Console.ReadKey();
 
             if (key.Key == ConsoleKey.Enter)
             {
+                if (selected == fields.Count)
+                {
+                    return [];
+                }
                 break;
             }
-            else if (IsDownKey(key.Key, false) && selected < fields.Count - 1)
+            else if (IsDownKey(key.Key, false) && selected < totalOptions - 1)
             {
                 selected++;
             }
@@ -83,11 +106,11 @@ public class InputFormMenu : BaseComponent
             {
                 selected--;
             }
-            else if (key.Key == ConsoleKey.Backspace && inputs[currentField].Length > 0)
+            else if (currentField != null && key.Key == ConsoleKey.Backspace && inputs[currentField].Length > 0)
             {
                 inputs[currentField] = inputs[currentField][..^1];
             }
-            else
+            else if (currentField != null)
             {
                 char character = key.KeyChar;
                 if (!char.IsControl(character))

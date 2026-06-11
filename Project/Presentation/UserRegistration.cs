@@ -7,6 +7,11 @@
         string[] fields = ["First Name", "Last Name", "Email", "Password (8-32 characters)", "Date of birth (dd/mm/yyyy)"];
         Dictionary<string, string> inputs = UiHelper.InputFormMenu.WriteMenu(fields, "Please enter your registration information");
 
+        if (inputs.Count == 0)
+        {
+            return;
+        }
+
         DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dateOfBirth);
 
         var (acc, result) = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"], dateOfBirth);
@@ -15,6 +20,11 @@
         {
             inputs = UiHelper.InputFormMenu.WriteMenu(inputs, "Please enter your registration information", header: GetErrorMessage(result));
 
+            if (inputs.Count == 0)
+            {
+                return;
+            }
+
             DateTime.TryParseExact(inputs["Date of birth (dd/mm/yyyy)"], "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dateOfBirth);
 
             (acc, result) = accountsLogic.CreateAccount(inputs["Email"], inputs["Password (8-32 characters)"], inputs["First Name"], inputs["Last Name"], dateOfBirth);
@@ -22,7 +32,7 @@
 
         Console.WriteLine("Account created successfully");
         UiHelper.HoldUser();
-        Menu.Start();
+        return;
     }
 
     private static string GetErrorMessage(RegistrationResult result) => result switch

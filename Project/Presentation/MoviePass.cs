@@ -12,6 +12,11 @@ static class MoviePass
                 fields, 
                 isValidInput ? "How many Pass points would you like to top up?" : "Invalid input, please try again"
             );
+            if (userInput.Count == 0)
+            {
+                return;
+            }
+
             (bool validOrNot, int amount) = PurchaseLogic.amountOfPassPointsIsValid(userInput[fields[0]]);
             isValidInput = validOrNot;
             amountOfPassPoints = amount;
@@ -26,7 +31,10 @@ static class MoviePass
         paymentMethodsForMoviePass.Remove("Movie pass");
 
         (bool completePayment, string selectedPaymentMethodString) = PaymentInformation.Start(paymentMethodsForMoviePass);
-        if(!completePayment) Menu.Start();
+        if (!completePayment)
+        {
+            return;
+        }
 
         PurchaseLogic.TopUpMoviePass(amountOfPassPoints);
     }
