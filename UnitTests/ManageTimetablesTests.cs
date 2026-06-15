@@ -43,7 +43,7 @@ public sealed class ManageTimetablesTests
     }
 
     [DataTestMethod]
-    [DataRow("2", 1)]
+    [DataRow("!", 1)]
     [DataRow("a", 1)]
     [DataRow("99", 1)]
     public void CreateTimetableAsAdmin_InvalidRoomNumber_ReturnsOne(string roomNumber, int expected)
