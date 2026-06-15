@@ -128,11 +128,13 @@
 
     public static bool ValidateRoomNumberString(string roomNumber)
     {
-        if (RoomsLogic.GetRoomById(int.Parse(roomNumber)) == null)
+        Int64 num;
+        bool isNum = Int64.TryParse(roomNumber, out num);
+        if (isNum && RoomsLogic.GetRoomById(num) != null)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static bool ValidateTimeString(string time)
