@@ -1,18 +1,18 @@
 ﻿public class MenuLogic
 {
-    private readonly MenuItemsAccess menuItemsAccess = new();
+    private readonly ConsumablesAccess consumablesAccess = new();
 
-    public List<MenuItemModel> GetSnacks()
+    public List<ConsumableModel> GetSnacks()
     {
-        return menuItemsAccess.GetMenuItemsByCategory("Snack");
+        return consumablesAccess.GetConsumablesByCategory("Snack");
     }
 
-    public List<MenuItemModel> GetDrinks()
+    public List<ConsumableModel> GetDrinks()
     {
-        return menuItemsAccess.GetMenuItemsByCategory("Drink");
+        return consumablesAccess.GetConsumablesByCategory("Drink");
     }
 
-    public bool AddItemToOrder(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 quantity)
+    public bool AddItemToOrder(List<OrderItemModel> orderItems, Int64 consumableId, Int64 quantity)
     {
         if (quantity <= 0)
         {
@@ -20,7 +20,7 @@
         }
 
         // get item from access layer
-        MenuItemModel? selectedItem = menuItemsAccess.GetMenuItemById(menuItemId);
+        ConsumableModel? selectedItem = consumablesAccess.GetConsumableById(consumableId);
 
         if (selectedItem == null)
         {
@@ -30,7 +30,7 @@
         // update quantity if item already exists
         foreach (OrderItemModel orderItem in orderItems)
         {
-            if (orderItem.MenuItemId == menuItemId)
+            if (orderItem.ConsumableId == consumableId)
             {
                 orderItem.Quantity += quantity;
                 orderItem.SubTotal = orderItem.Quantity * orderItem.PricePerItem;
@@ -49,7 +49,7 @@
         return true;
     }
 
-    public bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 menuItemId, Int64 newQuantity)
+    public bool UpdateItemQuantity(List<OrderItemModel> orderItems, Int64 consumableId, Int64 newQuantity)
     {
         if (newQuantity <= 0)
         {
@@ -58,7 +58,7 @@
 
         foreach (OrderItemModel orderItem in orderItems)
         {
-            if (orderItem.MenuItemId == menuItemId)
+            if (orderItem.ConsumableId == consumableId)
             {
                 orderItem.Quantity = newQuantity;
                 orderItem.SubTotal = orderItem.PricePerItem * newQuantity;
@@ -69,11 +69,11 @@
         return false;
     }
 
-    public bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 menuItemId)
+    public bool RemoveItemFromOrder(List<OrderItemModel> orderItems, Int64 consumableId)
     {
         for (int i = 0; i < orderItems.Count; i++)
         {
-            if (orderItems[i].MenuItemId == menuItemId)
+            if (orderItems[i].ConsumableId == consumableId)
             {
                 orderItems.RemoveAt(i);
                 return true;

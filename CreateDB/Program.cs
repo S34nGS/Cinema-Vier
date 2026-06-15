@@ -11,7 +11,7 @@ public static class Program
         CreateTicketTable.Execute();
         CreateConsumableTable.Execute();
         CreateConsumableOrderTable.Execute();
-        CreateMenuItemTable.Execute();
+        CreateConsumableTable.Execute();
         CreateSeatReservationTable.Execute();
         CreateRatingsTable.Execute();
     }

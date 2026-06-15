@@ -4,7 +4,7 @@
     // GeneratePage
     public static void Start(
         List<SeatModel> selectedSeats,
-        List<OrderItemModel> orderedMenuItems,
+        List<OrderItemModel> orderedConsumables,
         double menuTotal,
         List<OrderItemModel> loungePreOrderItems,
         double loungePreOrderTotal,
@@ -48,11 +48,11 @@ Ticket total: €{ticketTotal:0.00}
 Number of seats: {selectedSeats.Count}
 ";
 
-        if (orderedMenuItems.Count > 0)
+        if (orderedConsumables.Count > 0)
         {
             output += "Food and drink items:";
 
-            foreach (OrderItemModel item in orderedMenuItems)
+            foreach (OrderItemModel item in orderedConsumables)
             {
                 output += $@"
 Item name: {item.Name}

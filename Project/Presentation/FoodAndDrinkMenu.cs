@@ -43,14 +43,14 @@
         return orderItems;
     }
 
-    private static void ShowCategoryItems(List<MenuItemModel> items, MenuLogic menuLogic, List<OrderItemModel> orderItems)
+    private static void ShowCategoryItems(List<ConsumableModel> items, MenuLogic menuLogic, List<OrderItemModel> orderItems)
     {
         while (true)
         {
             // build item menu with prices
             List<string> itemMenu = new List<string>();
 
-            foreach (MenuItemModel item in items)
+            foreach (ConsumableModel item in items)
             {
                 itemMenu.Add($"{item.Name} - €{item.Price:0.00}");
             }
@@ -62,7 +62,7 @@
                 return;
             }
 
-            MenuItemModel selectedItem = items[selectedItemIndex];
+            ConsumableModel selectedItem = items[selectedItemIndex];
 
             Int64 quantity;
             do
@@ -216,7 +216,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
 
         } while (newQuantity < 1);
 
-        bool result = menuLogic.UpdateItemQuantity(orderItems, selectedItem.MenuItemId, newQuantity);
+        bool result = menuLogic.UpdateItemQuantity(orderItems, selectedItem.ConsumableId, newQuantity);
 
         if (result == false)
         {
@@ -246,7 +246,7 @@ Menu Total: €{menuLogic.CalculateMenuTotal(orderItems):0.00}
 
         OrderItemModel selectedItem = orderItems[selectedIndex];
 
-        bool result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.MenuItemId);
+        bool result = menuLogic.RemoveItemFromOrder(orderItems, selectedItem.ConsumableId);
 
         if (result == false)
         {

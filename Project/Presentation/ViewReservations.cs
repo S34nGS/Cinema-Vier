@@ -99,7 +99,7 @@
         Console.WriteLine($"Total         : €{reservation.TotalPrice:F2}");
 
         ConsumableOrderAccess consumableOrderAccess = new();
-        MenuItemsAccess menuItemsAccess = new();
+        ConsumablesAccess consumablesAccess = new();
 
         List<ConsumableOrderModel> consumableOrders =
             consumableOrderAccess.GetByReservationId(reservation.Id);
@@ -116,7 +116,7 @@
         {
             foreach (ConsumableOrderModel order in consumableOrders)
             {
-                MenuItemModel? item = menuItemsAccess.GetMenuItemById(order.ConsumableId);
+                ConsumableModel? item = consumablesAccess.GetConsumableById(order.ConsumableId);
 
                 if (item != null)
                 {

@@ -86,7 +86,7 @@
         });
 
         // selected menu items
-        List<OrderItemModel> orderedMenuItems = [];
+        List<OrderItemModel> orderedConsumables = [];
 
         // ask if user wants food or drinks before the movie
         List<string> orderMenuChoices =
@@ -98,7 +98,7 @@
         int selectedOrderChoice = UiHelper.SelectionMenu.WriteMenu(orderMenuChoices, "Do you want to add snacks or drinks before the movie?");
         if (selectedOrderChoice == 1)
         {
-            orderedMenuItems = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
+            orderedConsumables = FoodAndDrinkMenu.ShowFoodAndDrinkMenu();
         }
 
         // add free birthday popcorn gift if selected movie date is user's birthday
@@ -112,7 +112,7 @@
                 1
             );
 
-            orderedMenuItems.Add(freePopcornGift);
+            orderedConsumables.Add(freePopcornGift);
 
             AccountsLogic accountsLogic = new();
             accountsLogic.UseFreePopcornGift(AccountsLogic.CurrentAccount, convertedDateTime);
@@ -144,7 +144,7 @@
 
         // calculate totals
         MenuLogic menuLogic = new();
-        double menuTotal = menuLogic.CalculateMenuTotal(orderedMenuItems);
+        double menuTotal = menuLogic.CalculateMenuTotal(orderedConsumables);
 
         // calculate lounge pre-order total
         double loungePreOrderTotal = menuLogic.CalculateMenuTotal(loungePreOrderItems);
@@ -155,7 +155,7 @@
         // show summary before payment
         BookingSummary.Start(
             selectedSeats,
-            orderedMenuItems,
+            orderedConsumables,
             menuTotal,
             loungePreOrderItems,
             loungePreOrderTotal,
@@ -177,14 +177,14 @@
 
         ConsumableOrderAccess consumableOrderAccess = new();
 
-        foreach (OrderItemModel item in orderedMenuItems)
+        foreach (OrderItemModel item in orderedConsumables)
         {
-            if (item.MenuItemId != 0)
+            if (item.ConsumableId != 0)
             {
                 ConsumableOrderModel order = new ConsumableOrderModel(
                     -1,
                     reservation.Id,
-                    item.MenuItemId,
+                    item.ConsumableId,
                     item.Quantity
                 );
 
@@ -194,12 +194,12 @@
 
         foreach (OrderItemModel item in loungePreOrderItems)
         {
-            if (item.MenuItemId != 0)
+            if (item.ConsumableId != 0)
             {
                 ConsumableOrderModel order = new ConsumableOrderModel(
                     -1,
                     reservation.Id,
-                    item.MenuItemId,
+                    item.ConsumableId,
                     item.Quantity
                 );
 
