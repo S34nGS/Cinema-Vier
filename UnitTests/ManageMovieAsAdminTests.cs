@@ -3,40 +3,44 @@ namespace UnitTests;
 [TestClass]
 public sealed class ManageMovieAsAdminTests
 {
-    [TestMethod]
-    public void AddMovie_ReturnsAddedMovie()
+    [DataTestMethod]
+    [DataRow("Test Movie Add", 120, "Test summary", "Test Director", 12, "Action", 2026)]
+    public void AddMovie_ReturnsAddedMovie(string title, long duration, string summary, string director, long ageRating, string genre, long releaseDate)
     {
         // arrange
-        MovieModel movie = new(-1, "Test Movie Add", 120, "Test summary", "Test Director", 12, "Action", 2026);
+        MovieModel movie = new(-1, title, duration, summary, director, ageRating, genre, releaseDate);
 
         // act
         MoviesLogic.AddMovie(movie);
-        MovieModel? result = MoviesLogic.GetMovieByTitle("Test Movie Add");
+        MovieModel? result = MoviesLogic.GetMovieByTitle(title);
 
         // assert
         Assert.IsNotNull(result);
-        Assert.AreEqual("Test Movie Add", result.Title);
-        Assert.AreEqual(120, result.Duration);
+        Assert.AreEqual(title, result.Title);
+        Assert.AreEqual(duration, result.Duration);
     }
 
-    [TestMethod]
-    public void EditMovie_ReturnsEditedMovie()
+    [DataTestMethod]
+    [DataRow("Test Movie Edit", "Test Movie Edited", 100, 130, "Old summary", "Old Director", 12, "Drama", 2025)]
+    public void EditMovie_ReturnsEditedMovie(string title, string editedTitle, long duration, long editedDuration, string summary, string director, long ageRating, string genre, long releaseDate)
     {
         // arrange
-        MovieModel movie = new(-1, "Test Movie Edit", 100, "Old summary", "Old Director", 12, "Drama", 2025);
+        MovieModel movie = new(-1, title, duration, summary, director, ageRating, genre, releaseDate);
         MoviesLogic.AddMovie(movie);
-        MovieModel? addedMovie = MoviesLogic.GetMovieByTitle("Test Movie Edit");
+        MovieModel? addedMovie = MoviesLogic.GetMovieByTitle(title);
+
+        Assert.IsNotNull(addedMovie);
 
         // act
-        addedMovie.Title = "Test Movie Edited";
-        addedMovie.Duration = 130;
+        addedMovie.Title = editedTitle;
+        addedMovie.Duration = editedDuration;
         MoviesLogic.EditMovie(addedMovie);
         MovieModel? result = MoviesLogic.GetById(addedMovie.Id);
 
         // assert
         Assert.IsNotNull(result);
-        Assert.AreEqual("Test Movie Edited", result.Title);
-        Assert.AreEqual(130, result.Duration);
+        Assert.AreEqual(editedTitle, result.Title);
+        Assert.AreEqual(editedDuration, result.Duration);
     }
 
     [TestMethod]
@@ -46,6 +50,8 @@ public sealed class ManageMovieAsAdminTests
         MovieModel movie = new(-1, "Test Movie Disable", 90, "Test summary", "Test Director", 6, "Comedy", 2024);
         MoviesLogic.AddMovie(movie);
         MovieModel? addedMovie = MoviesLogic.GetMovieByTitle("Test Movie Disable");
+
+        Assert.IsNotNull(addedMovie);
 
         // act
         addedMovie.IsActive = 0;
