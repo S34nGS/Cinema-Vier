@@ -48,4 +48,9 @@ public class ConsumablesAccess : DefaultAccess, IAccess
         string sql = $"SELECT * FROM {Table} WHERE Id = @Id";
         return connection.QueryFirstOrDefault<ConsumableModel>(sql, new { Id = id });
     }
+
+    public ConsumableModel? GetById(Int64 id)
+    {
+        return GetConsumableById(id);
+    }
 }

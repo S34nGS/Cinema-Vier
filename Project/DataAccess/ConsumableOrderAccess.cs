@@ -8,19 +8,20 @@ public class ConsumableOrderAccess : DefaultAccess, IAccess
     {
         string sql = $@"
         CREATE TABLE IF NOT EXISTS {Table} (
-			id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			reservationId INTEGER NOT NULL,
 			consumableId INTEGER NOT NULL,
 			amount INTEGER NOT NULL,
 
             FOREIGN KEY (reservationId) REFERENCES Reservation(id),
-            FOREIGN KEY (consumableId) REFERENCES Consumable(id)
+            FOREIGN KEY (consumableId) REFERENCES Consumables(id)
         );";
         connection.Execute(sql);
     }
 
     public void Write(ConsumableOrderModel order)
     {
+        UiHelper.HoldUser();
         string sql = $@"
             INSERT INTO {Table} (reservationId, consumableId, amount)
             VALUES (@ReservationId, @ConsumableId, @Amount)";

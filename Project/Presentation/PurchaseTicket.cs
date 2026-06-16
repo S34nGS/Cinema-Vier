@@ -173,39 +173,12 @@
 
 
         (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null, selectedSeats.Count);
+
+        PreorderDrinksLogic.Save(orderedConsumables, reservation.Id);
+        PreorderDrinksLogic.Save(loungePreOrderItems, reservation.Id);
+
         if (!completePayment) return null;
 
-        ConsumableOrderAccess consumableOrderAccess = new();
-
-        foreach (OrderItemModel item in orderedConsumables)
-        {
-            if (item.ConsumableId != 0)
-            {
-                ConsumableOrderModel order = new ConsumableOrderModel(
-                    -1,
-                    reservation.Id,
-                    item.ConsumableId,
-                    item.Quantity
-                );
-
-                consumableOrderAccess.Write(order);
-            }
-        }
-
-        foreach (OrderItemModel item in loungePreOrderItems)
-        {
-            if (item.ConsumableId != 0)
-            {
-                ConsumableOrderModel order = new ConsumableOrderModel(
-                    -1,
-                    reservation.Id,
-                    item.ConsumableId,
-                    item.Quantity
-                );
-
-                consumableOrderAccess.Write(order);
-            }
-        }
 
         return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
     }
