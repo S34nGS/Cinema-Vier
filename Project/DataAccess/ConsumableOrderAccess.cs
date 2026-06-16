@@ -14,7 +14,7 @@ public class ConsumableOrderAccess : DefaultAccess, IAccess
 			amount INTEGER NOT NULL,
 
             FOREIGN KEY (reservationId) REFERENCES Reservation(id),
-            FOREIGN KEY (consumableId) REFERENCES MenuItems(id)
+            FOREIGN KEY (consumableId) REFERENCES Consumable(id)
         );";
         connection.Execute(sql);
     }

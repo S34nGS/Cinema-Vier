@@ -1,8 +1,8 @@
 ﻿using Dapper;
 
-public class MenuItemsAccess : DefaultAccess, IAccess
+public class ConsumablesAccess : DefaultAccess, IAccess
 {
-    public static string Table { get; } = "MenuItems";
+    public static string Table { get; } = "Consumables";
 
     public override void CreateTable()
     {
@@ -18,7 +18,7 @@ public class MenuItemsAccess : DefaultAccess, IAccess
         connection.Execute(sql);
     }
 
-    public void Write(MenuItemModel item)
+    public void Write(ConsumableModel item)
     {
         string sql = $@"
             INSERT INTO {Table} (Name, Category, Price)
@@ -28,24 +28,24 @@ public class MenuItemsAccess : DefaultAccess, IAccess
         connection.Execute(sql, item);
     }
 
-    public List<MenuItemModel> GetAllMenuItems()
+    public List<ConsumableModel> GetAllConsumables()
     {
         string sql = $"SELECT * FROM {Table}";
-        return connection.Query<MenuItemModel>(sql).ToList();
+        return connection.Query<ConsumableModel>(sql).ToList();
     }
 
-    public List<MenuItemModel> GetMenuItemsByCategory(string category)
+    public List<ConsumableModel> GetConsumablesByCategory(string category)
     {
         string sql = $@"
         SELECT *
         FROM {Table}
         WHERE Category = @Category";
-        return connection.Query<MenuItemModel>(sql, new { Category = category }).ToList();
+        return connection.Query<ConsumableModel>(sql, new { Category = category }).ToList();
     }
 
-    public MenuItemModel? GetMenuItemById(Int64 id)
+    public ConsumableModel? GetConsumableById(Int64 id)
     {
         string sql = $"SELECT * FROM {Table} WHERE Id = @Id";
-        return connection.QueryFirstOrDefault<MenuItemModel>(sql, new { Id = id });
+        return connection.QueryFirstOrDefault<ConsumableModel>(sql, new { Id = id });
     }
 }
