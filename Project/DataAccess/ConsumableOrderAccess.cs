@@ -21,7 +21,6 @@ public class ConsumableOrderAccess : DefaultAccess, IAccess
 
     public void Write(ConsumableOrderModel order)
     {
-        UiHelper.HoldUser();
         string sql = $@"
             INSERT INTO {Table} (reservationId, consumableId, amount)
             VALUES (@ReservationId, @ConsumableId, @Amount)";
