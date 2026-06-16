@@ -173,10 +173,12 @@
 
 
         (bool completePayment, string selectedPaymentMethod) = PaymentInformation.Start(null, selectedSeats.Count);
-        if (!completePayment) return null;
 
         PreorderDrinksLogic.Save(orderedConsumables, reservation.Id);
         PreorderDrinksLogic.Save(loungePreOrderItems, reservation.Id);
+
+        if (!completePayment) return null;
+
 
         return new TicketModel(-1, -1, convertedDateTime, selectedPaymentMethod);
     }
