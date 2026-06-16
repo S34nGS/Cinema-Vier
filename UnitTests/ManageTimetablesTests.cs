@@ -43,18 +43,66 @@ public sealed class ManageTimetablesTests
     }
 
     [DataTestMethod]
+    [DataRow("1")]
+    [DataRow("2")]
+    [DataRow("3")]
+    public void CreateTimetableAsAdmin_ValidRoomNumber_ReturnsZero(string roomNumber)
+    {
+        // arange
+        MovieModel? movie = MoviesLogic.GetById(1);
+
+        // act
+        int result = TimetablesLogic.CreateTimetableAsAdmin(
+            movie!,
+            roomNumber,
+            "29-06-2026",
+            "13:00"
+        );
+
+        // assert
+        Assert.AreEqual(0, result);
+    }
+
+    [DataTestMethod]
     [DataRow("!", 1)]
     [DataRow("a", 1)]
     [DataRow("99", 1)]
     public void CreateTimetableAsAdmin_InvalidRoomNumber_ReturnsOne(string roomNumber, int expected)
     {
         // arrange
-        MovieModel movie = MoviesLogic.GetById(1);
+        MovieModel? movie = MoviesLogic.GetById(1);
 
         // act
-        int result = TimetablesLogic.CreateTimetableAsAdmin(movie, roomNumber, "20/06/2026", "12:00");
+        int result = TimetablesLogic.CreateTimetableAsAdmin(movie!, roomNumber, "20/06/2026", "12:00");
 
         // assert
         Assert.AreEqual(expected, result);
+    }
+
+    [DataTestMethod]
+    [DataRow("1")]
+    [DataRow("2")]
+    [DataRow("3")]
+    public void CreateNewShowing_AlreadyUsedTimeslotAndRoom_ReturnsFour(string roomNumber)
+    {
+        // arrange
+        MovieModel? movie = MoviesLogic.GetById(1);
+        TimetablesLogic.CreateTimetableAsAdmin(
+            movie!,
+            roomNumber,
+            "29-06-2026",
+            "13:00"
+        );
+
+        // act
+        int result = TimetablesLogic.CreateTimetableAsAdmin(
+            movie!,
+            roomNumber,
+            "29-06-2026",
+            "13:00"
+        );
+
+        // assert
+        Assert.AreEqual(4, result);
     }
 }
